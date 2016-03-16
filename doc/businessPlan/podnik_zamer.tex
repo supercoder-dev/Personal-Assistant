@@ -108,7 +108,7 @@ Za zmínku ještě stojí projekt \textbf{Amazon echo} od firmy Amazon. Tento os
 My se budeme snažit o sestavení vlastního systému s podobnými vlastnostmi, jako mají již vzniklé projekty. 
 
 \section*{Popis navrženého řešení}
-Samotná finální aplikace se bude skládat z aplikačního jádra a modulů, které budou zodpovědné za jednotlivé funkcionality aplikace. Jádro aplikace bude pouze volat jednotlivé moduly a bude jim jen předávat získaná data z ostaních modulů. Bude tedy pouze řídit celý běh aplikace, ale nebude v něm probíhat žádné zpracování informací. Naopak jednotlivé moduly budou úzce zaměřené na zpracování nebo zjištění konkrétních dat. Mezi jádrem aplikace a jednotlivými moduly bude striktně definované rozhraní, což nám snadno umožní jednotlivé moduly nahradit za jiné, aniž by bylo třeba upravit jádro aplikace nebo ostatní moduly. Protože je aplikace vyvíjena jako otevřený software, umožňuje tato vysoká modularita každému uživateli jednoduše vytvořit si vlastní modul, případně si státavající modul upravit. Blokové schéma aplikace je zobrazeno na obrázku \ref{fig:diagram api}.
+Samotná finální aplikace se bude skládat z aplikačního jádra a modulů, které budou zodpovědné za jednotlivé funkcionality aplikace. Jádro aplikace bude pouze volat jednotlivé moduly a bude jim jen předávat získaná data z ostatních modulů. Bude tedy pouze řídit celý běh aplikace, ale nebude v něm probíhat žádné zpracování informací. Naopak jednotlivé moduly budou úzce zaměřené na zpracování nebo zjištění konkrétních dat. Mezi jádrem aplikace a jednotlivými moduly bude striktně definované rozhraní, což nám snadno umožní jednotlivé moduly nahradit za jiné, aniž by bylo třeba upravit jádro aplikace nebo ostatní moduly. Protože je aplikace vyvíjena jako otevřený software, umožňuje tato vysoká modularita každému uživateli jednoduše vytvořit si vlastní modul, případně si stávající modul upravit. Blokové schéma aplikace je zobrazeno na obrázku \ref{fig:diagram api}.
 
 \begin{figure}[ht]
 	\begin{center}
@@ -120,9 +120,9 @@ Samotná finální aplikace se bude skládat z aplikačního jádra a modulů, k
 
 Při popisu návrhu řešení aplikace budeme postupovat tak, jak bude reakce na mluvené slovo postupně prostupovat mezi jednotlivými moduly, až nakonec vznikne finální řečená odpověď.
 
-Za běžného provozu bude aplikace ve stand-by režimu, ve kterém bude čekat na zaznění aktivačního slova. Na rozpoznání aktivačního slova bude vyhrazen jeden samostatný modul. Aktivační slovo by mělo být snadno rozlišitelné od ostatních a zvukově velmi vyrazné, aby nedocházelo k jeho záměně s hlukem na pozadí. Ukazuje se vhodné zvolit tříslabičné slovo s výraznými písmeny, jako jsou například písmena \uv{r} nebo \uv{x}.
+Za běžného provozu bude aplikace ve stand-by režimu, ve kterém bude čekat na zaznění aktivačního slova. Na rozpoznání aktivačního slova bude vyhrazen jeden samostatný modul. Aktivační slovo by mělo být snadno rozlišitelné od ostatních a zvukově velmi výrazné, aby nedocházelo k jeho záměně s hlukem na pozadí. Ukazuje se vhodné zvolit tříslabičné slovo s výraznými písmeny, jako jsou například písmena \uv{r} nebo \uv{x}.
 
-Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání mluveného slova, který převede položenou otázku na prostý text. Vhodnou robustní aplikací pro tento problém je třeba vybrat. Jako vhodné aplikace se ukazají třeba \textit{wit.ai} nebo \textit{PocketSphinx}. Tyto aplikace podrobněji prozkoumáme a vybereme tu, která se bude na daný problém lépe hodit.
+Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání mluveného slova, který převede položenou otázku na prostý text. Vhodnou robustní aplikací pro tento problém je třeba vybrat. Jako vhodné aplikace se ukazují třeba \textit{wit.ai} nebo \textit{PocketSphinx}. Tyto aplikace podrobněji prozkoumáme a vybereme tu, která se bude na daný problém lépe hodit.
 
 Ze získaného textu z předchozího kroku je třeba vybrat klíčová slova, podle kterých určíme význam otázky. Klíčová slova umí rozeznávat, například již zmiňovaná, aplikace \textit{PocketSphinx}.
 
@@ -148,6 +148,20 @@ V poslední řadě využijeme aplikaci k převedení formulované odpovědi do s
 \end{landscape}
 
 \section*{Analýza rizik a krizové plány}
+V průběhu řešení projektu mohou nastat situace, jenž budou nepříjemnou překážkou v realizaci projektu. V nejhorším případě zapříčiní jeho zkázu. S riziky je třeba počítat a připravit si pro mě krizové plány. Lze se tak vyvarovat zbytečných zmatků a vzniklý problém efektivně řešit. \\
+
+ Rizika projektu, která mohou nastat a plán na jejich eliminaci: 
+
+\begin{itemize}
+	\item{\textbf{Nedostatečná funkčnost některého z modulů}} - jednotlivé moduly, které využívají již existující aplikace nebudou mít dostatečnou funkčnost.
+	
+	\item{\textbf{Nemoc}} - v dlouhodobém řešení projektu zastihne některého člena týmu vážná nemoc. 
+	
+	\item{\textbf{Finance}} - nebude k dispozici dostatek financí.
+	
+	\item{\textbf{Ztráta dat}} - vlivem selhání lidského faktoru nebo elektroniky dojde ke ztrátě kódu a příslušných souborů.
+	
+\end{itemize}
 
 \section*{Předběžné výsledky}
 
