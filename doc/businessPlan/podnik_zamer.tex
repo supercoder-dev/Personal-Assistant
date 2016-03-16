@@ -12,6 +12,8 @@
 \author{Jakub Drápela}
 \usepackage{fancyhdr}
 \usepackage{siunitx}
+\usepackage{lscape}
+
 
 \graphicspath{{./imgs/}}
 
@@ -100,7 +102,14 @@ My se snažíme jít o krok vpřed. Ruční manipulaci obejít a informace získ
 
 \section*{Detailní specifikace}
 V našem projektu se zaměříme na vytvoření dialogového systému pro použití v běžné domácnosti či kanceláři. Tedy systému, který dovede sám odpovídat na kladené otázky z limitované oblasti počasí, dopravy, obecných informací atd. Systém bude neustále čekat na aktivační slovo a potom bude schopen zodpovědět určitou škálu otázek. K realizaci projektu budeme využívat již existující aplikace. 
-% napsat víc a víc
+
+V současné době existuje řada aplikací, které fungují na podobném principu. Uveďme například aplikaci \textbf{Cortana} od firmy Microsoft. Cortana, podobně jako další aplikace od firmy Apple Siri, je označována jako osobní asistent. Lze ji použít pro širokou škálu úkonů. Například hlasové ovládání přijímače nebo vyhledávání informací na internetu. Její nevýhodou je použití pouze pod operačními systémy Windows. 
+
+Jako další lze uvést open-source aplikaci \textbf{Jasper} v jazyce Python. Tato aplikace umožňuje využití hlasu pro získání informací. Můžeme ji také použít v inteligentním bydlení a v dalších situacích. Jelikož je volně dostupná, leze k ní libovolně přidávat nové moduly a její použití ještě rozšířit. Stává se tak pro nás vhodnou inspirací. 
+
+Za zmínku ještě určitě stojí projekt \textbf{Amazon echo} od firmy Amazon. Tento osobní asistent z titulní strany může přehrávat muziku, odpovídat na otázky, vyhledávat zprávy, zjišťovat počasí, vytvářet seznamy a mnoho dalších věcí. 
+
+My se budeme snažit o to sestavit vlastní systém s podobnými vlastnostmi jako již vzniklé projekty. 
 
 \section*{Popis navrženého řešení}
 % možná detailněji
@@ -121,16 +130,25 @@ Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání m
 Ze získaného textu je třeba vybrat klíčová slova, která definují otázku v různých formulacích. Klíčová již rozezná například již zmiňovaná aplikace \textit{PocketSphinx}.
 
 
-Získaná klíčová slova jsou vstupní hodnotou do modulu, jenž získá potřebné informace z internetu. Úlohy budou rozdělené na jednotlivé subsystémy. Jeden subsystém bude například pouze na zpracování odpovědi na počasí. 
+Získaná klíčová slova jsou vstupní hodnotou do modulu, jenž získá potřebné informace z internetu. Úlohy budou rozdělené na jednotlivé subsystémy. Jeden subsystém bude například pouze na zpracování odpovědi na počasí přes aplikaci \textit{forecast.io}.
 
 Odpověď kterou dostaneme je třeba přeformulovat do srozumitelné odpovědi podle předem zadaných vzorů. 
 
-V poslední řadě využijeme aplikaci k převedení formulované odpovědi do strojově mluvené řeči. Prvotní aplikací pro tento může být jednoduchý "The Festival Speech Synthesis System".
+V poslední řadě využijeme aplikaci k převedení formulované odpovědi do strojově mluvené řeči. Prvotní aplikací pro tento může být jednoduchý \textit{"The Festival Speech Synthesis System"}.
 
 % plus dopsat nějaké kecy kolem 
 
 
-\section*{Plánování projektu(Ganttův diagram, úkoly, milníky)}
+\section*{Plánování projektu (Ganttův diagram, úkoly, milníky)}
+\begin{landscape}
+\begin{figure}[ht!]
+	\begin{center}
+	\includegraphics[height = 0.6\textheight ]{PTO-Gantt.png}
+	\caption{Ganttův diagram s milníky a úkoly.}
+	\label{fig:diagram api}
+	\end{center}
+\end{figure}
+\end{landscape}
 
 \section*{Analýza rizik a krizové plány}
 
