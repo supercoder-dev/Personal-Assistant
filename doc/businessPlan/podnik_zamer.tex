@@ -94,30 +94,26 @@ Datum vypracování: & \today\\
 \section*{Popis projektu, motivace}
 
 
-Jako lidi si klademe různé otázky. Abychom mohli ve světě rozumě fungovat potřebujeme znát odpovědi na ně. Od té doby, co se začaly informace zaznamenávat lze odpovědi nalézt v záznamech. V nedávné historii lidé prahnoucí po informacích ve velkém kupovali knihy, noviny, jízdní řády, prostě média se žádaným obsahem. 
+Jako lidi si stále klademe různé otázky. Abychom mohli ve světě rozumně fungovat potřebujeme na ně znát odpovědi. Od té doby, co se začaly informace zaznamenávat lze odpovědi nalézt v záznamech. V nedávné historii lidé prahnoucí po informacích ve velkém kupovali knihy, noviny, jízdní řády, prostě média se žádaným obsahem. 
 
-Doba pokročila. My jsme se posunuly do doby, kde jsou téměř všechny informace uložené v elektronické podobě. Je běžné k nim přistupovat pomocí moderních přístrojů. Téměř každý aktivní člověk vlastní alespoň jednu z věcí, jako je počítač, notebook, chytrý mobilní telefon, tablet, iPad a jiné. S využitím toho vybavení máme značně usnadněnou cestu k získání potřebné informace. Stačí mít u sebe správnou aplikaci, přístup na internet a například dopravní spojení nalezneme do minutky. Limituje nás ovšem schopnost manipulace, což při troše nešikovnosti dokáže člověka dost rozčílit.
+Doba pokročila a my jsme se posunuli do doby, ve které jsou téměř všechny informace uložené v elektronické podobě. Je běžné k nim přistupovat pomocí moderních přístrojů. Téměř každý aktivní člověk vlastní alespoň jednu z věcí, jako je počítač, notebook, chytrý mobilní telefon, tablet, iPad a jiné. S využitím toho vybavení máme značně usnadněnou cestu k získání potřebné informace. Stačí mít u sebe správnou aplikaci, přístup na internet a například dopravní spojení nalezneme do minutky. V dnešní době nás limituje už jen to, že si požadovanou informaci musíme najít sami.
 
-My se snažíme jít o krok vpřed. Ruční manipulaci obejít a informace získávat pouze pomocí našeho vlastního hlasu, což ovšem obsahuje širokou škálu požadavků.  
+My se snažíme jít o krok vpřed. Ruční hledání informací obejít a nechat si informaci vyhledat automaticky nástrojem, který můžeme ovldádat třeba jednoduše hlasem.
 
 \section*{Detailní specifikace}
-V našem projektu se zaměříme na vytvoření dialogového systému pro použití v běžné domácnosti či kanceláři. Tedy systému, který dovede sám odpovídat na kladené otázky z limitované oblasti počasí, dopravy, obecných informací atd. Systém bude neustále čekat na aktivační slovo a potom bude schopen zodpovědět určitou škálu otázek. K realizaci projektu budeme využívat již existující aplikace. 
+V našem projektu se zaměříme na vytvoření dialogového systému pro použití v běžné domácnosti či kanceláři. Tedy systému, který dovede sám odpovídat na kladené otázky z limitované oblasti počasí, dopravy, obecných informací atd. Systém bude neustále čekat na aktivační slovo a potom bude schopen zodpovědět určitou škálu otázek. K realizaci projektu použijeme již existující aplikace, které vhodně propojíme so funkčního celku.
 
-V současné době existuje řada aplikací, které fungují na podobném principu. Uveďme například aplikaci \textbf{Cortana} od firmy Microsoft. Cortana, podobně jako další aplikace od firmy Apple Siri, je označována jako osobní asistent. Lze ji použít pro širokou škálu úkonů. Například hlasové ovládání přijímače nebo vyhledávání informací na internetu. Její nevýhodou je použití pouze pod operačními systémy Windows. 
+V současné době existuje řada aplikací, které fungují na podobném principu. Uveďme například aplikaci \textbf{Cortana} od firmy Microsoft. Cortana, podobně jako další aplikace \textbf{Siri} od firmy Apple, je označována jako osobní asistent. Lze ji použít pro širokou škálu úkonů. Například hlasové ovládání přijímače nebo vyhledávání informací na internetu. Její nevýhodou je použití pouze pod operačním systémem Windows, případně iOS. 
 
-Jako další lze uvést open-source aplikaci \textbf{Jasper} v jazyce Python. Tato aplikace umožňuje využití hlasu pro získání informací. Můžeme ji také použít v inteligentním bydlení a v dalších situacích. Jelikož je volně dostupná, leze k ní libovolně přidávat nové moduly a její použití ještě rozšířit. Stává se tak pro nás vhodnou inspirací. 
+Jako další lze uvést open-source aplikaci \textbf{Jasper} v jazyce Python. Tato aplikace umožňuje využití hlasu pro získání informací. Můžeme ji také použít v inteligentním bydlení a v dalších situacích. Jelikož je volně dostupná, lze k ní libovolně přidávat nové moduly a její použití ještě rozšířit. Stává se tak pro nás vhodnou inspirací. 
 
-Za zmínku ještě určitě stojí projekt \textbf{Amazon echo} od firmy Amazon. Tento osobní asistent z titulní strany může přehrávat muziku, odpovídat na otázky, vyhledávat zprávy, zjišťovat počasí, vytvářet seznamy a mnoho dalších věcí. 
+Za zmínku ještě určitě stojí projekt \textbf{Amazon echo} od firmy Amazon. Tento osobní asistent z titulní strany umí přehrávat hudbu, odpovídat na otázky, vyhledávat zprávy, zjišťovat počasí, vytvářet seznamy a mnoho dalších věcí. 
 
-My se budeme snažit o to sestavit vlastní systém s podobnými vlastnostmi jako již vzniklé projekty. 
+My se budeme snažit o sestavení vlastního systému s podobnými vlastnostmi, jako mají již vzniklé projekty. 
 
 \section*{Popis navrženého řešení}
 % možná detailněji
 Při popisu návrhu řešení aplikace budeme postupovat tak, jak bude rekce na mluvené slovo postupně prostupovat mezi moduly, až nakonec vznikne finální řečená odpověď. Blokové schéma aplikace je zobrazeno na obrázku \ref{fig:diagram api}.
-
-V prvotní situaci bude aplikace v režimu čekání na aktivační slovo. Na rozpoznání aktivačního slova bude vyhrazen jedem samostatný modul. Aktivační slovo by mělo být snadno oddělitelné od ostatních. Ukazuje se vhodné zvolit tříslabičné slovo s výraznými písmeny jako je např. x.
-
-Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání mluveného slova. Vhodnou robustní aplikací pro tento problém je třeba vybrat. Experimentovat budeme s \textit{wit.ai} a \textit{PocketSphinx}.
 
 \begin{figure}[ht!]
 	\begin{center}
@@ -127,17 +123,19 @@ Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání m
 	\end{center}
 \end{figure}
 
-Ze získaného textu je třeba vybrat klíčová slova, která definují otázku v různých formulacích. Klíčová již rozezná například již zmiňovaná aplikace \textit{PocketSphinx}.
+V prvotní situaci bude aplikace v režimu čekání na aktivační slovo. Na rozpoznání aktivačního slova bude vyhrazen jedem samostatný modul. Aktivační slovo by mělo být snadno oddělitelné od ostatních. Ukazuje se vhodné zvolit tříslabičné slovo s výraznými písmeny jako je například písmeno x.
 
+Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání mluveného slova. Vhodnou robustní aplikací pro tento problém je třeba vybrat. Experimentovat budeme s aplikacemi \textit{wit.ai} a \textit{PocketSphinx}.
+
+Ze získaného textu v předchozího kroku je třeba vybrat klíčová slova, která definují otázku v různých formulacích. Klíčová slova rozezná, například již zmiňovaná, aplikace \textit{PocketSphinx}.
 
 Získaná klíčová slova jsou vstupní hodnotou do modulu, jenž získá potřebné informace z internetu. Úlohy budou rozdělené na jednotlivé subsystémy. Jeden subsystém bude například pouze na zpracování odpovědi na počasí přes aplikaci \textit{forecast.io}.
 
-Odpověď kterou dostaneme je třeba přeformulovat do srozumitelné odpovědi podle předem zadaných vzorů. 
+Informace získané z internetu je třeba přeformulovat do srozumitelné odpovědi podle předem zadaných vzorů. To je úkolem salšího samostatného modulu.
 
-V poslední řadě využijeme aplikaci k převedení formulované odpovědi do strojově mluvené řeči. Prvotní aplikací pro tento může být jednoduchý \textit{"The Festival Speech Synthesis System"}.
+V poslední řadě využijeme aplikaci k převedení formulované odpovědi do strojově mluvené řeči. Prvotní aplikací pro tento převod může být jednoduchý \textit{"The Festival Speech Synthesis System"}.
 
 % plus dopsat nějaké kecy kolem 
-
 
 \section*{Plánování projektu (Ganttův diagram, úkoly, milníky)}
 \begin{landscape}
