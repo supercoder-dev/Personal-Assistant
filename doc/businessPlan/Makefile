@@ -3,7 +3,7 @@
 
 all: podnik_zamer.pdf
 
-podnik_zamer.pdf: podnik_zamer.tex imgs/cvut_text.jpg imgs/Diagram_API.png imgs/ucho.jpg
+podnik_zamer.pdf: podnik_zamer.tex imgs/cvut_text.jpg imgs/blockDiagram.pdf imgs/ucho.jpg imgs/PTO-Gantt.png
 	pdflatex podnik_zamer.tex
 	pdflatex podnik_zamer.tex
 
