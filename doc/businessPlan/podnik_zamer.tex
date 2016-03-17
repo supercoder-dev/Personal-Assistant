@@ -5,7 +5,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{graphicx}
+\usepackage{color,graphicx}
 \usepackage{epstopdf}
 \usepackage{indentfirst}
 \setlength{\parindent}{4em} 
@@ -13,7 +13,13 @@
 \usepackage{fancyhdr}
 \usepackage{siunitx}
 \usepackage{pdflscape}
-\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage[backend=bibtex,style=numeric,backref=true]{biblatex}
+\definecolor{black}{gray}{0}
+\usepackage[pdftex,unicode]{hyperref}
+\hypersetup{colorlinks,pdfhighlight=/O,citecolor=black,
+  filecolor=black,urlcolor=black,linkcolor=black,
+  breaklinks=true,pdfpagemode=UseNone,plainpages=false,
+}
 \usepackage{filecontents}  % create "citations.bib" on-the-fly
 \graphicspath{{./imgs/}}
 
