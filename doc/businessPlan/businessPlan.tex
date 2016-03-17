@@ -26,7 +26,7 @@
 %\fontfamily{phs}
 %\selectfont
 
-\begin{filecontents*}{podnik_zamer.bib}
+\begin{filecontents*}{businessPlan.bib}
 
 @online{pict,
  author  = "The New York Times",
@@ -36,7 +36,7 @@
  url     = "http://static01.nyt.com/images/2015/06/25/business/GADGETWISE/GADGETWISE-master675.jpg",
 }
 \end{filecontents*}
-\addbibresource{podnik_zamer.bib}
+\addbibresource{businessPlan.bib}
 
 \begin{document}
 \pagestyle{empty}
@@ -101,7 +101,7 @@ Datum vypracování: & \today\\
 
 
 \section*{Popis projektu, motivace}
-Jako lidé si stále klademe různé otázky. Abychom mohli ve světě rozumně fungovat potřebujeme na tyto otázky znát odpovědi. Od té doby, co se začaly informace zaznamenávat lze odpovědi nalézt v záznamech. V nedávné historii lidé prahnoucí po informacích ve velkém kupovali knihy, noviny, jízdní řády, prostě média se žádaným obsahem. 
+Jako lidé si stále klademe různé otázky. Abychom mohli ve světě rozumně fungovat potřebujeme na tyto otázky znát odpovědi. Od té doby, co se začaly informace zaznamenávat lze odpovědi nalézt v záznamech. V~nedávné historii lidé prahnoucí po informacích ve velkém kupovali knihy, noviny, jízdní řády, prostě média se žádaným obsahem. 
 
 My se snažíme udělat krok vpřed. Ruční hledání informací obejít a nechat si informaci vyhledat automaticky nástrojem, který můžeme ovládat jednoduše hlasem.
 
@@ -122,7 +122,7 @@ Jako další lze uvést open-source aplikaci \textbf{Jasper} v jazyce Python. Ta
 Za zmínku ještě stojí projekt \textbf{Amazon Echo} od firmy Amazon. Tento osobní asistent umí přehrávat hudbu, odpovídat na otázky, vyhledávat zprávy, zjišťovat počasí, vytvářet seznamy a mnoho dalších věcí. 
 
 \section*{Popis navrženého řešení}
-Samotná finální aplikace se bude skládat z aplikačního jádra a modulů, které budou zodpovědné za jednotlivé funkcionality aplikace. Jádro aplikace bude pouze volat jednotlivé moduly a bude jim předávat získaná data z ostatních modulů. Bude tedy řídit celý běh aplikace, ale nebude v něm probíhat žádné zpracování informací. Naopak jednotlivé moduly budou úzce zaměřené na zpracování nebo zjištění konkrétních dat. Mezi jádrem aplikace a jednotlivými moduly bude striktně definované rozhraní, což nám snadno umožní jednotlivé moduly nahradit za jiné, aniž by bylo třeba upravit jádro aplikace nebo ostatní moduly. Protože je aplikace vyvíjena jako otevřený software, umožňuje tato vysoká modularita každému uživateli jednoduché vytvoření vlastního modulu, případně úpravu stávajících modulů. Blokové schéma aplikace je zobrazeno na obrázku \ref{fig:diagram api}.
+Samotná finální aplikace se bude skládat z aplikačního jádra a modulů, které budou zodpovědné za jednotlivé funkcionality aplikace. Jádro aplikace bude pouze volat jednotlivé moduly a bude jim předávat získaná data z ostatních modulů. Bude tedy řídit celý běh aplikace, ale nebude v~něm probíhat žádné zpracování informací. Naopak jednotlivé moduly budou úzce zaměřené na zpracování nebo zjištění konkrétních dat. Mezi jádrem aplikace a jednotlivými moduly bude striktně definované rozhraní, což nám snadno umožní jednotlivé moduly nahradit za jiné, aniž by bylo třeba upravit jádro aplikace nebo ostatní moduly. Protože je aplikace vyvíjena jako otevřený software, umožňuje tato vysoká modularita každému uživateli jednoduché vytvoření vlastního modulu, případně úpravu stávajících modulů. Blokové schéma aplikace je zobrazeno na obrázku \ref{fig:diagram api}.
 
 \begin{figure}[ht]
 	\begin{center}
@@ -134,7 +134,7 @@ Samotná finální aplikace se bude skládat z aplikačního jádra a modulů, k
 
 Při popisu návrhu řešení aplikace budeme postupovat tak, jak bude reakce na mluvené slovo postupně prostupovat mezi jednotlivými moduly, až nakonec vznikne finální odpověď ve formě mluveného slova.
 
-Za běžného provozu bude aplikace ve stand-by režimu, ve kterém bude čekat na zaznění aktivačního slova. Na rozpoznání aktivačního slova bude vyhrazen jeden samostatný modul. Aktivační slovo by mělo být snadno rozlišitelné od ostatních a zvukově velmi výrazné, aby nedocházelo k jeho záměně s hlukem na pozadí. Ukazuje se vhodné zvolit tříslabičné slovo s výraznými hláskami a vokály jako například \uv{a} nebo \uv{x}.
+Za běžného provozu bude aplikace ve stand-by režimu, ve kterém bude čekat na zaznění aktivačního slova. Na rozpoznání aktivačního slova bude vyhrazen jeden samostatný modul. Aktivační slovo by mělo být snadno rozlišitelné od ostatních a zvukově velmi výrazné, aby nedocházelo k jeho záměně s hlukem na pozadí. Ukazuje se vhodné zvolit tříslabičné slovo s~výraznými hláskami a vokály jako například \uv{a} nebo \uv{x}.
 
 Po zaznění aktivačního slova uživatelem se aktivuje blok pro rozpoznání mluveného slova, který převede položenou otázku na prostý text. Vhodnou robustní knihovnou pro tento problém je třeba vybrat. Jako vhodné knihovny se ukazují třeba \textit{wit.ai} nebo \textit{PocketSphinx}. Tyto knihovny podrobněji prozkoumáme a vybereme tu, která bude při řešení daného problému nejúspěšnější.
 
@@ -154,8 +154,9 @@ Vytvořili jsme časový plán projektu, který obsahuje naplánovanou posloupno
 Diagram obsahuje pět stěžejních fází projektu. První dvě fáze projektu, diskuze nad řešením projektu a rozdělení rolí v týmu, již proběhly. Následuje realizace prvotního prototypu s omezenými schopnostmi. Prototyp následně postoupí fázi rozšiřování o nové možnosti a v poslední řadě přichází na řadu testování a finální úprava. Harmonogram projektu zahrnuje, kromě časového rozložení jednotlivých úkolů a milníků, také pravidelné týdenní schůze, termíny odevzdání průběžných zpráv a prezentace stavu projektu.
 
 \section*{Analýza rizik a krizové plány}
-V průběhu řešení projektu mohou nastat situace, které budou bránit jeho plynulé a bezproblémové realizaci. Analyzovali jsme rizika, která mohou nastat a připravili jsme pro ně odpovídající krizové plány tak, aby bylo možné efektivní řešení vzniklých problémů a došlo k minimalizaci případných negativních následků. \\
+V průběhu řešení projektu mohou nastat situace, které budou bránit jeho plynulé a bezproblémové realizaci. Analyzovali jsme rizika, která mohou nastat a připravili jsme pro ně odpovídající krizové plány tak, aby bylo možné efektivní řešení vzniklých problémů a došlo k minimalizaci případných negativních následků.
 
+\vspace{1em}
 \noindent \textbf{Rizika projektu}, která mohou nastat a \textbf{plány} na jejich eliminaci: 
 
 \begin{itemize}
@@ -165,7 +166,7 @@ V průběhu řešení projektu mohou nastat situace, které budou bránit jeho p
 
 	\item{\textbf{Nemoc}} - v dlouhodobém řešení projektu zastihne některého člena týmu vážná nemoc. 
 	
-	V tomto případě zastoupí nemocného člena jiný člen a práce se přeorganizuje tak, aby nevznikaly zbytečné prodlevy. Obdobně budeme jednat, pokud někdo z týmu nebude stíhat plnit zadanou práci, a to z jakéhokoliv důvodu.
+	V tomto případě zastoupí nemocného člena jiný člen a práce se přeorganizuje tak, aby nevznikaly zbytečné prodlevy. Obdobně budeme jednat, pokud někdo z týmu nebude stíhat plnit zadanou práci, a to z~jakéhokoliv důvodu.
 	
 	\item{\textbf{Finance}} - nebude k dispozici dostatek financí.
 	
@@ -199,7 +200,7 @@ V průběhu řešení projektu mohou nastat situace, které budou bránit jeho p
 
   \item{Převod řeči na text a rozpoznání významu}
 
-  Pro převod řeči jsme zvolili dva různé přístupy. Jednou z možností je použití již zmíněné knihovny \textit{PocketSphinx}. Druhou a v současné době preferovanou možností je využití aplikace \textit{wit.ai}. Pro tuto aplikaci jsme vytvořili testovací databázi, která obsahuje malé množství dotazů z oblasti počasí. Dosavadní výsledky jsou velmi slibné.
+  Pro převod řeči jsme zvolili dva různé přístupy. Jednou z možností je použití již zmíněné knihovny \textit{PocketSphinx}. Druhou a v současné době preferovanou možností je využití aplikace \textit{wit.ai}. Pro tuto aplikaci jsme vytvořili testovací databázi, která obsahuje malé množství dotazů z~oblasti počasí. Dosavadní výsledky jsou velmi slibné.
 
   \item{Zpracování dotazu}
 
