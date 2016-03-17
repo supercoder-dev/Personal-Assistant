@@ -1,3 +1,0 @@
-Upravujte jak je libo. Kritizujte, nadávejte atd...
-
-
