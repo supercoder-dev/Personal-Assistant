@@ -1,21 +1,23 @@
 .PHONY: all clean
 .SECONDEXPANSION:
 
-all: podnik_zamer.pdf
+all: businessPlan.pdf
 
-podnik_zamer.pdf: podnik_zamer.tex imgs/cvut_text.jpg imgs/blockDiagram.pdf imgs/logo.pdf imgs/PTO-Gantt.png
-	pdflatex podnik_zamer.tex
-	pdflatex podnik_zamer.tex
-	bibtex podnik_zamer
-	pdflatex podnik_zamer.tex
-	pdflatex podnik_zamer.tex
+businessPlan.pdf: businessPlan.tex imgs/cvut_text.jpg imgs/blockDiagram.pdf imgs/logo.pdf imgs/PTO-Gantt.png
+	pdflatex businessPlan.tex
+	pdflatex businessPlan.tex
+	bibtex businessPlan
+	pdflatex businessPlan.tex
+	pdflatex businessPlan.tex
 
 clean:
-	-rm -f podnik_zamer.aux
-	-rm -f podnik_zamer.bbl
-	-rm -f podnik_zamer.bib
-	-rm -f podnik_zamer.blg
-	-rm -f podnik_zamer.log
-	-rm -f podnik_zamer.pdf
-	-rm -f podnik_zamer.run.xml
-	-rm -f podnik_zamer-blx.bib
+	-rm -f businessPlan.aux
+	-rm -f businessPlan.bbl
+	-rm -f businessPlan.bcf
+	-rm -f businessPlan.bib
+	-rm -f businessPlan.blg
+	-rm -f businessPlan.log
+	-rm -f businessPlan.pdf
+	-rm -f businessPlan.run.xml
+	-rm -f businessPlan.out
+	-rm -f businessPlan-blx.bib
