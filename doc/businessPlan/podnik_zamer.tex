@@ -13,12 +13,24 @@
 \usepackage{fancyhdr}
 \usepackage{siunitx}
 \usepackage{pdflscape}
-
-
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{filecontents}  % create "citations.bib" on-the-fly
 \graphicspath{{./imgs/}}
 
 %\fontfamily{phs}
 %\selectfont
+
+\begin{filecontents*}{podmik_zamer.bib}
+
+@online{pict,
+ author  = "The New York Times",
+ title   = "The Amazon Echo",
+ year    = "2015",
+ urlseen = "03-17-16",
+ url     = "http://static01.nyt.com/images/2015/06/25/business/GADGETWISE/GADGETWISE-master675.jpg",
+}
+\end{filecontents*}
+\addbibresource{podmik_zamer.bib}
 
 \begin{document}
 \pagestyle{empty}
@@ -194,7 +206,7 @@ V průběhu řešení projektu mohou nastat situace, jenž budou nepříjemnou p
 \section*{Předběžné výsledky}
 
 
+\nocite{*}
+\printbibliography 
 
-Zdroje:
-http://static01.nyt.com/images/2015/06/25/business/GADGETWISE/GADGETWISE-master675.jpg
 \end{document}
