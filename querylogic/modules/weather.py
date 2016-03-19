@@ -5,6 +5,11 @@ Author: Jiri Burant
 First draft of the possible weather module package.
 """
 
+#TODO: Get the forecast for next week,
+#      Be able to get the weather from past
+#      Select time period: Currently, Daily, Hourly
+
+
 from urllib.request import Request, urlopen, URLError
 from geopy.geocoders import Nominatim
 import json
@@ -16,6 +21,7 @@ def getLocation(place):
     location = geolocator.geocode(place)
     return location
 
+#init_hook initializes the class Weather
 def init_hook(args):
     if ('town' in args):
         location=getLocation(args['town'])
@@ -127,7 +133,7 @@ class Weather:
             answer=data[timeperiod]['data'][0]['visibility']
             return self.get_simplesentence(answer,'visibility will be ')
     
-    #switcher serves as an intent switch, based on the intent, the appropriate actions are taken
+    #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
     switcher={'weather' : get_summary,
               'temperature': get_temperature,
               'sunrise': get_sunrise,
@@ -142,24 +148,26 @@ class Weather:
               'visibility':get_visibility,
               }
 
+    #get_simplesentence returns the answer string, currently very simple
     def get_simplesentence(self,answer,intent):
         return 'The' + intent + answer
 
     def answersentence_add_location(self,answersentence,location):
         return answersentence+' in ' + location
         
+    #Called from the query logic
     def query_resolution(self, intent, query ):
         location=''
         
         if (intent in self.switcher.keys()):
             
-            if ('location' in query['entities']):
+            if ('location' in query['entities']):    #If location is present in the query, take it into account
                 location=query['entities']['location']['value']
                 coordinates=getLocation(location)
                 
                 data=self.call_weather_api(coordinates.latitude,coordinates.longitude)
             else:
-                data=self.call_weather_api()
+                data=self.call_weather_api()    #Use the default coordinates
              
             answersentence=self.switcher[intent](query,data)
 
