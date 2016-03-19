@@ -9,12 +9,13 @@ At init, the currently present modules are loaded and initialized bz the info fr
 
 import os
 import yaml
+import json
 
 class Query_control:
 
     def __init__(self):
         currentDir=os.path.dirname(os.path.abspath(__file__))
-        moduleNames=os.listdir(currentDir+'\modules')
+        moduleNames=os.listdir(os.path.join(currentDir,'modules'))
         moduleNames=['modules.' + s for s in moduleNames]
 
         moduleNames = [ name for name in moduleNames if not name.startswith('modules.__') ]
@@ -40,7 +41,8 @@ class Query_control:
                 self.moduleInst.append(initModule)
 
     def query_request(self, query):
-        jsonData = data.split("(")[1].strip(")")
+        #jsonData = query.split("(")[1].strip(")")
+        jsonData=query
         parsedQuery=json.loads(jsonData)
 
         try:

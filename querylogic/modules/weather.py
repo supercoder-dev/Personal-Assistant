@@ -25,17 +25,20 @@ def getLocation(place):
 def init_hook(args):
     if ('town' in args):
         location=getLocation(args['town'])
-        return Weather(location.latitude,location.longitude)
+        weather=Weather()
+        weather.set_init_parameters(location.latitude,location.longitude)
+        return weather
     else:
         return 'Error'
 
 class Weather:
-    def __init__(self, latitude, longitude):
+
+    def set_init_parameters(self,latitude, longitude):
         self.apikey='2fe3789874bc830a8cf2b1d98c4d7dbb' #Free apikey for up to 1000 queries per day, registered to the author
         self.latitude=latitude
         self.longitude=longitude
 
-    def call_weather_api(self, latitude=self.latitude, longitude=self.longitude):
+    def call_weather_api(self, latitude, longitude):
         request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude))
         print('calledWeather api')
             
@@ -48,6 +51,13 @@ class Weather:
          
         return data
 
+    #get_simplesentence returns the answer string, currently very simple
+    def get_simplesentence(self,answer,intent):
+        return 'The ' + str(intent) + str(answer)
+
+    def answersentence_add_location(self,answersentence,location):
+        return answersentence+' in ' + location
+
     def convert_time(self, posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -57,7 +67,7 @@ class Weather:
 
     def get_temperature(self,data,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data']['temperature']
+            answer=data[timeperiod]['temperature']
             return self.get_simplesentence(answer,'temperature is ')  
         else:
             answer=data[timeperiod]['data'][0]['temperature']
@@ -132,6 +142,14 @@ class Weather:
         else:
             answer=data[timeperiod]['data'][0]['visibility']
             return self.get_simplesentence(answer,'visibility will be ')
+
+    def get_pressure(self, data,timeperiod='currently'):
+        if(timeperiod=='currently'):
+            answer=data[timeperiod]['pressure']
+            return self.get_simplesentence(answer,'pressure is ')
+        else:
+            answer=data[timeperiod]['data'][0]['pressure']
+            return self.get_simplesentence(answer,'pressure will be ')
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
     switcher={'weather' : get_summary,
@@ -147,33 +165,30 @@ class Weather:
               'temperatureMax':get_temperatureMax,
               'visibility':get_visibility,
               }
-
-    #get_simplesentence returns the answer string, currently very simple
-    def get_simplesentence(self,answer,intent):
-        return 'The' + intent + answer
-
-    def answersentence_add_location(self,answersentence,location):
-        return answersentence+' in ' + location
         
     #Called from the query logic
-    def query_resolution(self, intent, query ):
+    def query_resolution(self, intent, query, params):
         location=''
         
         if (intent in self.switcher.keys()):
-            
-            if ('location' in query['entities']):    #If location is present in the query, take it into account
-                location=query['entities']['location']['value']
-                coordinates=getLocation(location)
-                
-                data=self.call_weather_api(coordinates.latitude,coordinates.longitude)
+            if ('entities' in query):
+                if ('location' in query['entities']):    #If location is present in the query, take it into account
+                    location=query['entities']['location']['value']
+                    coordinates=getLocation(location)
+                    
+                    data=self.call_weather_api(coordinates.latitude,coordinates.longitude)
+                else:
+                    data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates
             else:
-                data=self.call_weather_api()    #Use the default coordinates
+                data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates    
+            
+            answersentence=Weather.switcher[intent](self,data)
              
-            answersentence=self.switcher[intent](query,data)
-
             if(location!=''):
                 answersentence=self.answersentence_add_location(answersentence,location)
+        
+            return answersentence
+
         else:
             answersentence='query not recognised'
-
-        return answersentence
+            return answersentence

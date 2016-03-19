@@ -26,7 +26,7 @@ class GeoLocation:
             'longitudeSelf': location.longitude,
         }
 
-        if (query in querySwitcher):
+        if (intent in querySwitcher.keys()):
             answer=querySwitcher[query]
         else:
             answer='query not recognised'
