@@ -52,3 +52,5 @@ class Query_control:
             answer=module.query_resolution(intent, parsedQuery, self.args)
             if(answer!='query not recognised'):
                 return answer
+
+        return answer

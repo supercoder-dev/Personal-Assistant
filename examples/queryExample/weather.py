@@ -22,10 +22,15 @@ class QueryControl:
     def callWeatherAPI(self):
         request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(self.latitude) +',' + str(self.longitude))
         print('calledWeather api')
+        
             
         try:
             response = urlopen(request)
             data = json.loads(response.readall().decode('utf-8'))
+
+            fo=open('foo.txt','w+')
+            fo.write(str(data))
+            fo.close()
         except URLError:
             data='There was an error'
             print ('Error')
