@@ -30,7 +30,7 @@ file = open('queries_json.txt', 'w')
 for q in querry_array:
 	resp = findResponse(q)
 	file.write(resp)
-	#file.write('\n')
+	file.write('\n')
 
 file.close()
 
