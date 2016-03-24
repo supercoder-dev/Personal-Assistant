@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-import subprocess
-import zmq
+import actwordListener
 
 class Kernel:
   """
@@ -17,7 +16,7 @@ class Kernel:
       None
     """
 
-    self.zmqctx = zmq.Context()
+    self.actwordListener = actwordListener.actwordListener('')
 
 
   def run(self):
@@ -30,12 +29,11 @@ class Kernel:
 
     try:
       # run all processes
-      self.executeActwordListener()
+      self.actwordListener.start()
 
       # do the work
       for i in range(0, 10):
-        self.actwordListenerS.send_string(str(i))
-        print(self.actwordListenerS.recv().decode('utf-8'))
+        print(self.actwordListener.comm(str(i)))
 
     finally:
       # clean after all
@@ -50,24 +48,7 @@ class Kernel:
       None
     """
 
-    self.actwordListenerP.terminate()
-
-  def executeActwordListener(self):
-    """
-    Executes activation word listener as independent process.
-
-    Returns:
-      None
-    """
-
-    port = 5556
-
-    # run the process
-    self.actwordListenerP = subprocess.Popen(['../modules/dummy/dummy.py', str(port)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-    # create client
-    self.actwordListenerS = self.zmqctx.socket(zmq.REQ)
-    self.actwordListenerS.connect('ipc://127.0.0.1:{}'.format(port))
+    self.actwordListener.stop()
 
 
 # DEMO
