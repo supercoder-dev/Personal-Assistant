@@ -27,14 +27,14 @@ class DummyModule:
 
   def runServer(self):
     """
-    Runs the ZQM server.
+    Runs the ZMQ server.
 
     Returns:
       None
     """
 
+    # bind the port
     self.socket = self.zmqctx.socket(zmq.REP)
-    print('ipc://127.0.0.1:{}'.format(port))
     self.socket.bind('ipc://127.0.0.1:{}'.format(port))
 
 
@@ -47,24 +47,33 @@ class DummyModule:
     """
 
     while True:
-      message = self.socket.recv().decode('utf-8')
-      print(message)
-      time.sleep(1)
-      self.reply(message)
+      # wait for request
+      message = self.socket.recv_json()
+
+      # do
+      reply = self.logic(message)
+
+      # sebd back reply
+      self.socket.send_json(reply)
 
 
-  def reply(self, message):
+  def logic(self, message):
     """
-    Sends reply back to client.
+    Main logic of the module.
 
     Args:
-      message (str): message to send
+      message (JSON): received data in JSON format
 
     Returns:
-      None
+      JSON: data to send back in JSON format
     """
 
-    self.socket.send_string(str(message))
+    # HERE GOES YOUR CODE
+    print(message)
+
+    # return result
+    return message
+
 
 
 if __name__ == '__main__':

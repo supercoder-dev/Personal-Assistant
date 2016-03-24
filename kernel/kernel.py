@@ -33,7 +33,6 @@ class Kernel:
 
       # do the work
       for i in range(0, 10):
-        print(self.actwordListener.comm(str(i)))
         print(self.actwordListener.commJSON({'iteration': i}))
 
     finally:
