@@ -42,10 +42,12 @@ class Query_control:
 
     def query_request(self, query):
         #jsonData = query.split("(")[1].strip(")")
-        jsonData=query
-        parsedQuery=json.loads(jsonData)
-
+        #jsonData=query
+        jsonData = query.replace('[','').replace(']','')
+        parsedQuery=json.loads(jsonData)['outcomes']          
+		
         try:
+            print(parsedQuery['_text'])
             intent=parsedQuery['intent']
         except:
             return 'malformed json'
