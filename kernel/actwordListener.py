@@ -76,6 +76,10 @@ class actwordListener:
       str: received massage
     """
 
+    #check the process is running
+    if self.process.poll() != None:
+      self.execute()
+    
     self.socket.send_string(message)
     return self.socket.recv().decode('utf-8')
 
