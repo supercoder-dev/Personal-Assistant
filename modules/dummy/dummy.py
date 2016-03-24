@@ -50,7 +50,7 @@ class DummyModule:
       message = self.socket.recv().decode('utf-8')
       print(message)
       time.sleep(1)
-      self.reply('Reply: ' + message)
+      self.reply(message)
 
 
   def reply(self, message):

@@ -2,6 +2,7 @@
 
 import zmq
 import subprocess
+import json
 
 class actwordListener:
   """
@@ -77,3 +78,17 @@ class actwordListener:
 
     self.socket.send_string(message)
     return self.socket.recv().decode('utf-8')
+
+
+  def commJSON(self, dct):
+    """
+    Converts dictionary to a JSON string and sends it to the server. Then waits for the reply and converts is back to dictionary.
+
+    Args:
+      dct (dict): dictionary to send
+
+    Returns:
+      dict: received reply as dictionary
+    """
+
+    return json.loads(self.comm(json.dumps(dct)))
