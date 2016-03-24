@@ -42,9 +42,8 @@ class Query_control:
 
     def query_request(self, query):
         #jsonData = query.split("(")[1].strip(")")
-        #jsonData=query
-        jsonData = query.replace('[','').replace(']','')
-        parsedQuery=json.loads(jsonData)['outcomes']          
+        #jsonData = query.replace('[','').replace(']','')
+        parsedQuery=json.loads(query)['outcomes'][0]          
 		
         try:
             print(parsedQuery['_text'])

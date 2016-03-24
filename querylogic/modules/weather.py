@@ -173,7 +173,7 @@ class Weather:
         if (intent in self.switcher.keys()):
             if ('entities' in query):
                 if ('location' in query['entities']):    #If location is present in the query, take it into account
-                    location=query['entities']['location']['value']
+                    location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
                     
                     data=self.call_weather_api(coordinates.latitude,coordinates.longitude)
