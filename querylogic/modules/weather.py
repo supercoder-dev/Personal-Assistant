@@ -74,16 +74,16 @@ class Weather:
             return self.get_simplesentence(answer,'temperature will be ')  
        
     def get_sunrise(self,data,timeperiod='daily'):
-        time=convert_time(data[timeperiod]['data'][0]['sunriseTime']) 
+        time=self.convert_time(data[timeperiod]['data'][0]['sunriseTime']) 
         return self.get_simplesentence(time,'time of sunrise is ')  
 
     def get_sunset(self,data,timeperiod='daily'):
-        time=convert_time(data[timeperiod]['data'][0]['sunsetTime'])
+        time=self.convert_time(data[timeperiod]['data'][0]['sunsetTime'])
         return self.get_simplesentence(time,'time of sunset is ')
     
     def get_precip_intensity(self,data,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data']['precipIntensity']
+            answer=data[timeperiod]['data'][0]['precipIntensity']
             return self.get_simplesentence(answer,'intensity of the precipations is ')
         else:
             answer=data[timeperiod]['data'][0]['precipIntensity']
@@ -91,7 +91,7 @@ class Weather:
 
     def get_humidity(self,data,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data']['humidity']
+            answer=data[timeperiod]['data'][0]['humidity']
             return self.get_simplesentence(answer,'humidity is ')
         else:
             answer=data[timeperiod]['data'][0]['humidity']
