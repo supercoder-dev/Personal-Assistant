@@ -67,7 +67,7 @@ class Kernel:
 
     # create client
     self.actwordListenerS = self.zmqctx.socket(zmq.REQ)
-    self.actwordListenerS.connect('tcp://127.0.0.1:{}'.format(port))
+    self.actwordListenerS.connect('ipc://127.0.0.1:{}'.format(port))
 
 
 # DEMO

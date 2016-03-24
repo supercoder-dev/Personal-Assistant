@@ -34,8 +34,8 @@ class DummyModule:
     """
 
     self.socket = self.zmqctx.socket(zmq.REP)
-    print('tcp://127.0.0.1:{}'.format(port))
-    self.socket.bind('tcp://127.0.0.1:{}'.format(port))
+    print('ipc://127.0.0.1:{}'.format(port))
+    self.socket.bind('ipc://127.0.0.1:{}'.format(port))
 
 
   def listen(self):
