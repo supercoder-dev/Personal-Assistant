@@ -51,6 +51,37 @@ class Kernel:
     self.actwordListener.stop()
 
 
+
+class ConfigError(Exception):
+  """
+  Exception class handling module configuration error.
+  """
+
+  def __init__(self, module):
+    """
+    Init of the exception.
+
+    Args:
+      module (str): name of module failed to config
+
+    Returns:
+      None
+    """
+
+    self.module = module
+  
+  def __str__(self):
+    """
+    Converts exception to a string.
+
+    Returns:
+      str: string representation of the exception
+    """
+
+    return 'Module "' + self.module  + '" failed to config.'
+
+
+
 # DEMO
 if __name__ == '__main__':
   kernel = Kernel()

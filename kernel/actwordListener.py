@@ -29,6 +29,7 @@ class actwordListener:
     self.port = None
     self.path = '../modules/dummy/dummy.py';
     self.configToSend = {}
+    self.name = 'activation word module'
 
     # ZMQ
     self.zmqctx = zmq.Context()
@@ -106,7 +107,7 @@ class actwordListener:
       else:
         raise kernel.CommunicationError('Communication with "Activation word module" failed (no field "data" in reply)')
     elif reply['config']['state'] == 'failed':
-      raise kernel.ConfigError('"Activation word module" failed to config.')
+      raise kernel.ConfigError(self.name)
     else:
       raise kernel.CommunicationError('Communication with "Activation word module" failed (state of configuration badly defined).')
 
