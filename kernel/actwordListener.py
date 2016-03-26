@@ -100,16 +100,23 @@ class actwordListener:
     reply = self.commJSON(message)
 
     # parse the reply
-    print(reply['config'])
+    if 'config' in reply:
+      pass
+    else:
+      raise kernel.CommunicationError(self.name, 'no field "config" in the reply')
+    if 'state' in reply['config']:
+      pass
+    else:
+      raise kernel.CommunicationError(self.name, 'no field "state" in the "config" section of the reply')
     if reply['config']['state'] == 'accepted':
       if 'data' in reply:
         return reply['data']
       else:
-        raise kernel.CommunicationError('Communication with "Activation word module" failed (no field "data" in reply)')
+        raise kernel.CommunicationError(self.name, 'no field "data" in the reply')
     elif reply['config']['state'] == 'failed':
       raise kernel.ConfigError(self.name)
     else:
-      raise kernel.CommunicationError('Communication with "Activation word module" failed (state of configuration badly defined).')
+      raise kernel.CommunicationError(self.name, 'unknown value of the state of the configuration section')
 
 
   def comm(self, message):
