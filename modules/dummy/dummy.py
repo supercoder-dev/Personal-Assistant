@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 import zmq
-import time
 import sys
+import datetime
 
 class DummyModule:
   """
@@ -50,10 +50,25 @@ class DummyModule:
       # wait for request
       message = self.socket.recv_json()
 
-      # do
-      reply = self.logic(message)
+      config = message['config']
+      data = message['data']
+      timestamp = message['timestamp']
 
-      # sebd back reply
+      # save config
+      configSaved = self.saveConfig(config)
+
+      # do what is needed with the data
+      replyData = self.logic(data)
+
+      # prepare data before send
+      replyTimestamp = datetime.datetime.now().isoformat(' ')
+      reply = {'timestamp': replyTimestamp, 'data': replyData, 'config': {}}
+      if configSaved == True:
+        reply['config']['state'] = 'accepted'
+      else:
+        reply['config']['state'] = 'failed'
+
+      # send back reply
       self.socket.send_json(reply)
 
 
@@ -73,6 +88,25 @@ class DummyModule:
 
     # return result
     return message
+
+
+  def saveConfig(self, config):
+    """
+    Saves config received from the kernel.
+
+    Args:
+      config (dict): received config
+
+    Returns:
+      bool: True if config successuflly saved, False is not
+    """
+
+    # HERE SAVE YOUR CONFIG
+    print(config)
+
+    # return result
+    return True # if saved successufully
+    return False # if saving failed (unknown config, bad config, ...)
 
 
 

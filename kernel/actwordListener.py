@@ -3,6 +3,8 @@
 import zmq
 import subprocess
 import json
+import datetime
+import kernel
 
 class actwordListener:
   """
@@ -26,6 +28,7 @@ class actwordListener:
     self.maxRetries = 99
     self.port = None
     self.path = '../modules/dummy/dummy.py';
+    self.configToSend = {}
 
     # ZMQ
     self.zmqctx = zmq.Context()
@@ -75,6 +78,37 @@ class actwordListener:
     """
 
     self.process.terminate()
+
+
+  def sendReply(self, data):
+    """
+    Constructs the message from given data and sends it to the server. Waits for the reply, parse it and return received data.
+
+    Args:
+      data (dict): data to send in dictionary
+
+    Returns:
+      dict: received data
+    """
+
+    # prepare the data to send
+    timestamp = datetime.datetime.now().isoformat(' ')
+    message = {'data': data, 'config': self.configToSend, 'timestamp': timestamp}
+
+    # send
+    reply = self.commJSON(message)
+
+    # parse the reply
+    print(reply['config'])
+    if reply['config']['state'] == 'accepted':
+      if 'data' in reply:
+        return reply['data']
+      else:
+        raise kernel.CommunicationError('Communication with "Activation word module" failed (no field "data" in reply)')
+    elif reply['config']['state'] == 'failed':
+      raise kernel.ConfigError('"Activation word module" failed to config.')
+    else:
+      raise kernel.CommunicationError('Communication with "Activation word module" failed (state of configuration badly defined).')
 
 
   def comm(self, message):
