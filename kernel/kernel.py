@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import actwordListener
+import attwordListener
 
 class Kernel:
   """
@@ -16,7 +16,7 @@ class Kernel:
       None
     """
 
-    self.actwordListener = actwordListener.actwordListener('')
+    self.attwordListener = attwordListener.attwordListener('')
 
 
   def run(self):
@@ -29,11 +29,11 @@ class Kernel:
 
     try:
       # run all processes
-      self.actwordListener.start()
+      self.attwordListener.start()
 
       # do the work
       for i in range(0, 10):
-        print(self.actwordListener.sendReply({'iteration': i}))
+        print(self.attwordListener.sendReply({'iteration': i}))
 
     finally:
       # clean after all
@@ -48,7 +48,7 @@ class Kernel:
       None
     """
 
-    self.actwordListener.stop()
+    self.attwordListener.stop()
 
 
 

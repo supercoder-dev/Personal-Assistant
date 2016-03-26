@@ -6,9 +6,9 @@ import json
 import datetime
 import kernel
 
-class actwordListener:
+class attwordListener:
   """
-  Class maintaining activation word listener module.
+  Class maintaining attention word listener module.
   """
 
   def __init__(self, config):
@@ -29,7 +29,7 @@ class actwordListener:
     self.port = None
     self.path = '../modules/dummy/dummy.py';
     self.configToSend = {}
-    self.name = 'activation word module'
+    self.name = 'attention word module'
 
     # ZMQ
     self.zmqctx = zmq.Context()
