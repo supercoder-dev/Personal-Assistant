@@ -106,7 +106,7 @@ class DummyModule:
 
     # return result
     return True # if saved successufully
-    return False # if saving failed (unknown config, bad config, ...)
+    return False # if saving failed (unknown config, bad config, some config missing, ...)
 
 
 

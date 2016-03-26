@@ -8,7 +8,7 @@ import kernel
 
 class actwordListener:
   """
-  Class maintaining action word listener module.
+  Class maintaining activation word listener module.
   """
 
   def __init__(self, config):
