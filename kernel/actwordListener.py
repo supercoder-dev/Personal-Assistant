@@ -21,7 +21,10 @@ class actwordListener:
     """
 
     self.config = config
-    self.port = 5556
+    self.minPort = 5000
+    self.maxPort = 5999
+    self.maxRetries = 99
+    self.port = None
     self.path = '../modules/dummy/dummy.py';
 
     # ZMQ
@@ -36,6 +39,15 @@ class actwordListener:
     Returns:
       None
     """
+
+    # disconnect from previus socket
+    if self.port != None:
+      self.socket.disconnect('ipc://127.0.0.1:{}'.format(port))
+
+    # select free port
+    tmpSocket = self.zmqctx.socket(zmq.REP)
+    self.port = tmpSocket.bind_to_random_port('ipc://127.0.0.1', self.minPort, self.maxPort, self.maxRetries)
+    tmpSocket.unbind('ipc://127.0.0.1:{}'.format(self.port))
 
     # run the process
     self.process = subprocess.Popen([self.path, str(self.port)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
