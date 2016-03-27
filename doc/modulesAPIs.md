@@ -48,3 +48,13 @@ Field `state` is `accepted` when configuration of the module went well or `faile
       * `request`: transcripted request
       * `JSON`: transcripted request, intend and other data in a JSON format as a string
 
+## Query module ##
+  * **Request**
+    * `config`:
+      * `country`: country of the user
+      * `city`: city in which the user lives
+    * `data`:
+      * `JSON`: transcripted request, intend and other data in a JSON format as a string
+  * **Reply**
+    * `data`:
+      * `answer`: formulated answer to tell to the user
