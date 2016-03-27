@@ -11,7 +11,7 @@ All modules communicate with the kernel by strictly defined API. All modules are
         "timestamp": "2016-01-21 21:21:21"
     }
 
-Content of the fields *"data"* and *"config"* is specified in details seprately for each module. Each field can be empty if no *"data"* or *"config"* is sent.
+Content of the fields `data` and `config` is specified in details seprately for each module. Each field can be empty if no `data` or `config` is sent.
 
 ### Standard reply: module &rarr; kernel ###
     {
@@ -24,7 +24,7 @@ Content of the fields *"data"* and *"config"* is specified in details seprately 
         "timestamp": "2016-01-21 21:21:21"
     }
 
-Field *"state"* is *"accepted"* when configuration of the module went well or *"failed"* when some data is missing or wrong values are given. Content of the field *"data"* is specified for each module separately.
+Field `state` is `accepted` when configuration of the module went well or `failed` when some data is missing or wrong values are given. Content of the field `data` is specified for each module separately.
 
 ## Attention word module ##
   * **Request**
