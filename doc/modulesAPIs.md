@@ -58,3 +58,12 @@ Field `state` is `accepted` when configuration of the module went well or `faile
   * **Reply**
     * `data`:
       * `answer`: formulated answer to tell to the user
+
+## Text-to-speech module ##
+  * **Request**
+    * `config`:
+    * `data`:
+      * `answer`: formulated answer to tell to the user
+  * **Reply**
+    * `data`:
+      * `timeOfAnswer`: timestamp, when the answer was told to the user (eg. string `2016-01-01 21:21:21`)
