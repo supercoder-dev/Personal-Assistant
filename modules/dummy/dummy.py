@@ -55,10 +55,18 @@ class DummyModule:
       timestamp = message['timestamp']
 
       # save config
-      configSaved = self.saveConfig(config)
+      if bool(config):
+        configSaved = self.saveConfig(config)
+      else:
+        # no config send
+        configSaved = True
 
       # do what is needed with the data
-      replyData = self.logic(data)
+      if bool(data):
+        replyData = self.logic(data)
+      else:
+        # no data send
+        replyData = {}
 
       # prepare data before send
       replyTimestamp = datetime.datetime.now().isoformat(' ')
