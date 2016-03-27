@@ -25,3 +25,16 @@ Content of the fields *"data"* and *"config"* is specified in details seprately 
     }
 
 Field *"state"* is *"accepted"* when configuration of the module went well or *"failed"* when some data is missing or wrong values are given. Content of the field *"data"* is specified for each module separately.
+
+## Attention word module ##
+  * **Request**
+    * `config`:
+      * `attentionWord`: string, phrase that wake up the system
+      * `threshold`:
+    * `data`:
+      * `action`: string `listen` to start listening for the attention word
+  * **Reply**
+    * `data`:
+      * `timeOfActivation`: timestamp, when the attention word was heard and recognized (eg. string `2016-01-01 21:21:21`)
+
+
