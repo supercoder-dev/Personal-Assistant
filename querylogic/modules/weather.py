@@ -52,8 +52,12 @@ class Weather:
         return data
 
     #get_simplesentence returns the answer string, currently very simple
-    def get_simplesentence(self,answer,intent):
-        return 'The ' + str(intent) + str(answer)
+    def get_simplesentence(self,answer,subject):
+        return 'The ' + str(subject) + str(answer) + '.'
+
+    #again, very simple sentence
+    def get_typeofprecipsentence(self,answer,verb):
+        return 'It is ' + str(answer) + 'ing' + 'outside.'
 
     def answersentence_add_location(self,answersentence,location):
         return answersentence+' in ' + location
@@ -150,6 +154,16 @@ class Weather:
         else:
             answer=data[timeperiod]['data'][0]['pressure']
             return self.get_simplesentence(answer,'pressure will be ')
+
+    def get_snow(self, data,timeperiod='currently'):
+        if(timeperiod=='currently'):
+            if('precipType' in data[timeperiod]['data'][0]):
+                answer=data[timeperiod]['data'][0]['precipType']
+                self.get_typeofprecipsentence(answer,'')
+            else:
+                return 'Currently, there are no precipitations at the location.'
+        else:
+            return 'I dont know'
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
     switcher={'weather' : get_summary,
