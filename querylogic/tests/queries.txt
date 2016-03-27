@@ -1,8 +1,11 @@
 What is the weather today
-Tell me weather in paris on Saturday
 Will be weather nice this weekend in Liberec
-Forceast for Madrid
 when is the sunset in London
 Tell me the outside temperature in Paris
 wind in Brno tonight
 Sunrise tomorrow in Prague
+What lunar phase is it
+Will be the stars visible tonight
+What is the air pressure today
+What is the temperature minmium record for today
+What is the temperature maximum record for today
