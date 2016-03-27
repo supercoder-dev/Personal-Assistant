@@ -106,7 +106,7 @@ class Weather:
             return self.get_simplesentence(answer,'speed of wind will be ')
 
     def get_moonphase(self,data,timeperiod='daily'):
-        phase=double(data['daily']['data'][0]['moonPhase'])
+        phase=data['daily']['data'][0]['moonPhase']
 
         if(phase==0):
             answer='new moon'
@@ -125,7 +125,7 @@ class Weather:
         elif(phase>0.75 and phase<1):
             answer='wanning crescent'
 
-        return elf.get_simplesentence(answer,'moon phase is ')
+        return self.get_simplesentence(answer,'moon phase is ')
 
     def get_temperatureMin(self,data,timeperiod='daily'):
         answer = data[timeperiod]['data'][0]['temperatureMin']
@@ -161,16 +161,15 @@ class Weather:
               'windspeed':get_windspeed,
               'pressure':get_pressure,
               'moonphase':get_moonphase,
-              'temperatureMin':get_temperatureMin,
-              'temperatureMax':get_temperatureMax,
+              'temperaturemin':get_temperatureMin,
+              'temperaturemax':get_temperatureMax,
               'visibility':get_visibility,
               }
         
     #Called from the query logic
     def query_resolution(self, intent, query, params):
         location=''
-        
-        if (intent in self.switcher.keys()):
+        if (intent == 'weather'):
             if ('entities' in query):
                 if ('location' in query['entities']):    #If location is present in the query, take it into account
                     location=query['entities']['location'][0]['value']
@@ -181,8 +180,20 @@ class Weather:
                     data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates
             else:
                 data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates    
-            
-            answersentence=Weather.switcher[intent](self,data)
+           
+            if ('weather_type' in query['entities']):
+                if (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
+                    weather_type = query['entities']['weather_type'][0]['value']
+                    if('value_size' in query['entities']): 
+                        if (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
+                            answersentence=Weather.switcher[weather_type + query['entities']['value_size'][0]['value']](self,data)
+                    else:
+                        answersentence=Weather.switcher[weather_type](self,data)
+                else:
+                    answersentence=Weather.switcher[intent](self,data)
+
+            else:
+                answersentence=Weather.switcher[intent](self,data)
              
             if(location!=''):
                 answersentence=self.answersentence_add_location(answersentence,location)
