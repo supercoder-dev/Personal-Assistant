@@ -37,4 +37,14 @@ Field `state` is `accepted` when configuration of the module went well or `faile
     * `data`:
       * `timeOfActivation`: timestamp, when the attention word was heard and recognized (eg. string `2016-01-01 21:21:21`)
 
+## Speech-to-text module ##
+  * **Request**
+    * `config`:
+      * `dbToken`: token of the database
+    * `data`:
+      * `action`: string `listen` to start listening to the user
+  * **Reply**
+    * `data`:
+      * `request`: transcripted request
+      * `JSON`: transcripted request, intend and other data in a JSON format as a string
 
