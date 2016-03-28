@@ -2,6 +2,7 @@
 
 import attwordListener
 import speechToText
+import queryProcessor
 
 class Kernel:
   """
@@ -34,9 +35,16 @@ class Kernel:
     self.speechToTextConfig['maxPort'] = self.maxPort
     self.speechToTextConfig['maxRetries'] = self.maxRetries
 
+    # query module config
+    self.queryProcessorConfig = {'path': '../modules/dummy/dummy.py', 'country': 'Czech Republic', 'city': 'Prague'}
+    self.queryProcessorConfig['minPort'] = self.minPort
+    self.queryProcessorConfig['maxPort'] = self.maxPort
+    self.queryProcessorConfig['maxRetries'] = self.maxRetries
+
     # init wrappers
     self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
     self.speechToText = speechToText.speechToText(self.speechToTextConfig)
+    self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig)
 
 
   def run(self):
@@ -51,11 +59,13 @@ class Kernel:
       # run all processes
       self.attwordListener.start()
       self.speechToText.start()
+      self.queryProcessor.start()
 
       # do the work
       for i in range(0, 10):
         print(self.attwordListener.sendReply({'iteration': i}))
         print(self.speechToText.sendReply({'iteration': i}))
+        print(self.queryProcessor.sendReply({'iteration': i}))
 
     finally:
       # clean after all
@@ -72,6 +82,7 @@ class Kernel:
 
     self.attwordListener.stop()
     self.speechToText.stop()
+    self.queryProcessor.stop()
 
 
 
