@@ -3,6 +3,7 @@
 import attwordListener
 import speechToText
 import queryProcessor
+import textToSpeech
 
 class Kernel:
   """
@@ -41,10 +42,17 @@ class Kernel:
     self.queryProcessorConfig['maxPort'] = self.maxPort
     self.queryProcessorConfig['maxRetries'] = self.maxRetries
 
+    # text-to-speech module config
+    self.textToSpeechConfig = {'path': '../modules/dummy/dummy.py'}
+    self.textToSpeechConfig['minPort'] = self.minPort
+    self.textToSpeechConfig['maxPort'] = self.maxPort
+    self.textToSpeechConfig['maxRetries'] = self.maxRetries
+
     # init wrappers
     self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
     self.speechToText = speechToText.speechToText(self.speechToTextConfig)
     self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig)
+    self.textToSpeech = textToSpeech.textToSpeech(self.textToSpeechConfig)
 
 
   def run(self):
@@ -60,12 +68,14 @@ class Kernel:
       self.attwordListener.start()
       self.speechToText.start()
       self.queryProcessor.start()
+      self.textToSpeech.start()
 
       # do the work
       for i in range(0, 10):
         print(self.attwordListener.sendReply({'iteration': i}))
         print(self.speechToText.sendReply({'iteration': i}))
         print(self.queryProcessor.sendReply({'iteration': i}))
+        print(self.textToSpeech.sendReply({'iteration': i}))
 
     finally:
       # clean after all
@@ -83,6 +93,7 @@ class Kernel:
     self.attwordListener.stop()
     self.speechToText.stop()
     self.queryProcessor.stop()
+    self.textToSpeech.stop()
 
 
 
