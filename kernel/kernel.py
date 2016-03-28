@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import attwordListener
+import speechToText
 
 class Kernel:
   """
@@ -27,8 +28,15 @@ class Kernel:
     self.attwordConfig['maxPort'] = self.maxPort
     self.attwordConfig['maxRetries'] = self.maxRetries
 
+    # speech-to-text module config
+    self.speechToTextConfig = {'path': '../modules/dummy/dummy.py', 'dbToken': 'someToken'}
+    self.speechToTextConfig['minPort'] = self.minPort
+    self.speechToTextConfig['maxPort'] = self.maxPort
+    self.speechToTextConfig['maxRetries'] = self.maxRetries
+
     # init wrappers
     self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
+    self.speechToText = speechToText.speechToText(self.speechToTextConfig)
 
 
   def run(self):
@@ -42,10 +50,12 @@ class Kernel:
     try:
       # run all processes
       self.attwordListener.start()
+      self.speechToText.start()
 
       # do the work
       for i in range(0, 10):
         print(self.attwordListener.sendReply({'iteration': i}))
+        print(self.speechToText.sendReply({'iteration': i}))
 
     finally:
       # clean after all
@@ -61,6 +71,7 @@ class Kernel:
     """
 
     self.attwordListener.stop()
+    self.speechToText.stop()
 
 
 
