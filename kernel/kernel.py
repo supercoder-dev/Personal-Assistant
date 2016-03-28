@@ -71,11 +71,15 @@ class Kernel:
       self.textToSpeech.start()
 
       # do the work
-      for i in range(0, 10):
-        print(self.attwordListener.sendReply({'iteration': i}))
-        print(self.speechToText.sendReply({'iteration': i}))
-        print(self.queryProcessor.sendReply({'iteration': i}))
-        print(self.textToSpeech.sendReply({'iteration': i}))
+      while True:
+        activationWordTimestamp = self.attwordListener.sendReply({'action': 'listen'})['timeOfActivation']
+        print(attwordConfig)
+        intend = self.speechToText.sendReply({'action': 'listen'})['JSON']
+        print(intend)
+        answer = self.queryProcessor.sendReply({'JSON': intend})['answer']
+        print(answer)
+        answerTimestamp = self.textToSpeech.sendReply({'answer': answer})['timeOfAnswer']
+        print(answerTimestamp)
 
     finally:
       # clean after all
