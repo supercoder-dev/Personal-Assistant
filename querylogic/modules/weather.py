@@ -52,8 +52,12 @@ class Weather:
         return data
 
     #get_simplesentence returns the answer string, currently very simple
-    def get_simplesentence(self,answer,intent):
-        return 'The ' + str(intent) + str(answer)
+    def get_simplesentence(self,answer,subject):
+        return 'The ' + str(subject) + str(answer) + '.'
+
+    #again, very simple sentence
+    def get_typeofprecipsentence(self,answer,verb):
+        return 'It is ' + str(answer) + 'ing' + 'outside.'
 
     def answersentence_add_location(self,answersentence,location):
         return answersentence+' in ' + location
@@ -74,16 +78,16 @@ class Weather:
             return self.get_simplesentence(answer,'temperature will be ')  
        
     def get_sunrise(self,data,timeperiod='daily'):
-        time=convert_time(data[timeperiod]['data'][0]['sunriseTime']) 
+        time=self.convert_time(data[timeperiod]['data'][0]['sunriseTime']) 
         return self.get_simplesentence(time,'time of sunrise is ')  
 
     def get_sunset(self,data,timeperiod='daily'):
-        time=convert_time(data[timeperiod]['data'][0]['sunsetTime'])
+        time=self.convert_time(data[timeperiod]['data'][0]['sunsetTime'])
         return self.get_simplesentence(time,'time of sunset is ')
     
     def get_precip_intensity(self,data,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data']['precipIntensity']
+            answer=data[timeperiod]['data'][0]['precipIntensity']
             return self.get_simplesentence(answer,'intensity of the precipations is ')
         else:
             answer=data[timeperiod]['data'][0]['precipIntensity']
@@ -91,7 +95,7 @@ class Weather:
 
     def get_humidity(self,data,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data']['humidity']
+            answer=data[timeperiod]['data'][0]['humidity']
             return self.get_simplesentence(answer,'humidity is ')
         else:
             answer=data[timeperiod]['data'][0]['humidity']
@@ -106,7 +110,7 @@ class Weather:
             return self.get_simplesentence(answer,'speed of wind will be ')
 
     def get_moonphase(self,data,timeperiod='daily'):
-        phase=double(data['daily']['data'][0]['moonPhase'])
+        phase=data['daily']['data'][0]['moonPhase']
 
         if(phase==0):
             answer='new moon'
@@ -125,7 +129,7 @@ class Weather:
         elif(phase>0.75 and phase<1):
             answer='wanning crescent'
 
-        return elf.get_simplesentence(answer,'moon phase is ')
+        return self.get_simplesentence(answer,'moon phase is ')
 
     def get_temperatureMin(self,data,timeperiod='daily'):
         answer = data[timeperiod]['data'][0]['temperatureMin']
@@ -150,6 +154,16 @@ class Weather:
         else:
             answer=data[timeperiod]['data'][0]['pressure']
             return self.get_simplesentence(answer,'pressure will be ')
+
+    def get_snow(self, data,timeperiod='currently'):
+        if(timeperiod=='currently'):
+            if('precipType' in data[timeperiod]['data'][0]):
+                answer=data[timeperiod]['data'][0]['precipType']
+                self.get_typeofprecipsentence(answer,'')
+            else:
+                return 'Currently, there are no precipitations at the location.'
+        else:
+            return 'I dont know'
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
     switcher={'weather' : get_summary,
@@ -161,19 +175,18 @@ class Weather:
               'windspeed':get_windspeed,
               'pressure':get_pressure,
               'moonphase':get_moonphase,
-              'temperatureMin':get_temperatureMin,
-              'temperatureMax':get_temperatureMax,
+              'temperaturemin':get_temperatureMin,
+              'temperaturemax':get_temperatureMax,
               'visibility':get_visibility,
               }
         
     #Called from the query logic
     def query_resolution(self, intent, query, params):
         location=''
-        
-        if (intent in self.switcher.keys()):
+        if (intent == 'weather'):
             if ('entities' in query):
                 if ('location' in query['entities']):    #If location is present in the query, take it into account
-                    location=query['entities']['location']['value']
+                    location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
                     
                     data=self.call_weather_api(coordinates.latitude,coordinates.longitude)
@@ -181,8 +194,20 @@ class Weather:
                     data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates
             else:
                 data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates    
-            
-            answersentence=Weather.switcher[intent](self,data)
+           
+            if ('weather_type' in query['entities']):
+                if (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
+                    weather_type = query['entities']['weather_type'][0]['value']
+                    if('value_size' in query['entities']): 
+                        if (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
+                            answersentence=Weather.switcher[weather_type + query['entities']['value_size'][0]['value']](self,data)
+                    else:
+                        answersentence=Weather.switcher[weather_type](self,data)
+                else:
+                    answersentence=Weather.switcher[intent](self,data)
+
+            else:
+                answersentence=Weather.switcher[intent](self,data)
              
             if(location!=''):
                 answersentence=self.answersentence_add_location(answersentence,location)

@@ -7,52 +7,94 @@ At init, the currently present modules are loaded and initialized bz the info fr
 
 """
 
+import zmq
+import sys
+import datetime
 import os
-import yaml
 import json
 
 class Query_control:
 
-    def __init__(self):
+    def __init__(self,port):
+        self.port = port
+        self.zmqctx = zmq.Context()
+        
         currentDir=os.path.dirname(os.path.abspath(__file__))
         moduleNames=os.listdir(os.path.join(currentDir,'modules'))
         moduleNames=['modules.' + s for s in moduleNames]
 
         moduleNames = [ name for name in moduleNames if not name.startswith('modules.__') ]
         self.modules=[]
+
+        self.runServer()
         
         for i in range(0,len(moduleNames)):
             moduleNames[i]=moduleNames[i][:-3]
             self.modules.append(__import__(moduleNames[i], fromlist=['']))
-            
-        config = yaml.safe_load(open('config.yml'))
-
-        self.args={}
-        self.args['name'] = config['user']['name']
-        self.args['mail']=config['user']['mail']
-        self.args['town']=config['location']['town']
-        self.args['country']=config['location']['country']
         
         self.moduleInst=[]
         
         for module in self.modules:
-            initModule=module.init_hook(self.args)
+            initModule=module.init_hook(self.config)
             if(initModule!='Error'):
                 self.moduleInst.append(initModule)
 
-    def query_request(self, query):
+    def runServer(self):
+        self.socket = self.zmqctx.socket(zmq.REP)
+        self.socket.bind('ipc://127.0.0.1:{}'.format(self.port))
+    
+    def logic(self, query):
         #jsonData = query.split("(")[1].strip(")")
-        jsonData=query
-        parsedQuery=json.loads(jsonData)
-
+        #jsonData = query.replace('[','').replace(']','')
+        parsedQuery=json.loads(query)['outcomes'][0]          
+		
         try:
+            print(parsedQuery['_text'])
             intent=parsedQuery['intent']
         except:
             return 'malformed json'
         
         for module in self.moduleInst:
-            answer=module.query_resolution(intent, parsedQuery, self.args)
+            answer=module.query_resolution(intent, parsedQuery, self.config)
             if(answer!='query not recognised'):
                 return answer
 
         return answer
+
+    def saveConfig(self, config):
+        self.config=config
+        # return result
+        return True # if saved successufully
+        return False # if saving failed (unknown config, bad config, some config missing, ...)
+
+    def listen(self):
+        while True:
+          # wait for request
+          message = self.socket.recv_json()
+
+          config = message['config']
+          data = message['data']
+          timestamp = message['timestamp']
+
+          # save config
+          configSaved = self.saveConfig(config)
+
+          # do what is needed with the data
+          replyData = self.logic(data)
+
+          # prepare data before send
+          replyTimestamp = datetime.datetime.now().isoformat(' ')
+          reply = {'timestamp': replyTimestamp, 'data': replyData, 'config': {}}
+          if configSaved == True:
+            reply['config']['state'] = 'accepted'
+          else:
+            reply['config']['state'] = 'failed'
+
+          # send back reply
+          self.socket.send_json(reply)
+      
+if __name__ == '__main__':
+    port = sys.argv[1]
+    port = int(port)
+    qc = Query_control(port)
+    qc.listen()
