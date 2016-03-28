@@ -16,7 +16,19 @@ class Kernel:
       None
     """
 
-    self.attwordListener = attwordListener.attwordListener('')
+    # global config
+    self.minPort = 5000
+    self.maxPort = 5999
+    self.maxRetries = 99
+
+    # attention word module config
+    self.attwordConfig = {'path': '../modules/dummy/dummy.py', 'attentionWord': 'Fenix', 'threshold': 1}
+    self.attwordConfig['minPort'] = self.minPort
+    self.attwordConfig['maxPort'] = self.maxPort
+    self.attwordConfig['maxRetries'] = self.maxRetries
+
+    # init wrappers
+    self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
 
 
   def run(self):

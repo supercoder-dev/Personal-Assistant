@@ -16,19 +16,19 @@ class attwordListener:
     Constuctor of the class.
 
     Args:
-      config (json): config of the module
+      config (dict): config of the module
 
     Returns:
       None
     """
 
     self.config = config
-    self.minPort = 5000
-    self.maxPort = 5999
-    self.maxRetries = 99
+    self.minPort = config['minPort']
+    self.maxPort = config['maxPort']
+    self.maxRetries = config['maxRetries']
     self.port = None
-    self.path = '../modules/dummy/dummy.py';
-    self.configToSend = {}
+    self.path = config['path']
+    self.configToSend = {'attentionWord': config['attentionWord'], 'threshold': config['threshold']}
     self.name = 'attention word module'
 
     # ZMQ
