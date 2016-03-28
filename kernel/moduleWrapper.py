@@ -4,7 +4,7 @@ import zmq
 import subprocess
 import json
 import datetime
-import kernel
+import kernelErrors
 
 class moduleWrapper:
   """
@@ -103,20 +103,20 @@ class moduleWrapper:
     if 'config' in reply:
       pass
     else:
-      raise kernel.CommunicationError(self.name, 'no field "config" in the reply')
+      raise kernelErrors.CommunicationError(self.name, 'no field "config" in the reply')
     if 'state' in reply['config']:
       pass
     else:
-      raise kernel.CommunicationError(self.name, 'no field "state" in the "config" section of the reply')
+      raise kernelErrors.CommunicationError(self.name, 'no field "state" in the "config" section of the reply')
     if reply['config']['state'] == 'accepted':
       if 'data' in reply:
         return reply['data']
       else:
-        raise kernel.CommunicationError(self.name, 'no field "data" in the reply')
+        raise kernelErrors.CommunicationError(self.name, 'no field "data" in the reply')
     elif reply['config']['state'] == 'failed':
-      raise kernel.ConfigError(self.name)
+      raise kernelErrors.ConfigError(self.name)
     else:
-      raise kernel.CommunicationError(self.name, 'unknown value of the state of the configuration section')
+      raise kernelErrors.CommunicationError(self.name, 'unknown value of the state of the configuration section')
 
 
   def comm(self, message):
