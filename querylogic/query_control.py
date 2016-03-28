@@ -35,15 +35,14 @@ class Query_control:
         self.moduleInst=[]
         
         for module in self.modules:
-            initModule=module.init_hook(self.config)
-            if(initModule!='Error'):
-                self.moduleInst.append(initModule)
+            initModule=module.init_hook()
+            self.moduleInst.append(initModule)
 
     def runServer(self):
         self.socket = self.zmqctx.socket(zmq.REP)
         self.socket.bind('ipc://127.0.0.1:{}'.format(self.port))
     
-    def logic(self, query):
+    def application(self, query):
         #jsonData = query.split("(")[1].strip(")")
         #jsonData = query.replace('[','').replace(']','')
         parsedQuery=json.loads(query)['outcomes'][0]          
@@ -72,15 +71,14 @@ class Query_control:
           # wait for request
           message = self.socket.recv_json()
 
-          config = message['config']
+          #self.config = message['config']
           data = message['data']
-          timestamp = message['timestamp']
 
           # save config
           configSaved = self.saveConfig(config)
 
           # do what is needed with the data
-          replyData = self.logic(data)
+          replyData = self.application(data)
 
           # prepare data before send
           replyTimestamp = datetime.datetime.now().isoformat(' ')

@@ -22,14 +22,9 @@ def getLocation(place):
     return location
 
 #init_hook initializes the class Weather
-def init_hook(args):
-    if ('town' in args):
-        location=getLocation(args['town'])
+def init_hook():
         weather=Weather()
-        weather.set_init_parameters(location.latitude,location.longitude)
         return weather
-    else:
-        return 'Error'
 
 class Weather:
 
@@ -38,8 +33,12 @@ class Weather:
         self.latitude=latitude
         self.longitude=longitude
 
-    def call_weather_api(self, latitude, longitude):
-        request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude))
+    def call_weather_api(self, latitude, longitude, time='now'):
+        if (time!='now'):
+            request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude) + '?units=si')
+        else:
+            request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude) + ',' + str(time) + '?units=si')
+            
         print('calledWeather api')
             
         try:
@@ -164,6 +163,21 @@ class Weather:
                 return 'Currently, there are no precipitations at the location.'
         else:
             return 'I dont know'
+
+    def call_switcher(self, key, data):
+        try:
+            answer=Weather.switcher[key](self,data)
+        except:
+            try:
+                answer=Weather.switcher[key](self,data,hourly)
+            except:
+                try:
+                    answer=Weather.switcher[key](self,data,daily)
+                except:
+                    answer='I could not receive the information'
+
+        return answer
+        
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
     switcher={'weather' : get_summary,
@@ -182,32 +196,42 @@ class Weather:
         
     #Called from the query logic
     def query_resolution(self, intent, query, params):
+        if ('city' in params):
+            location=getLocation(params['city'])
+            self.set_init_parameters(location.latitude,location.longitude)
+    
         location=''
+        time='now'
+        
         if (intent == 'weather'):
             if ('entities' in query):
+                if('datetime' in query['entities']):
+                    if('value' in query['entities']['datetime']):
+                        if('from' in query['entities']['datetime']['value']):
+                            time=query['entities']['datetime']['value']['from']
+                
                 if ('location' in query['entities']):    #If location is present in the query, take it into account
                     location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
                     
-                    data=self.call_weather_api(coordinates.latitude,coordinates.longitude)
+                    data=self.call_weather_api(coordinates.latitude,coordinates.longitude,time)
                 else:
-                    data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates
+                    data=self.call_weather_api(self.latitude,self.longitude,time)    #Use the default coordinates
             else:
-                data=self.call_weather_api(self.latitude,self.longitude)    #Use the default coordinates    
+                data=self.call_weather_api(self.latitude,self.longitude,time)    #Use the default coordinates    
            
             if ('weather_type' in query['entities']):
                 if (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
                     weather_type = query['entities']['weather_type'][0]['value']
                     if('value_size' in query['entities']): 
                         if (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
-                            answersentence=Weather.switcher[weather_type + query['entities']['value_size'][0]['value']](self,data)
+                            answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data)
                     else:
-                        answersentence=Weather.switcher[weather_type](self,data)
+                        answersentence=Weather.call_switcher(self,weather_type,data)
                 else:
-                    answersentence=Weather.switcher[intent](self,data)
-
+                    answersentence=Weather.call_switcher(self,intent,data)
             else:
-                answersentence=Weather.switcher[intent](self,data)
+                answersentence=Weather.call_switcher(self,intent,data)
              
             if(location!=''):
                 answersentence=self.answersentence_add_location(answersentence,location)
