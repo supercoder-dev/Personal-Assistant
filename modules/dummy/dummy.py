@@ -63,7 +63,7 @@ class DummyModule:
 
       # do what is needed with the data
       if bool(data):
-        replyData = self.logic(data)
+        replyData = self.application(data)
       else:
         # no data send
         replyData = {}
@@ -80,15 +80,15 @@ class DummyModule:
       self.socket.send_json(reply)
 
 
-  def logic(self, message):
+  def application(self, message):
     """
-    Main logic of the module.
+    Main application logic of the module.
 
     Args:
-      message (JSON): received data in JSON format
+      message (dict): received data as a dictionary
 
     Returns:
-      JSON: data to send back in JSON format
+      dict: data to send back as dictionary
     """
 
     # HERE GOES YOUR CODE
