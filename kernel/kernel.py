@@ -5,6 +5,7 @@ import speechToText
 import queryProcessor
 import textToSpeech
 import os
+import yaml
 
 class Kernel:
   """
@@ -20,45 +21,44 @@ class Kernel:
       None
     """
 
-    # global config
-    self.minPort = 5000
-    self.maxPort = 5999
-    self.maxRetries = 99
-    self.configFileName = os.path.abspath(__file__)
-
-    # attention word module config
-    self.attwordConfig = {'path': '../modules/dummy/dummy.py', 'attentionWord': 'Fenix', 'threshold': 1}
-    self.attwordConfig['minPort'] = self.minPort
-    self.attwordConfig['maxPort'] = self.maxPort
-    self.attwordConfig['maxRetries'] = self.maxRetries
-    self.attwordConfig['configFileName'] = self.configFileName
-
-    # speech-to-text module config
-    self.speechToTextConfig = {'path': '../modules/dummy/dummy.py', 'dbToken': 'someToken'}
-    self.speechToTextConfig['minPort'] = self.minPort
-    self.speechToTextConfig['maxPort'] = self.maxPort
-    self.speechToTextConfig['maxRetries'] = self.maxRetries
-    self.speechToTextConfig['configFileName'] = self.configFileName
-
-    # query module config
-    self.queryProcessorConfig = {'path': '../modules/dummy/dummy.py', 'country': 'Czech Republic', 'city': 'Prague'}
-    self.queryProcessorConfig['minPort'] = self.minPort
-    self.queryProcessorConfig['maxPort'] = self.maxPort
-    self.queryProcessorConfig['maxRetries'] = self.maxRetries
-    self.queryProcessorConfig['configFileName'] = self.configFileName
-
-    # text-to-speech module config
-    self.textToSpeechConfig = {'path': '../modules/dummy/dummy.py'}
-    self.textToSpeechConfig['minPort'] = self.minPort
-    self.textToSpeechConfig['maxPort'] = self.maxPort
-    self.textToSpeechConfig['maxRetries'] = self.maxRetries
-    self.textToSpeechConfig['configFileName'] = self.configFileName
+    # load default config
+    self.loadConfig('defaultConfig.yml')
 
     # init wrappers
     self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
     self.speechToText = speechToText.speechToText(self.speechToTextConfig)
     self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig)
     self.textToSpeech = textToSpeech.textToSpeech(self.textToSpeechConfig)
+
+
+  def loadConfig(self, path):
+    """
+    Loads config from the given path.
+
+    Args:
+      path (str): path to the config file
+
+    Returns:
+      None
+    """
+
+    configFileName = os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
+
+    with open(configFileName, 'r') as ymlfile:
+      cfg = yaml.load(ymlfile)
+
+    self.globalConfig = cfg['global']
+    self.attwordConfig = cfg['attword']
+    self.speechToTextConfig = cfg['speechToText']
+    self.queryProcessorConfig = cfg['queryProcessor']
+    self.textToSpeechConfig = cfg['textToSpeech']
+
+    self.globalConfig['configFileName'] = configFileName
+
+    self.attwordConfig.update(self.globalConfig)
+    self.speechToTextConfig.update(self.globalConfig)
+    self.queryProcessorConfig.update(self.globalConfig)
+    self.textToSpeechConfig.update(self.globalConfig)
 
 
   def run(self):
