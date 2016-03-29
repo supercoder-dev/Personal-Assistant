@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 
 import attwordListener
+import speechToText
+import queryProcessor
+import textToSpeech
+import os
+import yaml
 
 class Kernel:
   """
@@ -16,7 +21,44 @@ class Kernel:
       None
     """
 
-    self.attwordListener = attwordListener.attwordListener('')
+    # load default config
+    self.loadConfig('defaultConfig.yml')
+
+    # init wrappers
+    self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
+    self.speechToText = speechToText.speechToText(self.speechToTextConfig)
+    self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig)
+    self.textToSpeech = textToSpeech.textToSpeech(self.textToSpeechConfig)
+
+
+  def loadConfig(self, path):
+    """
+    Loads config from the given path.
+
+    Args:
+      path (str): path to the config file
+
+    Returns:
+      None
+    """
+
+    configFileName = os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
+
+    with open(configFileName, 'r') as ymlfile:
+      cfg = yaml.load(ymlfile)
+
+    self.globalConfig = cfg['global']
+    self.attwordConfig = cfg['attword']
+    self.speechToTextConfig = cfg['speechToText']
+    self.queryProcessorConfig = cfg['queryProcessor']
+    self.textToSpeechConfig = cfg['textToSpeech']
+
+    self.globalConfig['configFileName'] = configFileName
+
+    self.attwordConfig.update(self.globalConfig)
+    self.speechToTextConfig.update(self.globalConfig)
+    self.queryProcessorConfig.update(self.globalConfig)
+    self.textToSpeechConfig.update(self.globalConfig)
 
 
   def run(self):
@@ -30,10 +72,20 @@ class Kernel:
     try:
       # run all processes
       self.attwordListener.start()
+      self.speechToText.start()
+      self.queryProcessor.start()
+      self.textToSpeech.start()
 
       # do the work
-      for i in range(0, 10):
-        print(self.attwordListener.sendReply({'iteration': i}))
+      while True:
+        activationWordTimestamp = self.attwordListener.sendReply({'action': 'listen'})['timeOfActivation']
+        print(attwordConfig)
+        intend = self.speechToText.sendReply({'action': 'listen'})['JSON']
+        print(intend)
+        answer = self.queryProcessor.sendReply({'JSON': intend})['answer']
+        print(answer)
+        answerTimestamp = self.textToSpeech.sendReply({'answer': answer})['timeOfAnswer']
+        print(answerTimestamp)
 
     finally:
       # clean after all
@@ -49,68 +101,9 @@ class Kernel:
     """
 
     self.attwordListener.stop()
-
-
-
-class ConfigError(Exception):
-  """
-  Exception class handling module configuration error.
-  """
-
-  def __init__(self, module):
-    """
-    Init of the exception.
-
-    Args:
-      module (str): name of module failed to config
-
-    Returns:
-      None
-    """
-
-    self.module = module
-  
-  def __str__(self):
-    """
-    Converts exception to a string.
-
-    Returns:
-      str: string representation of the exception
-    """
-
-    return 'Module "' + self.module  + '" failed to config.'
-
-
-
-class CommunicationError(Exception):
-  """
-  Exception class handling communication error with the module.
-  """
-
-  def __init__(self, module, message):
-    """
-    Init of the exception.
-
-    Args:
-      module (str): name of module failed to communicate to
-      message (str): description of the problem
-
-    Returns:
-      None
-    """
-
-    self.module = module
-    self.message = message
-  
-  def __str__(self):
-    """
-    Converts exception to a string.
-
-    Returns:
-      str: string representation of the exception
-    """
-
-    return 'Communication failed with the module "' + self.module  + '" (' + self.message + ').'
+    self.speechToText.stop()
+    self.queryProcessor.stop()
+    self.textToSpeech.stop()
 
 
 

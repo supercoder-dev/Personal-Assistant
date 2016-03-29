@@ -1,0 +1,30 @@
+# Default configuration file
+#
+# All paths are absolute or relative to this file
+
+# global config
+global:
+  minPort: 5000
+  maxPort: 5999
+  maxRetries: 99
+
+# attention word module config
+attword:
+  path: ../modules/dummy/dummy.py
+  attentionWord: Fenix
+  threshold: 1
+
+# speech-to-text module config
+speechToText:
+  path: ../modules/dummy/dummy.py
+  dbToken: someToken
+
+# query module config
+queryProcessor:
+  path: ../modules/dummy/dummy.py
+  country: Czech Republic
+  city: Prague
+
+# text-to-speech module config
+textToSpeech:
+  path: ../modules/dummy/dummy.py
