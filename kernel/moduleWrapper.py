@@ -5,6 +5,7 @@ import subprocess
 import json
 import datetime
 import kernelErrors
+import os
 
 class moduleWrapper:
   """
@@ -27,7 +28,7 @@ class moduleWrapper:
     self.maxPort = config['maxPort']
     self.maxRetries = config['maxRetries']
     self.port = None
-    self.path = config['path']
+    self.path = os.path.normpath(os.path.join(os.path.dirname(config['configFileName']), config['path']))
     self.configToSend = {}
     self.name = 'module wrapper (name not set)'
 

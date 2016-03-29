@@ -4,6 +4,7 @@ import attwordListener
 import speechToText
 import queryProcessor
 import textToSpeech
+import os
 
 class Kernel:
   """
@@ -23,30 +24,35 @@ class Kernel:
     self.minPort = 5000
     self.maxPort = 5999
     self.maxRetries = 99
+    self.configFileName = os.path.abspath(__file__)
 
     # attention word module config
     self.attwordConfig = {'path': '../modules/dummy/dummy.py', 'attentionWord': 'Fenix', 'threshold': 1}
     self.attwordConfig['minPort'] = self.minPort
     self.attwordConfig['maxPort'] = self.maxPort
     self.attwordConfig['maxRetries'] = self.maxRetries
+    self.attwordConfig['configFileName'] = self.configFileName
 
     # speech-to-text module config
     self.speechToTextConfig = {'path': '../modules/dummy/dummy.py', 'dbToken': 'someToken'}
     self.speechToTextConfig['minPort'] = self.minPort
     self.speechToTextConfig['maxPort'] = self.maxPort
     self.speechToTextConfig['maxRetries'] = self.maxRetries
+    self.speechToTextConfig['configFileName'] = self.configFileName
 
     # query module config
     self.queryProcessorConfig = {'path': '../modules/dummy/dummy.py', 'country': 'Czech Republic', 'city': 'Prague'}
     self.queryProcessorConfig['minPort'] = self.minPort
     self.queryProcessorConfig['maxPort'] = self.maxPort
     self.queryProcessorConfig['maxRetries'] = self.maxRetries
+    self.queryProcessorConfig['configFileName'] = self.configFileName
 
     # text-to-speech module config
     self.textToSpeechConfig = {'path': '../modules/dummy/dummy.py'}
     self.textToSpeechConfig['minPort'] = self.minPort
     self.textToSpeechConfig['maxPort'] = self.maxPort
     self.textToSpeechConfig['maxRetries'] = self.maxRetries
+    self.textToSpeechConfig['configFileName'] = self.configFileName
 
     # init wrappers
     self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
