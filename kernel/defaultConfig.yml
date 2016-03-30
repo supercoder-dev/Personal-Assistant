@@ -10,7 +10,7 @@ global:
 
 # attention word module config
 attword:
-  path: ../modules/dummy/dummy.py
+  path: ../modules/attentionWord/pocketSphinx/attentionWord.py
   attentionWord: Fenix
   threshold: 1
 
