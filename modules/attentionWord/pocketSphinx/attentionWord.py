@@ -90,11 +90,11 @@ class DummyModule:
     """
 
     # start Decoder
-    decoder = Decoder(config)
+    decoder = Decoder(self.config)
     decoder.start_utt()
 
     while True:
-        buf = stream.read(1024)
+        buf = self.stream.read(1024)
         if buf:
              decoder.process_raw(buf, False, False)
         else:
@@ -122,18 +122,18 @@ class DummyModule:
     attentionWord = config['attentionWord']
     threshold = config['threshold']
 
-    if bool(attentionWord) && bool(threshold):
+    if bool(attentionWord) and bool(threshold):
         # Create a decoder with certain model
-        config = Decoder.default_config()
-        config.set_string('-hmm', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/en-us')
-        config.set_string('-dict', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/cmudict-en-us.dict')
-        config.set_string('-keyphrase', attentionWord)
-        config.set_float('-kws_threshold', threshold)
+        self.config = Decoder.default_config()
+        self.config.set_string('-hmm', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/en-us')
+        self.config.set_string('-dict', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/cmudict-en-us.dict')
+        self.config.set_string('-keyphrase', attentionWord)
+        self.config.set_float('-kws_threshold', threshold)
 
         # prepare microphone using PyAudio
         p = pyaudio.PyAudio()
-        stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
-        stream.start_stream()
+        self.stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
+        self.stream.start_stream()
         return True
     else: 
         return False
