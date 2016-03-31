@@ -16,8 +16,8 @@ attword:
 
 # speech-to-text module config
 speechToText:
-  path: ../modules/dummy/dummy.py
-  dbToken: someToken
+  path: ../modules/speechToText/speechToText.py
+  dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
 
 # query module config
 queryProcessor:
