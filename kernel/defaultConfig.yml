@@ -11,8 +11,10 @@ global:
 # attention word module config
 attword:
   path: ../modules/attentionWord/pocketSphinx/attentionWord.py
-  attentionWord: Fenix
+  attentionWord: phoenix
   threshold: 1
+  modelPath: /usr/local/share/pocketsphinx/model/en-us/en-us
+  dictionaryPath: /usr/local/share/pocketsphinx/model/en-us/en-us/dictionary.dict
 
 # speech-to-text module config
 speechToText:

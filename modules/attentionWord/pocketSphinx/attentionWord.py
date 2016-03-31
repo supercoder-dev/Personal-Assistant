@@ -124,12 +124,14 @@ class DummyModule:
     
     attentionWord = config['attentionWord']
     threshold = config['threshold']
+    modelPath = config['modelPath']
+    dictionaryPath = config['dictionaryPath']
 
-    if bool(attentionWord) and bool(threshold) and bool():
+    if bool(attentionWord) and bool(threshold) and bool(modelPath) and bool(dictionaryPath):
         # Create a decoder with certain model
         self.config = Decoder.default_config()
-        self.config.set_string('-hmm', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/en-us')
-        self.config.set_string('-dict', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/cmudict-en-us.dict')
+        self.config.set_string('-hmm', modelPath)
+        self.config.set_string('-dict', dictionaryPath)
         self.config.set_string('-keyphrase', attentionWord)
         self.config.set_float('-kws_threshold', threshold)
 
