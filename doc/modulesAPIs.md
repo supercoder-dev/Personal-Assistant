@@ -31,6 +31,8 @@ Field `state` is `accepted` when configuration of the module went well or `faile
     * `config`:
       * `attentionWord`: string, phrase that wake up the system
       * `threshold`:
+      * `modelPath`: path to the PocketSphinx model
+      * `dictionaryPath`: path to the PocketSphinx dictonary
     * `data`:
       * `action`: string `listen` to start listening for the attention word
   * **Reply**
