@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "ARTACK/debian-jessie"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--usb", "off"]
+    vb.customize ["modifyvm", :id, "--usbehci", "off"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on", "--audio", "alsa", "--audiocontroller", "ac97"]
+  end
+
+  config.vm.provision :ansible do |ansible|
+    ansible.playbook = "ansible/deploy.yml"
+  end
+
+  #config.vm.provision "shell", inline: <<-SHELL
+  #   sudo apt-get update
+  #   sudo apt-get install -y apache2
+  #  sudo apt-get update
+  #  sudo apt-get upgrade -y
+  #  sudo apt-get install -y g++ build-essential vim
+  #SHELL
+end

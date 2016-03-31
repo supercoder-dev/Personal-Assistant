@@ -1,0 +1,52 @@
+- hosts: all
+  become: yes
+  tasks:
+  - name: apt upgrade
+  #  apt: upgrade=dist update_cache=yes
+    apt: update_cache=yes
+
+  - name: install basic system packages
+    apt: name={{item}} state=present
+    with_items:
+    - htop
+    - vim
+    - git
+    - python3
+    - python3-pip
+
+
+  - name: install alsa audio drivers
+    apt: name={{item}} state=present
+    with_items:
+    - alsa-base
+    - alsa-utils
+    - alsa-oss
+    #- alsamixergui
+    #- alsaplayer-gtk
+    - alsaplayer-common
+    - alsaplayer-oss
+    #- snd-gtk-jack 
+
+  - name: init alsa audio 2>/dev/null
+    command: alsactl init
+    ignore_errors: True
+    changed_when: False
+
+  - name: set output volume
+    command: amixer set Master 100%
+    changed_when: False
+
+  - name: clone repo
+    git: repo=https://github.com/brmson/Personal-Assistant.git dest=/home/vagrant/Personal-Assistant version=attwordModule force=yes depth=5
+
+  - name: install (via pip3) required python libraries for kernel
+    pip: requirements=/home/vagrant/Personal-Assistant/kernel/requirements.txt executable=pip3
+
+  - name: install (via apt) required python libraries for attention word module (PocketSphinx)
+    apt: name={{item}} state=present
+    with_items:
+    - python3-pyaudio
+    - swig
+    
+  - name: install (via pip3) required python libraries for attention word module (PocketSphinx)
+    pip: requirements=/home/vagrant/Personal-Assistant/modules/attentionWord/pocketSphinx/requirements.txt executable=pip3
