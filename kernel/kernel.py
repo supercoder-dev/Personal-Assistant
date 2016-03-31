@@ -79,7 +79,7 @@ class Kernel:
       # do the work
       while True:
         activationWordTimestamp = self.attwordListener.sendReply({'action': 'listen'})['timeOfActivation']
-        print(attwordConfig)
+        print(activationWordTimestamp)
         intend = self.speechToText.sendReply({'action': 'listen'})['JSON']
         print(intend)
         answer = self.queryProcessor.sendReply({'JSON': intend})['answer']
