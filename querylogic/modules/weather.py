@@ -14,6 +14,7 @@ from urllib.request import Request, urlopen, URLError
 from geopy.geocoders import Nominatim
 import json
 import datetime
+import time as tm
     
 
 def getLocation(place):
@@ -34,7 +35,7 @@ class Weather:
         self.longitude=longitude
 
     def call_weather_api(self, latitude, longitude, time='now'):
-        if (time!='now'):
+        if (time=='now'):
             request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude) + '?units=si')
         else:
             request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude) + ',' + str(time) + '?units=si')
@@ -63,6 +64,11 @@ class Weather:
 
     def convert_time(self, posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
+
+    def convetrUTCtoUNIXtime(self,utctime):
+        utctime=utctime[:-6] #ignoring tme zone 
+        d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
+        return int(tm.mktime(d.timetuple()))
 
     def get_summary(self,data,timeperiod='daily'):
         answer=data[timeperiod]['data'][0]['summary']
@@ -169,10 +175,10 @@ class Weather:
             answer=Weather.switcher[key](self,data)
         except:
             try:
-                answer=Weather.switcher[key](self,data,hourly)
+                answer=Weather.switcher[key](self,data,'hourly')
             except:
                 try:
-                    answer=Weather.switcher[key](self,data,daily)
+                    answer=Weather.switcher[key](self,data,'daily')
                 except:
                     answer='I could not receive the information'
 
@@ -192,6 +198,7 @@ class Weather:
               'temperaturemin':get_temperatureMin,
               'temperaturemax':get_temperatureMax,
               'visibility':get_visibility,
+              'snow':get_snow,
               }
         
     #Called from the query logic
@@ -206,9 +213,8 @@ class Weather:
         if (intent == 'weather'):
             if ('entities' in query):
                 if('datetime' in query['entities']):
-                    if('value' in query['entities']['datetime']):
-                        if('from' in query['entities']['datetime']['value']):
-                            time=query['entities']['datetime']['value']['from']
+                    if('interval' in query['entities']['datetime'][0]['type']):
+                        time=self.convetrUTCtoUNIXtime(query['entities']['datetime'][0]['from']['value'])
                 
                 if ('location' in query['entities']):    #If location is present in the query, take it into account
                     location=query['entities']['location'][0]['value']

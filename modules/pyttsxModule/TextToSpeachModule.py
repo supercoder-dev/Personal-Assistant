@@ -1,38 +1,33 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 import zmq
 import sys
 import datetime
-import wit
-import json
+import pyttsx
 
-
-class SpeechToTextModule:
+class TextToSpeachModule:
   """
-  SpeechToText module class, which accepts database code and returns processed data.
+  Dummy module class, which just sends back what it receives.
   """
 
   def __init__(self, port):
     """
-    Constructor of the SpeechToText class.
-
+    Constructor of the dummy class.
     Args:
       port (int): port of the server
-
     Returns:
       None
     """
 
     self.port = port
+    self.engine = pyttsx.init()
     self.zmqctx = zmq.Context()
     self.runServer()
-
 
 
   def runServer(self):
     """
     Runs the ZMQ server.
-
     Returns:
       None
     """
@@ -45,7 +40,6 @@ class SpeechToTextModule:
   def listen(self):
     """
     Listens on the port.
-
     Returns:
       None
     """
@@ -87,51 +81,67 @@ class SpeechToTextModule:
   def application(self, message):
     """
     Main application logic of the module.
-
     Args:
       message (dict): received data as a dictionary
-
     Returns:
       dict: data to send back as dictionary
     """
-    action = message['action']
-    if action == 'listen':
-        wit.init()
-        response = wit.voice_query_auto(self.access_token)
 
-        print('Response: {}'.format(response))
-        print('msg_id')
-        jresponse = json.loads(response)
-        print(jresponse["_text"])
-        wit.close()
-        data = {'response': jresponse["_text"], 'JSON': response}
 
-        # return result
-        return data
-    else:
-        return False
+    msg = message['answer']
+    self.engine.say(msg)
+    self.engine.runAndWait()
+
+    # return result
+    # return timestamp !!!
+    return msg
 
 
   def saveConfig(self, config):
     """
     Saves config received from the kernel.
-
     Args:
       config (dict): received config
-
     Returns:
       bool: True if config successuflly saved, False is not
+
+    rate = self.engine.getProperty('rate')
+    self.engine.setProperty('rate', rate+50)
+
+    rate = self.engine.getProperty('volume')
+    self.engine.setProperty('volume', rate+50)
+
+    voices = self.engine.getProperty('voices')
+    self.engine.setProperty('voice', voice.id)
+
+    voices = self.engine.getProperty('voices')
+    for voice in voices:
+        self.engine.setProperty('voice', voice.id)
+        self.engine.say('The quick brown fox jumped over the lazy dog.')
+
+
+       try:
+            #zde kod ktery se bude hlidat
+       except KeyError:
+           return False
+        return True
     """
 
-    try:
-        self.access_token = config['dbToken']
-    except KeyError:
-        return False
-    return True
+    # HERE SAVE YOUR CONFIG
+    print(config)
+
+    # return result
+    return True # if saved successufully
+    return False # if saving failed (unknown config, bad config, some config missing, ...)
+
+    """
+
+     """
+
 
 
 if __name__ == '__main__':
-    port = sys.argv[1]
-    port = int(port)
-    dm = SpeechToTextModule(port)
-    dm.listen()
+  port = sys.argv[1]
+  port = int(port)
+  dm = TextToSpeachModule(port)
+  dm.listen()
