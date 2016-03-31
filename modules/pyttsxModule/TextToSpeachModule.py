@@ -108,8 +108,8 @@ class TextToSpeachModule:
     rate = self.engine.getProperty('rate')
     self.engine.setProperty('rate', rate+50)
 
-    rate = self.engine.getProperty('rate')
-    self.engine.setProperty('rate', rate+50)
+    rate = self.engine.getProperty('volume')
+    self.engine.setProperty('volume', rate+50)
 
     voices = self.engine.getProperty('voices')
     self.engine.setProperty('voice', voice.id)
@@ -121,7 +121,7 @@ class TextToSpeachModule:
 
 
        try:
-            #zde kod
+            #zde kod ktery se bude hlidat
        except KeyError:
            return False
         return True
