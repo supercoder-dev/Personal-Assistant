@@ -13,7 +13,9 @@
     - git
     - python3
     - python3-pip
-
+    - python
+    - python-dev
+    - python-pip
 
   - name: install alsa audio drivers
     apt: name={{item}} state=present
@@ -37,7 +39,7 @@
     changed_when: False
 
   - name: clone repo
-    git: repo=https://github.com/brmson/Personal-Assistant.git dest=/home/vagrant/Personal-Assistant version=attwordModule force=yes depth=5
+    git: repo=https://github.com/brmson/Personal-Assistant.git dest=/home/vagrant/Personal-Assistant version=master force=yes depth=5
 
   - name: install (via pip3) required python libraries for kernel
     pip: requirements=/home/vagrant/Personal-Assistant/kernel/requirements.txt executable=pip3
@@ -50,3 +52,15 @@
     
   - name: install (via pip3) required python libraries for attention word module (PocketSphinx)
     pip: requirements=/home/vagrant/Personal-Assistant/modules/attentionWord/pocketSphinx/requirements.txt executable=pip3
+
+  - name: install (via apt) required python libraries for speech-to-text module (Wit.ai)
+    apt: name={{item}} state=present
+    with_items:
+    - sox
+    - libsox-dev
+    - curl
+    - libcurl4-openssl-dev
+    - libssl-dev
+
+  - name: install (via pip) required python libraries for speech-to-text module (Wit.ai)
+    pip: requirements=/home/vagrant/Personal-Assistant/modules/speechToText/requirements.txt executable=pip
