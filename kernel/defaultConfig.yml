@@ -11,7 +11,7 @@ global:
 # attention word module config
 attword:
   path: ../modules/attentionWord/pocketSphinx/attentionWord.py
-  attentionWord: Fenix
+  attentionWord: PHOENIX
   threshold: 1
 
 # speech-to-text module config

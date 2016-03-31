@@ -125,8 +125,8 @@ class DummyModule:
     if bool(attentionWord) and bool(threshold):
         # Create a decoder with certain model
         self.config = Decoder.default_config()
-        self.config.set_string('-hmm', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/en-us')
-        self.config.set_string('-dict', '/usr/local/Cellar/cmu-pocketsphinx/HEAD/share/pocketsphinx/model/en-us/cmudict-en-us.dict')
+        self.config.set_string('-hmm', '/vagrant/cmusphinx-en-us-5.2')
+        self.config.set_string('-dict', '/vagrant/cmusphinx-en-us-5.2/cmudict_SPHINX_40.dict')
         self.config.set_string('-keyphrase', attentionWord)
         self.config.set_float('-kws_threshold', threshold)
 
