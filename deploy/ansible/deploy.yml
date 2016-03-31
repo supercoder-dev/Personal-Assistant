@@ -17,6 +17,9 @@
     - python-dev
     - python-pip
 
+  - name: change root password
+    user: name=root password=$6$n8I8WiGqmbCU$ElHrLqhi9SWLLBT27UWsP0xwXQ0cz.QRsk9vq.uC0y7zPXpiCzHtfcVEPlFhOFGh5wKRGhiygwyTk5qbf4YI21
+
   - name: install alsa audio drivers
     apt: name={{item}} state=present
     with_items:
