@@ -7,7 +7,7 @@ Module providing access to geopy library
 
 from geopy.geocoders import Nominatim
 
-def init_hook(args):
+def init_hook():
     return GeoLocation()
     
 class GeoLocation:

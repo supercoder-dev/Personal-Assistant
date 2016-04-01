@@ -23,7 +23,7 @@ speechToText:
 
 # query module config
 queryProcessor:
-  path: ../modules/dummy/dummy.py
+  path: ../modules/querylogic/query_control.py
   country: Czech Republic
   city: Prague
 
