@@ -68,5 +68,8 @@
   - name: install (via pip) required python libraries for speech-to-text module (Wit.ai)
     pip: requirements=/root/Personal-Assistant/modules/speechToText/requirements.txt executable=pip
 
+  - name: install (via pip3) required python libraries for query logic module
+    pip: requirements=/root/Personal-Assistant/modules/querylogic/requirements.txt executable=pip3
+
   - name: copy config file
     copy: dest=/root/Personal-Assistant/kernel/defaultConfig.yml src=files/defaultConfig.yml force=yes
