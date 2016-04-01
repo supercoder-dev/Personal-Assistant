@@ -42,9 +42,10 @@ class Query_control:
         self.socket = self.zmqctx.socket(zmq.REP)
         self.socket.bind('ipc://127.0.0.1:{}'.format(self.port))
     
-    def application(self, query):
+    def application(self, message):
         #jsonData = query.split("(")[1].strip(")")
         #jsonData = query.replace('[','').replace(']','')
+        query = message['JSON']
         parsedQuery=json.loads(query)['outcomes'][0]          
 		
         try:
@@ -71,7 +72,7 @@ class Query_control:
           # wait for request
           message = self.socket.recv_json()
 
-          #self.config = message['config']
+          config = message['config']
           data = message['data']
 
           # save config
