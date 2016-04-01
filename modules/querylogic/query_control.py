@@ -59,9 +59,9 @@ class Query_control:
         for module in self.moduleInst:
             answer=module.query_resolution(intent, parsedQuery, self.config)
             if(answer!='query not recognised'):
-                return answer
+                return {'answer': answer}
 
-        return answer
+        return {'answer': answer}
 
     def saveConfig(self, config):
         self.config=config
