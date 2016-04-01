@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """
 Date created: 12.3.2016
 Author: Jiri Burant
