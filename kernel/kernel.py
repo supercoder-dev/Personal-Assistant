@@ -25,10 +25,10 @@ class Kernel:
     self.loadConfig('defaultConfig.yml')
 
     # init wrappers
-    self.attwordListener = attwordListener.attwordListener(self.attwordConfig)
-    self.speechToText = speechToText.speechToText(self.speechToTextConfig)
-    self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig)
-    self.textToSpeech = textToSpeech.textToSpeech(self.textToSpeechConfig)
+    self.attwordListener = attwordListener.attwordListener(self.attwordConfig, 'attention word module')
+    self.speechToText = speechToText.speechToText(self.speechToTextConfig, 'speech-to-text module')
+    self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig, 'query processing module')
+    self.textToSpeech = textToSpeech.textToSpeech(self.textToSpeechConfig, 'text-to-speech module')
 
 
   def loadConfig(self, path):
@@ -59,6 +59,16 @@ class Kernel:
     self.speechToTextConfig.update(self.globalConfig)
     self.queryProcessorConfig.update(self.globalConfig)
     self.textToSpeechConfig.update(self.globalConfig)
+
+    # propage the new config into the module
+    if hasattr(self, 'attwordListener'):
+      self.attwordListener.loadConfig(self.attwordConfig)
+    if hasattr(self, 'speechToText'):
+      self.speechToText.loadConfig(self.speechToTextConfig)
+    if hasattr(self, 'queryProcessor'):
+      self.queryProcessor.loadConfig(self.queryProcessorConfig)
+    if hasattr(self, 'textToSpeech'):
+      self.textToSpeech.loadConfig(self.textToSpeechConfig)
 
 
   def run(self):

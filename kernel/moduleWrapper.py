@@ -12,9 +12,30 @@ class moduleWrapper:
   Class maintaining module.
   """
 
-  def __init__(self, config):
+  def __init__(self, config, name):
     """
     Constuctor of the class.
+
+    Args:
+      config (dict): config of the module
+      name (str): name of the module
+
+    Returns:
+      None
+    """
+
+    self.loadConfig(config)
+    self.port = None
+    self.name = name
+
+    # ZMQ
+    self.zmqctx = zmq.Context()
+    self.socket = self.zmqctx.socket(zmq.REQ)
+
+
+  def loadConfig(self, config):
+    """
+    Loads config into the module.
 
     Args:
       config (dict): config of the module
@@ -27,14 +48,27 @@ class moduleWrapper:
     self.minPort = config['minPort']
     self.maxPort = config['maxPort']
     self.maxRetries = config['maxRetries']
-    self.port = None
     self.path = os.path.normpath(os.path.join(os.path.dirname(config['configFileName']), config['path']))
-    self.configToSend = {}
-    self.name = 'module wrapper (name not set)'
+    self.prepareConfigToSend(config)
 
-    # ZMQ
-    self.zmqctx = zmq.Context()
-    self.socket = self.zmqctx.socket(zmq.REQ)
+    # send config to the process
+    if hasattr(self, 'process'):
+      self.sendReply({});
+
+
+  def prepareConfigToSend(self, config):
+    """
+    Prepares config specific for each module.
+
+    Args:
+      config (dict): config of the module
+
+    Returns:
+      None
+    """
+
+    raise NotImplementedError
+    self.configToSend = {}
 
 
   def execute(self):
@@ -59,6 +93,9 @@ class moduleWrapper:
 
     # create client
     self.socket.connect('ipc://127.0.0.1:{}'.format(self.port))
+
+    # send config to the process
+    self.sendReply({});
 
   def start(self):
     """

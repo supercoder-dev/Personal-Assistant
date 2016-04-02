@@ -78,10 +78,18 @@ class Query_control:
           data = message['data']
 
           # save config
-          configSaved = self.saveConfig(config)
+          if bool(config):
+            configSaved = self.saveConfig(config)
+          else:
+            # no config send
+            configSaved = True
 
           # do what is needed with the data
-          replyData = self.application(data)
+          if bool(data):
+            replyData = self.application(data)
+          else:
+            # no data send
+            replyData = {}
 
           # prepare data before send
           replyTimestamp = datetime.datetime.now().isoformat(' ')

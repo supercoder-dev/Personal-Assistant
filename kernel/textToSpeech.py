@@ -7,9 +7,9 @@ class textToSpeech(moduleWrapper.moduleWrapper):
   Class maintaining text-to-speech module.
   """
 
-  def __init__(self, config):
+  def prepareConfigToSend(self, config):
     """
-    Constuctor of the class.
+    Prepares config specific for each module.
 
     Args:
       config (dict): config of the module
@@ -18,8 +18,4 @@ class textToSpeech(moduleWrapper.moduleWrapper):
       None
     """
 
-    super(textToSpeech, self).__init__(config)
-
     self.configToSend = {}
-    self.name = 'text-to-speech module'
-

@@ -7,9 +7,9 @@ class queryProcessor(moduleWrapper.moduleWrapper):
   Class maintaining query module.
   """
 
-  def __init__(self, config):
+  def prepareConfigToSend(self, config):
     """
-    Constuctor of the class.
+    Prepares config specific for each module.
 
     Args:
       config (dict): config of the module
@@ -18,8 +18,4 @@ class queryProcessor(moduleWrapper.moduleWrapper):
       None
     """
 
-    super(queryProcessor, self).__init__(config)
-
     self.configToSend = {'country': config['country'], 'city': config['city']}
-    self.name = 'query processing module'
-

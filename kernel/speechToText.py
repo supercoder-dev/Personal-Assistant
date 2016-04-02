@@ -7,9 +7,9 @@ class speechToText(moduleWrapper.moduleWrapper):
   Class maintaining speech-to-text module.
   """
 
-  def __init__(self, config):
+  def prepareConfigToSend(self, config):
     """
-    Constuctor of the class.
+    Prepares config specific for each module.
 
     Args:
       config (dict): config of the module
@@ -18,8 +18,5 @@ class speechToText(moduleWrapper.moduleWrapper):
       None
     """
 
-    super(speechToText, self).__init__(config)
-
     self.configToSend = {'dbToken': config['dbToken']}
-    self.name = 'speech-to-text module'
 
