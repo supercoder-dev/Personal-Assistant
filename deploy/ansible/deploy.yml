@@ -32,9 +32,9 @@
     - alsaplayer-oss
     #- snd-gtk-jack 
 
-  - name: init alsa audio 2>/dev/null
+  - name: init alsa audio
     command: alsactl init
-    ignore_errors: True
+    failed_when: False
     changed_when: False
 
   - name: set output volume
