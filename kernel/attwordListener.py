@@ -20,6 +20,6 @@ class attwordListener(moduleWrapper.moduleWrapper):
 
     super(attwordListener, self).__init__(config)
 
-    self.configToSend = {'attentionWord': config['attentionWord'], 'threshold': config['threshold'], 'modelPath': config['modelPath'], 'dictionaryPath': config['dictionaryPath']}
+    self.configToSend = {'attentionWord': config['attentionWord'], 'threshold': float(config['threshold']), 'modelPath': config['modelPath'], 'dictionaryPath': config['dictionaryPath']}
     self.name = 'attention word module'
 
