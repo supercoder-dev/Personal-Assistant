@@ -101,6 +101,9 @@ class Kernel:
         answerTimestamp = self.textToSpeech.sendReply({'answer': answer})['timeOfAnswer']
         print('The answer has been told.')
 
+    except KeyboardInterrupt:
+      print('Ctrl-C pressed. Exiting...')
+
     finally:
       # clean after all
       self.stop()
