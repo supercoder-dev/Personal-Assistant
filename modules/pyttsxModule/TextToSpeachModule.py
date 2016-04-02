@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import zmq
 import sys
@@ -92,9 +92,10 @@ class TextToSpeachModule:
     self.engine.say(msg)
     self.engine.runAndWait()
 
-    # return result
-    # return timestamp !!!
-    return msg
+    timestamp = datetime.datetime.now().isoformat(' ')
+    result = {'timeOfAnswer': timestamp}
+
+    return result
 
 
   def saveConfig(self, config):
