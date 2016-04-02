@@ -1,0 +1,32 @@
+# Default configuration file
+#
+# All paths are absolute or relative to this file
+
+# global config
+global:
+  minPort: 5000
+  maxPort: 5999
+  maxRetries: 99
+
+# attention word module config
+attword:
+  path: ./Personal-Assistant/modules/attentionWord/pocketSphinx/attentionWord.py
+  attentionWord: phoenix
+  threshold: 1
+  modelPath: /root/PocketSphinx/en-us/
+  dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
+
+# speech-to-text module config
+speechToText:
+  path: ./Personal-Assistant/modules/speechToText/speechToText.py
+  dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
+
+# query module config
+queryProcessor:
+  path: ./Personal-Assistant/modules/querylogic/query_control.py
+  country: Czech Republic
+  city: Prague
+
+# text-to-speech module config
+textToSpeech:
+  path: ./Personal-Assistant/modules/pyttsxModule/TextToSpeachModule.py

@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "ARTACK/debian-jessie"
+
+  # config VirtualBox properties
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "Hausehold assistant"
+    vb.memory = 1024
+    vb.customize ["modifyvm", :id, "--usb", "off"]
+    vb.customize ["modifyvm", :id, "--usbehci", "off"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on", "--audio", "alsa", "--audiocontroller", "ac97"]
+    vb.customize ["modifyvm", :id, "--pae", "on"]
+  end
+
+  # disable default sunced folder
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  # provision with ansible
+  config.vm.provision :ansible do |ansible|
+    ansible.playbook = "ansible/deploy.yml"
+  end
+
+end
