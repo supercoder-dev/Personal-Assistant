@@ -18,7 +18,7 @@ class GeoLocation:
         return location
 
     def query_resolution(self, intent, query, params):
-        location=self.getLocation(params['town'])
+        location=self.getLocation(params['city'])
         
         querySwitcher = {
             'locationSelf': location,
