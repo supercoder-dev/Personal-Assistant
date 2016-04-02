@@ -10,7 +10,7 @@ global:
 
 # attention word module config
 attword:
-  path: ../modules/attentionWord/pocketSphinx/attentionWord.py
+  path: ./Personal-Assistant/modules/attentionWord/pocketSphinx/attentionWord.py
   attentionWord: phoenix
   threshold: 1
   modelPath: /root/PocketSphinx/en-us/
@@ -18,15 +18,15 @@ attword:
 
 # speech-to-text module config
 speechToText:
-  path: ../modules/speechToText/speechToText.py
+  path: ./Personal-Assistant/modules/speechToText/speechToText.py
   dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
 
 # query module config
 queryProcessor:
-  path: ../modules/querylogic/query_control.py
+  path: ./Personal-Assistant/modules/querylogic/query_control.py
   country: Czech Republic
   city: Prague
 
 # text-to-speech module config
 textToSpeech:
-  path: ../modules/pyttsxModule/TextToSpeachModule.py
+  path: ./Personal-Assistant/modules/pyttsxModule/TextToSpeachModule.py
