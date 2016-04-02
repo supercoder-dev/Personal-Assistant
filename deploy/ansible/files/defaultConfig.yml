@@ -11,10 +11,10 @@ global:
 # attention word module config
 attword:
   path: ../modules/attentionWord/pocketSphinx/attentionWord.py
-  attentionWord: PHOENIX
+  attentionWord: phoenix
   threshold: 1
-  modelPath: /vagrant/en-us/
-  dictionaryPath: /vagrant/en-us/cmudict.dict
+  modelPath: /root/PocketSphinx/en-us/
+  dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
 
 # speech-to-text module config
 speechToText:
