@@ -78,14 +78,18 @@ class Kernel:
 
       # do the work
       while True:
+        print('Listening for the attention word...')
         activationWordTimestamp = self.attwordListener.sendReply({'action': 'listen'})['timeOfActivation']
-        print(activationWordTimestamp)
-        intend = self.speechToText.sendReply({'action': 'listen'})['JSON']
-        print(intend)
-        answer = self.queryProcessor.sendReply({'JSON': intend})['answer']
-        print(answer)
+        print('Attention word spotted at {}'.format(activationWordTimestamp))
+        print('Listening for the query...')
+        sttResult = self.speechToText.sendReply({'action': 'listen'})
+        intent = sttResult['JSON']
+        query = sttResult['request']
+        print('Transcribed query: {}'.format(query))
+        answer = self.queryProcessor.sendReply({'JSON': intent})['answer']
+        print('The answer is: {}'.format(answer))
         answerTimestamp = self.textToSpeech.sendReply({'answer': answer})['timeOfAnswer']
-        print(answerTimestamp)
+        print('The answer has been told.')
 
     finally:
       # clean after all

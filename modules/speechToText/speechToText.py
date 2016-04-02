@@ -104,7 +104,7 @@ class SpeechToTextModule:
         jresponse = json.loads(response)
         print(jresponse["_text"])
         wit.close()
-        data = {'response': jresponse["_text"], 'JSON': response}
+        data = {'request': jresponse["_text"], 'JSON': response}
 
         # return result
         return data
