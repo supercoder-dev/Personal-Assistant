@@ -29,4 +29,4 @@ queryProcessor:
 
 # text-to-speech module config
 textToSpeech:
-  path: ../modules/dummy/dummy.py
+  path: ../modules/pyttsxModule/TextToSpeachModule.py
