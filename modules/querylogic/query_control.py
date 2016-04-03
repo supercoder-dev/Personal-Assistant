@@ -47,6 +47,9 @@ class Query_control:
     def application(self, message):
         #jsonData = query.split("(")[1].strip(")")
         #jsonData = query.replace('[','').replace(']','')
+
+        testMode=0;
+        
         query = message['JSON']
         parsedQuery=json.loads(query)['outcomes'][0]          
 		
@@ -55,13 +58,16 @@ class Query_control:
             intent=parsedQuery['intent']
         except:
             return 'malformed json'
-        
-        for module in self.moduleInst:
-            answer=module.query_resolution(intent, parsedQuery, self.config)
-            if(answer!='query not recognised'):
-                return {'answer': answer}
 
-        return {'answer': answer}
+        if(testMode==0):
+            for module in self.moduleInst:
+                answer=module.query_resolution(intent, parsedQuery, self.config)
+                if(answer!='query not recognised'):
+                    return {'answer': answer}
+        else:
+            return {'answer': 'Query test answer string.'}
+
+        return {'answer': 'query not recognised'}
 
     def saveConfig(self, config):
         self.config=config

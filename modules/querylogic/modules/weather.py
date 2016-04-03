@@ -25,6 +25,7 @@ def getLocation(place):
 #init_hook initializes the class Weather
 def init_hook():
         weather=Weather()
+        weather.set_init_parameters(getLocation('Prague'))
         return weather
 
 class Weather:
@@ -35,7 +36,7 @@ class Weather:
         self.longitude=longitude
 
     def call_weather_api(self, latitude, longitude, time='now'):
-        if (time=='now'):
+        if time == 'now':
             request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude) + '?units=si')
         else:
             request = Request('https://api.forecast.io/forecast/'+ self.apikey + '/' + str(latitude) +',' + str(longitude) + ',' + str(time) + '?units=si')
@@ -51,6 +52,13 @@ class Weather:
          
         return data
 
+    def calculate_time_offset(time):
+        diff = time - datetime.utcnow()
+        daysOffset = diff.TotalDays
+        hoursOffset = diff.TotalHours
+
+        return {'dOffset': daysOffset, 'hOffset': hoursOffset}
+
     #get_simplesentence returns the answer string, currently very simple
     def get_simplesentence(self,answer,subject):
         return 'The ' + str(subject) + str(answer) + '.'
@@ -59,13 +67,14 @@ class Weather:
     def get_typeofprecipsentence(self,answer,verb):
         return 'It is ' + str(answer) + 'ing' + 'outside.'
 
+    #append the info about the location to the answer.
     def answersentence_add_location(self,answersentence,location):
         return answersentence+' in ' + location
 
     def convert_time(self, posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
 
-    def convetrUTCtoUNIXtime(self,utctime):
+    def convertUTCtoUNIXtime(self,utctime):
         utctime=utctime[:-6] #ignoring tme zone 
         d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
         return int(tm.mktime(d.timetuple()))
@@ -164,12 +173,14 @@ class Weather:
         if(timeperiod=='currently'):
             if('precipType' in data[timeperiod]['data'][0]):
                 answer=data[timeperiod]['data'][0]['precipType']
-                self.get_typeofprecipsentence(answer,'')
+                return self.get_typeofprecipsentence(answer,'')
             else:
                 return 'Currently, there are no precipitations at the location.'
         else:
             return 'I dont know'
 
+    #call_switcher indexes to the dictionary with key, calling the appropriate function. Firstly, it tries the call with the default timeperiod,
+    #if this fails it tries it with other timeperiods.
     def call_switcher(self, key, data):
         try:
             answer=Weather.switcher[key](self,data)
@@ -203,20 +214,30 @@ class Weather:
         
     #Called from the query logic
     def query_resolution(self, intent, query, params):
-        if ('city' in params):
+        if 'city' in params:
             location=getLocation(params['city'])
             self.set_init_parameters(location.latitude,location.longitude)
-    
-        location=''
+
         time='now'
         
-        if (intent == 'weather'):
-            if ('entities' in query):
-                if('datetime' in query['entities']):
-                    if('interval' in query['entities']['datetime'][0]['type']):
-                        time=self.convetrUTCtoUNIXtime(query['entities']['datetime'][0]['from']['value'])
-                
-                if ('location' in query['entities']):    #If location is present in the query, take it into account
+        if intent == 'weather':
+            if 'entities' in query:
+                if'datetime' in query['entities']:  #If datetime is present in the query, take it into account
+                    if'interval' in query['entities']['datetime'][0]['type']:  #In case of interval, take the beginning
+                        time=self.convertUTCtoUNIXtime(query['entities']['datetime'][0]['from']['value'])
+                        timeOffset=calculate_time_offset(time)
+
+                        if timeOffset['hours']>48 & timeOffset['days']<7:
+                            offset=timeOffset['days']
+                            timeperiod=daily
+
+                        else:
+                            if timeOffset['hours']<48:
+                                offset = timeOffset['hours']
+                                timeperiod=hourly
+
+
+                if 'location' in query['entities']:    #If location is present in the query, take it into account
                     location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
                     
@@ -226,11 +247,11 @@ class Weather:
             else:
                 data=self.call_weather_api(self.latitude,self.longitude,time)    #Use the default coordinates    
            
-            if ('weather_type' in query['entities']):
-                if (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
+            if ('entities' in query) & ('weather_type' in query['entities']):
+                if query['entities']['weather_type'][0]['value'] in self.switcher.keys():
                     weather_type = query['entities']['weather_type'][0]['value']
-                    if('value_size' in query['entities']): 
-                        if (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
+                    if'value_size' in query['entities']:
+                        if weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys():
                             answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data)
                     else:
                         answersentence=Weather.call_switcher(self,weather_type,data)
@@ -239,11 +260,11 @@ class Weather:
             else:
                 answersentence=Weather.call_switcher(self,intent,data)
              
-            if(location!=''):
-                answersentence=self.answersentence_add_location(answersentence,location)
+            answersentence=self.answersentence_add_location(answersentence,location)
         
             return answersentence
 
         else:
             answersentence='query not recognised'
             return answersentence
+
