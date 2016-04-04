@@ -2,8 +2,7 @@
   become: yes
   tasks:
   - name: apt upgrade
-  #  apt: upgrade=dist update_cache=yes
-    apt: update_cache=yes
+    apt: upgrade=dist update_cache=yes
 
   - name: install basic system packages
     apt: name={{item}} state=present
