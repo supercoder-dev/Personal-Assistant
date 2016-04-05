@@ -17,6 +17,7 @@ import datetime
 import time as tm
     
 
+
 def getLocation(place):
     geolocator = Nominatim()
     location = geolocator.geocode(place)
@@ -25,7 +26,9 @@ def getLocation(place):
 #init_hook initializes the class Weather
 def init_hook():
         weather=Weather()
-        weather.set_init_parameters(getLocation('Prague'))
+        location=getLocation('Prague');
+        
+        weather.set_init_parameters(location.latitude,location.longitude)
         return weather
 
 class Weather:
