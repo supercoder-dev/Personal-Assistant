@@ -26,9 +26,9 @@ def getLocation(place):
 #init_hook initializes the class Weather
 def init_hook():
         weather=Weather()
-        location=getLocation('Prague');
-        
-        weather.set_init_parameters(location.latitude,location.longitude)
+        location='Prague'
+        homelocation=getLocation(location);
+        weather.set_init_parameters(homelocation.latitude,homelocation.longitude)
         return weather
 
 class Weather:
@@ -218,8 +218,9 @@ class Weather:
     #Called from the query logic
     def query_resolution(self, intent, query, params):
         if 'city' in params:
-            location=getLocation(params['city'])
-            self.set_init_parameters(location.latitude,location.longitude)
+            location=params['city']
+            homelocation=getLocation(location)
+            self.set_init_parameters(homelocation.latitude,homelocation.longitude)
 
         time='now'
         
