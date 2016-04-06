@@ -273,7 +273,6 @@ class Weather:
               'temperature': get_temperature,
               'sunrise': get_sunrise,
               'sunset': get_sunset,
-              'precip':get_precip_intensity,
               'humidity':get_humidity,
               'windspeed':get_windspeed,
               'pressure':get_pressure,
