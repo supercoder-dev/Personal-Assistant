@@ -74,7 +74,7 @@ class Weather:
     def answersentence_add_location(self,answersentence,location):
         return answersentence+' in ' + location
 
-    def degreesToWorldSide(self,degrees)
+    def degreesToWorldSide(self,degrees):
         if(degrees<22.5):
             return 'North'
         if(degrees<67.5):
@@ -93,7 +93,7 @@ class Weather:
             return 'North-West'
         return 'North'
 
-    def precipQuantity(self,precipIntensity)
+    def precipQuantity(self,precipIntensity):
         k = 2.54
         if(0.002*k<precipIntensity):
             return 'no precipitation'
