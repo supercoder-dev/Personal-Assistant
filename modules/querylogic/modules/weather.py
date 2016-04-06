@@ -222,7 +222,7 @@ class Weather:
                 quantum = self.precipQuantity(self,intensity)
                 if(quantum == 'no precipitation'):
                     return 'Currently, there are no precipitations.'
-                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' units + '.'
+                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units + '.'
             else:
                 return 'Currently, there are no precipitations.'
         else:
@@ -245,7 +245,7 @@ class Weather:
                 quantum = self.precipQuantity(self,intensity)
                 if(quantum == 'no precipitation'):
                     return 'Currently, there are no precipitations.'
-                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' units + '.'
+                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units + '.'
             else:
                 return 'Currently, there are no precipitations.'
         else:
