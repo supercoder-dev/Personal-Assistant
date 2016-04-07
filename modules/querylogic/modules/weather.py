@@ -55,10 +55,12 @@ class Weather:
 
     def calculate_time_offset(time):
         diff = time - datetime.datetime.utcnow()
-  
         daysOffset = diff.days
+
         try:
-            hoursOffset = diff.days*24+diff.hours
+            hoursOffset = diff.days*24+int(diff.seconds/3600)
+            if hoursOffset>daysOffset*24:
+                daysOffset=daysOffset+1
         except:
             hoursOffset = diff.days*24
 
@@ -66,7 +68,8 @@ class Weather:
 
     def get_timeperiod_offset(timeIn,grain):
         #timeConv=Weather.convertUTCtoUNIXtime(timeIn)
-        utc = datetime.datetime.strptime(timeIn, '%Y-%m-%dT%H:%M:%S.000')
+        t= timeIn[:-6] #Ignore timezone
+        utc = datetime.datetime.strptime(t, '%Y-%m-%dT%H:%M:%S.000')
         timeOffset=Weather.calculate_time_offset(utc)
         print(timeOffset)
 

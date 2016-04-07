@@ -22,7 +22,7 @@ for module in modules:
 
 
 
-wit={"_text":"What is the weather today","msg_id":"20853b05-3c62-4766-8404-601b6d5eb6fa","outcomes":[{"_text":"What is the weather today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":"2016-04-10T00:00:00.000","values":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000"}]}]},"intent":"weather"}]}
+wit={"_text":"What is the weather today","msg_id":"20853b05-3c62-4766-8404-601b6d5eb6fa","outcomes":[{"_text":"What is the weather today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":"2016-04-12T00:00:00.000+02:00","values":[{"grain":"day","type":"value","value":"2016-04-12T00:00:00.000+02:00"}]}]},"intent":"weather"}]}
 #+01:00 +01:00
 params={'city':'Prague'}
 
