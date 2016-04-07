@@ -1,13 +1,11 @@
 """
 Date created: 12.3.2016
-Author: Jiri Burant
+Author: Jiri Burant, Jakub Drapela
 
-First draft of the possible weather module package.
+First demo of the possible weather module package.
 """
 
-#TODO: Get the forecast for next week,
 #      Be able to get the weather from past
-#      Select time period: Currently, Daily, Hourly
 
 
 from urllib.request import Request, urlopen, URLError
@@ -62,6 +60,22 @@ class Weather:
 
         return {'dOffset': daysOffset, 'hOffset': hoursOffset}
 
+    def get_timeperiod_offset(timeIn,grain):
+        timeConv=self.convertUTCtoUNIXtime(timeIn)
+        timeOffset=calculate_time_offset(timeConv)
+
+        if (grain == 'day' | timeOffset['hours']>48) & timeOffset['days']<7 :
+            offset=timeOffset['days']
+            timeperiod='daily'
+            return {'offset':offset,'timeperiod':timeperiod}
+        else:
+            if timeOffset['hours']<48 & grain=='hour':
+                offset = timeOffset['hours']
+                timeperiod='hourly'
+                return {'offset':offset,'timeperiod':timeperiod}
+            else:
+                return 'Not supp'
+                
     #get_simplesentence returns the answer string, currently very simple
     def get_simplesentence(self,answer,subject):
         return 'The ' + str(subject) + str(answer) + '.'
@@ -70,10 +84,24 @@ class Weather:
     def get_typeofprecipsentence(self,answer,verb):
         return 'It is ' + str(answer) + 'ing' + 'outside.'
 
+    def answer_polish(self,answersentence,location):
+        if self.check_answer(answersentence):
+            return self.answersentence_add_location(answersentence,location)
+        else:
+            return answersentence
+    def check_answer(self,answersentence):
+        if answersentence!='Not supp' & answersentence!='' & answersentence!='I could not receive the information':
+            return True
+        else:
+            return False
+
     #append the info about the location to the answer.
     def answersentence_add_location(self,answersentence,location):
-        return answersentence+' in ' + location
-
+        if location != '':
+            return answersentence+' in ' + location
+        else:
+            return answersentence
+  
     def convert_time(self, posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -82,52 +110,52 @@ class Weather:
         d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
         return int(tm.mktime(d.timetuple()))
 
-    def get_summary(self,data,timeperiod='daily'):
-        answer=data[timeperiod]['data'][0]['summary']
+    def get_summary(self,data,offset,timeperiod='daily'):
+        answer=data[timeperiod]['data'][offset]['summary']
         return self.get_simplesentence(answer,'forecast says ')  
 
-    def get_temperature(self,data,timeperiod='currently'):
+    def get_temperature(self,data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
             answer=data[timeperiod]['temperature']
             return self.get_simplesentence(answer,'temperature is ')  
         else:
-            answer=data[timeperiod]['data'][0]['temperature']
+            answer=data[timeperiod]['data'][offset]['temperature']
             return self.get_simplesentence(answer,'temperature will be ')  
        
-    def get_sunrise(self,data,timeperiod='daily'):
-        time=self.convert_time(data[timeperiod]['data'][0]['sunriseTime']) 
+    def get_sunrise(self,data,offset,timeperiod='daily'):
+        time=self.convert_time(data[timeperiod]['data'][offset]['sunriseTime']) 
         return self.get_simplesentence(time,'time of sunrise is ')  
 
-    def get_sunset(self,data,timeperiod='daily'):
-        time=self.convert_time(data[timeperiod]['data'][0]['sunsetTime'])
+    def get_sunset(self,data,offset,timeperiod='daily'):
+        time=self.convert_time(data[timeperiod]['data'][offset]['sunsetTime'])
         return self.get_simplesentence(time,'time of sunset is ')
     
-    def get_precip_intensity(self,data,timeperiod='currently'):
+    def get_precip_intensity(self,data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data'][0]['precipIntensity']
+            answer=data[timeperiod]['data'][offset]['precipIntensity']
             return self.get_simplesentence(answer,'intensity of the precipations is ')
         else:
-            answer=data[timeperiod]['data'][0]['precipIntensity']
+            answer=data[timeperiod]['data'][offset]['precipIntensity']
             return self.get_simplesentence(answer,'intensity of the precipations will be ')
 
-    def get_humidity(self,data,timeperiod='currently'):
+    def get_humidity(self,data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data'][0]['humidity']
+            answer=data[timeperiod]['data'][offset]['humidity']
             return self.get_simplesentence(answer,'humidity is ')
         else:
-            answer=data[timeperiod]['data'][0]['humidity']
+            answer=data[timeperiod]['data'][offset]['humidity']
             return self.get_simplesentence(answer,'humidity will be ')
 
-    def get_windspeed(self,data,timeperiod='currently'):
+    def get_windspeed(self,data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
             answer=data[timeperiod]['windSpeed']
             return self.get_simplesentence(answer,'speed of wind is ')
         else:
-            answer=data[timeperiod]['data'][0]['windSpeed']
+            answer=data[timeperiod]['data'][offset]['windSpeed']
             return self.get_simplesentence(answer,'speed of wind will be ')
 
-    def get_moonphase(self,data,timeperiod='daily'):
-        phase=data['daily']['data'][0]['moonPhase']
+    def get_moonphase(self,data,offset,timeperiod='daily'):
+        phase=data['daily']['data'][offset]['moonPhase']
 
         if(phase==0):
             answer='new moon'
@@ -148,56 +176,94 @@ class Weather:
 
         return self.get_simplesentence(answer,'moon phase is ')
 
-    def get_temperatureMin(self,data,timeperiod='daily'):
-        answer = data[timeperiod]['data'][0]['temperatureMin']
+    def get_temperatureMin(self,data,offset,timeperiod='daily'):
+        answer = data[timeperiod]['data'][offset]['temperatureMin']
         return self.get_simplesentence(answer,'minimum temperature will be ')
 
-    def get_temperatureMax(self,data,timeperiod='daily'):
-        answer=data[timeperiod]['data'][0]['temperatureMax']
+    def get_temperatureMax(self,data,offset,timeperiod='daily'):
+        answer=data[timeperiod]['data'][offset]['temperatureMax']
         return self.get_simplesentence(answer,'maximum temperature will be ')
 
-    def get_visibility(self, data,timeperiod='currently'):
+    def get_visibility(self, data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
             answer=data[timeperiod]['visibility']
             return self.get_simplesentence(answer,'visibility is ')
         else:
-            answer=data[timeperiod]['data'][0]['visibility']
+            answer=data[timeperiod]['data'][offset]['visibility']
             return self.get_simplesentence(answer,'visibility will be ')
 
-    def get_pressure(self, data,timeperiod='currently'):
+    def get_pressure(self, data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
             answer=data[timeperiod]['pressure']
             return self.get_simplesentence(answer,'pressure is ')
         else:
-            answer=data[timeperiod]['data'][0]['pressure']
+            answer=data[timeperiod]['data'][offset]['pressure']
             return self.get_simplesentence(answer,'pressure will be ')
 
-    def get_snow(self, data,timeperiod='currently'):
+    def get_snow(self, data,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
-            if('precipType' in data[timeperiod]['data'][0]):
-                answer=data[timeperiod]['data'][0]['precipType']
+            if('precipType' in data[timeperiod]['data'][offset]):
+                answer=data[timeperiod]['data'][offset]['precipType']
                 return self.get_typeofprecipsentence(answer,'')
             else:
                 return 'Currently, there are no precipitations at the location.'
         else:
             return 'I dont know'
+    
+    #check if the datetime is specified and take it into account
+    def check_query_datetime(self,entities):
+        if 'datetime' in entities:  #If datetime is present in the query, take it into account
+            if 'interval' in entities['datetime'][0]['type']:  #In case of interval, take the beginning
+
+                timeOffsetB=get_timeperiod_offset(entities['datetime'][0]['from']['value'],entities['datetime'][0]['from']['grain'])
+                if timeOffsetB != 'Not supp':
+                    timeperiodB=timeOffsetB['timeperiod']
+                    offsetB=timeOffsetB['offset']
+                else:
+                    return 'Not supp'
+
+                timeOffsetE=get_timeperiod_offset(entities['datetime'][0]['to']['value'],entities['datetime'][0]['to']['grain'])
+                if timeOffsetE != 'Not supp':
+                    timeperiodE=timeOffsetE['timeperiod']
+                    offsetE=timeOffsetE['offset']
+                else:
+                    return 'Not supp'
+                
+                if timeperiodB==timeperiodE:
+                    offset=(offsetB+offsetE)/2
+                    timeperiod=timeperiodB
+                else:
+                    if timeperiodB=='daily':
+                        offset=offsetB
+                        timeperiod=timeperiodB
+                    else:
+                        offset=offsetE
+                        timeperiod=timeperiodE
+
+                return {'timeperiod':timeperiod, 'offset':offset}
+            else:
+                return get_timeperiod_offset(entities['datetime'][0]['value'],entities['datetime'][0]['grain'])
+        else:
+            return 'Not supp'
 
     #call_switcher indexes to the dictionary with key, calling the appropriate function. Firstly, it tries the call with the default timeperiod,
     #if this fails it tries it with other timeperiods.
-    def call_switcher(self, key, data):
-        try:
-            answer=Weather.switcher[key](self,data)
-        except:
+    def call_switcher(self, key, data, timeperiod, offset):
+        if timeperiod=='':
             try:
-                answer=Weather.switcher[key](self,data,'hourly')
+                answer=Weather.switcher[key](self,data,offset)
             except:
                 try:
-                    answer=Weather.switcher[key](self,data,'daily')
+                    answer=Weather.switcher[key](self,data,offset,'hourly')
                 except:
-                    answer='I could not receive the information'
+                    try:
+                        answer=Weather.switcher[key](self,data,offset,'daily')
+                    except:
+                        answer='I could not receive the information'            
+        else:
+            answer=Weather.switcher[key](self,data,timeperiod,offset)
 
         return answer
-        
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
     switcher={'weather' : get_summary,
@@ -214,57 +280,54 @@ class Weather:
               'visibility':get_visibility,
               'snow':get_snow,
               }
-        
+
     #Called from the query logic
     def query_resolution(self, intent, query, params):
+        location=''
+        time='now'
+        timeperiod=''
+        offset=0
+
         if 'city' in params:
             location=params['city']
             homelocation=getLocation(location)
             self.set_init_parameters(homelocation.latitude,homelocation.longitude)
 
-        time='now'
+        latitude=self.latitude
+        longitude=self.longitude
         
         if intent == 'weather':
             if 'entities' in query:
-                if'datetime' in query['entities']:  #If datetime is present in the query, take it into account
-                    if'interval' in query['entities']['datetime'][0]['type']:  #In case of interval, take the beginning
-                        time=self.convertUTCtoUNIXtime(query['entities']['datetime'][0]['from']['value'])
-                        timeOffset=calculate_time_offset(time)
+                timeperiodOffset=self.check_query_datetime(query['entities'])
+                
+                if timeperiodOffset!='Not supp':
+                    try:
+                        timeperiod=timeperiodOffset['timeperiod']
+                        offset=timeperiodOffset['offset']
+                    except:
+                        timeperiod=''
+                        offset=0
 
-                        if timeOffset['hours']>48 & timeOffset['days']<7:
-                            offset=timeOffset['days']
-                            timeperiod=daily
-
-                        else:
-                            if timeOffset['hours']<48:
-                                offset = timeOffset['hours']
-                                timeperiod=hourly
-
-
-                if 'location' in query['entities']:    #If location is present in the query, take it into account
+                #If location is present in the query, take it into account
+                if 'location' in query['entities']:    
                     location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
-                    
-                    data=self.call_weather_api(coordinates.latitude,coordinates.longitude,time)
-                else:
-                    data=self.call_weather_api(self.latitude,self.longitude,time)    #Use the default coordinates
-            else:
-                data=self.call_weather_api(self.latitude,self.longitude,time)    #Use the default coordinates    
-           
-            if ('entities' in query) & ('weather_type' in query['entities']):
-                if query['entities']['weather_type'][0]['value'] in self.switcher.keys():
+                    longitude=coordinates.longitude
+                    latitude=coordinates.latitude
+
+                data = call_weather_api(self, latitude, longitude, time)
+                
+                #If weather_type is present in the query, take it into account
+                if ('weather_type' in query['entities']) & (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
                     weather_type = query['entities']['weather_type'][0]['value']
-                    if'value_size' in query['entities']:
-                        if weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys():
-                            answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data)
+                    if ('value_size' in query['entities']) & (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
+                        answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data, timeperiod, offset)
                     else:
-                        answersentence=Weather.call_switcher(self,weather_type,data)
+                        answersentence=Weather.call_switcher(self,weather_type,data,timeperiod,offset)
                 else:
-                    answersentence=Weather.call_switcher(self,intent,data)
-            else:
-                answersentence=Weather.call_switcher(self,intent,data)
-             
-            answersentence=self.answersentence_add_location(answersentence,location)
+                    answersentence=Weather.call_switcher(self,intent,data,timeperiod,offset)
+                
+                answersentence = self.answer_polish(answersentence,locaion)                  
         
             return answersentence
 

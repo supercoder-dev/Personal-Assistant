@@ -5,7 +5,7 @@ Date created: 12.3.2016
 Author: Jiri Burant
 
 The main control script of the Query logic part
-At init, the currently present modules are loaded and initialized bz the info from config file,
+At init, the currently present modules are loaded and initialized by the info from config file,
 
 """
 
