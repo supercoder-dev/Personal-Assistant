@@ -73,12 +73,12 @@ class Weather:
         timeOffset=Weather.calculate_time_offset(utc)
         print(timeOffset)
 
-        if ((grain == 'day') | (int(timeOffset['hours'])>48)) & int(timeOffset['days'])<7 :
+        if ((grain == 'day') | (int(timeOffset['hours'])>48)) and int(timeOffset['days'])<7 :
             offset=timeOffset['days']
             timeperiod='daily'
             return {'offset':offset,'timeperiod':timeperiod}
         else:
-            if int(timeOffset['hours'])<48 & grain=='hour':
+            if int(timeOffset['hours'])<48 and grain=='hour':
                 offset = timeOffset['hours']
                 timeperiod='hourly'
                 return {'offset':offset,'timeperiod':timeperiod}
@@ -194,6 +194,7 @@ class Weather:
                 side = self.degreesToWorldSide(data[timeperiod]['windBearing'])
             return self.get_simplesentence(answer,'There is ' + side + ' wind of speed ', units)
         else:
+            print(offset)
             answer=data[timeperiod]['data'][offset]['windSpeed']
             if(answer>0):
                 side = self.degreesToWorldSide(data[timeperiod]['data'][0]['windBearing'])
@@ -227,6 +228,7 @@ class Weather:
         return self.get_simplesentence(answer,'minimum temperature will be ',units)
 
     def get_temperatureMax(self,data,offset,timeperiod='daily'):
+        units = 'degrees of celsius'
         answer=data[timeperiod]['data'][offset]['temperatureMax']
         return self.get_simplesentence(answer,'maximum temperature will be ',units)
 
@@ -403,12 +405,12 @@ class Weather:
                 #If weather_type is present in the query, take it into account
                 if ('weather_type' in query['entities']) and (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
                     weather_type = query['entities']['weather_type'][0]['value']
-                    if ('value_size' in query['entities']) & (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
-                        answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data, timeperiod, offset)
+                    if ('value_size' in query['entities']) and (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
+                        answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data, timeperiod, int(offset))
                     else:
-                        answersentence=Weather.call_switcher(self,weather_type,data,timeperiod,offset)
+                        answersentence=Weather.call_switcher(self,weather_type,data,timeperiod,int(offset))
                 else:
-                    answersentence=Weather.call_switcher(self,intent,data,timeperiod,offset)
+                    answersentence=Weather.call_switcher(self,intent,data,timeperiod,int(offset))
                 
                 answersentence = self.answer_polish(answersentence,location)                  
         
