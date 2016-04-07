@@ -384,7 +384,7 @@ class Weather:
 
                 #If location is present in the query, take it into account
                 if 'location' in query['entities']:    
-                   location=query['entities']['location'][0]['value']
+                    location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
                     longitude=coordinates.longitude
                     latitude=coordinates.latitude
