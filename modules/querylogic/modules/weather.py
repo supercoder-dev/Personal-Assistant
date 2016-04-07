@@ -54,22 +54,28 @@ class Weather:
         return data
 
     def calculate_time_offset(time):
-        diff = time - datetime.utcnow()
-        daysOffset = diff.TotalDays
-        hoursOffset = diff.TotalHours
+        diff = time - datetime.datetime.utcnow()
+  
+        daysOffset = diff.days
+        try:
+            hoursOffset = diff.days*24+diff.hours
+        except:
+            hoursOffset = diff.days*24
 
-        return {'dOffset': daysOffset, 'hOffset': hoursOffset}
+        return {'days': daysOffset, 'hours': hoursOffset}
 
     def get_timeperiod_offset(timeIn,grain):
-        timeConv=self.convertUTCtoUNIXtime(timeIn)
-        timeOffset=calculate_time_offset(timeConv)
+        #timeConv=Weather.convertUTCtoUNIXtime(timeIn)
+        utc = datetime.datetime.strptime(timeIn, '%Y-%m-%dT%H:%M:%S.000')
+        timeOffset=Weather.calculate_time_offset(utc)
+        print(timeOffset)
 
-        if (grain == 'day' | timeOffset['hours']>48) & timeOffset['days']<7 :
+        if ((grain == 'day') | (int(timeOffset['hours'])>48)) & int(timeOffset['days'])<7 :
             offset=timeOffset['days']
             timeperiod='daily'
             return {'offset':offset,'timeperiod':timeperiod}
         else:
-            if timeOffset['hours']<48 & grain=='hour':
+            if int(timeOffset['hours'])<48 & grain=='hour':
                 offset = timeOffset['hours']
                 timeperiod='hourly'
                 return {'offset':offset,'timeperiod':timeperiod}
@@ -90,7 +96,7 @@ class Weather:
         else:
             return answersentence
     def check_answer(self,answersentence):
-        if answersentence!='Not supp' & answersentence!='' & answersentence!='I could not receive the information':
+        if (answersentence!='Not supp') and answersentence!='' and answersentence!='I could not receive the information':
             return True
         else:
             return False
@@ -133,10 +139,10 @@ class Weather:
             return 'moderate'
         return 'heavy'
 
-    def convert_time(self, posixtime):
+    def convert_time(posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
 
-    def convertUTCtoUNIXtime(self,utctime):
+    def convertUTCtoUNIXtime(utctime):
         utctime=utctime[:-6] #ignoring tme zone 
         d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
         return int(tm.mktime(d.timetuple()))
@@ -152,11 +158,11 @@ class Weather:
             return self.get_simplesentence(answer,'temperature will be ')  
        
     def get_sunrise(self,data,offset,timeperiod='daily'):
-        time=self.convert_time(data[timeperiod]['data'][offset]['sunriseTime']) 
+        time=Weather.convert_time(data[timeperiod]['data'][offset]['sunriseTime']) 
         return self.get_simplesentence(time,'time of sunrise is ')  
 
     def get_sunset(self,data,offset,timeperiod='daily'):
-        time=self.convert_time(data[timeperiod]['data'][offset]['sunsetTime'])
+        time=Weather.convert_time(data[timeperiod]['data'][offset]['sunsetTime'])
         return self.get_simplesentence(time,'time of sunset is ')
     
     def get_precip_intensity(self,data,offset,timeperiod='currently'):
@@ -289,14 +295,14 @@ class Weather:
         if 'datetime' in entities:  #If datetime is present in the query, take it into account
             if 'interval' in entities['datetime'][0]['type']:  #In case of interval, take the beginning
 
-                timeOffsetB=get_timeperiod_offset(entities['datetime'][0]['from']['value'],entities['datetime'][0]['from']['grain'])
+                timeOffsetB=Weather.get_timeperiod_offset(entities['datetime'][0]['from']['value'],entities['datetime'][0]['from']['grain'])
                 if timeOffsetB != 'Not supp':
                     timeperiodB=timeOffsetB['timeperiod']
                     offsetB=timeOffsetB['offset']
                 else:
                     return 'Not supp'
 
-                timeOffsetE=get_timeperiod_offset(entities['datetime'][0]['to']['value'],entities['datetime'][0]['to']['grain'])
+                timeOffsetE=Weather.get_timeperiod_offset(entities['datetime'][0]['to']['value'],entities['datetime'][0]['to']['grain'])
                 if timeOffsetE != 'Not supp':
                     timeperiodE=timeOffsetE['timeperiod']
                     offsetE=timeOffsetE['offset']
@@ -316,7 +322,7 @@ class Weather:
 
                 return {'timeperiod':timeperiod, 'offset':offset}
             else:
-                return get_timeperiod_offset(entities['datetime'][0]['value'],entities['datetime'][0]['grain'])
+                return Weather.get_timeperiod_offset(entities['datetime'][0]['value'],entities['datetime'][0]['grain'])
         else:
             return 'Not supp'
 
@@ -335,7 +341,7 @@ class Weather:
                     except:
                         answer='I could not receive the information'            
         else:
-            answer=Weather.switcher[key](self,data,timeperiod,offset)
+            answer=Weather.switcher[key](self,data,offset,timeperiod)
 
         return answer
     
@@ -389,10 +395,10 @@ class Weather:
                     longitude=coordinates.longitude
                     latitude=coordinates.latitude
 
-                data = call_weather_api(self, latitude, longitude, time)
+                data = self.call_weather_api(latitude, longitude, time)
                 
                 #If weather_type is present in the query, take it into account
-                if ('weather_type' in query['entities']) & (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
+                if ('weather_type' in query['entities']) and (query['entities']['weather_type'][0]['value'] in self.switcher.keys()):
                     weather_type = query['entities']['weather_type'][0]['value']
                     if ('value_size' in query['entities']) & (weather_type + query['entities']['value_size'][0]['value'] in self.switcher.keys()):
                         answersentence=Weather.call_switcher(self, weather_type + query['entities']['value_size'][0]['value'],data, timeperiod, offset)
@@ -401,7 +407,7 @@ class Weather:
                 else:
                     answersentence=Weather.call_switcher(self,intent,data,timeperiod,offset)
                 
-                answersentence = self.answer_polish(answersentence,locaion)                  
+                answersentence = self.answer_polish(answersentence,location)                  
         
             return answersentence
 
