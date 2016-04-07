@@ -77,8 +77,8 @@ class Weather:
                 return 'Not supp'
                 
     #get_simplesentence returns the answer string, currently very simple
-    def get_simplesentence(self,answer,subject):
-        return 'The ' + str(subject) + str(answer) + '.'
+    def get_simplesentence(self,answer,subject,units=''):
+        return 'The ' + str(subject) + str(answer) + ' ' +str(units) + '.'
 
     #again, very simple sentence
     def get_typeofprecipsentence(self,answer,verb):
@@ -102,6 +102,37 @@ class Weather:
         else:
             return answersentence
   
+    def degreesToWorldSide(self,degrees):
+        if(degrees<22.5):
+            return 'North'
+        if(degrees<67.5):
+            return 'North-East'
+        if(degrees<112.5):
+            return 'East'
+        if(degrees<157.5):
+            return 'South-East'
+        if(degrees<202.5):
+            return 'South'
+        if(degrees<247.5):
+            return 'South-West'
+        if(degrees<292.5):
+            return 'West'
+        if(degrees<337.5):
+            return 'North-West'
+        return 'North'
+
+    def precipQuantity(self,precipIntensity):
+        k = 2.54
+        if(0.002*k<precipIntensity):
+            return 'no precipitation'
+        if(0.017*k<precipIntensity):
+            return 'very light'
+        if(0.1*k<precipIntensity):
+            return 'ligth'
+        if(0.4*k<precipIntensity):
+            return 'moderate'
+        return 'heavy'
+
     def convert_time(self, posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -115,10 +146,8 @@ class Weather:
         return self.get_simplesentence(answer,'forecast says ')  
 
     def get_temperature(self,data,offset,timeperiod='currently'):
+        units = 'degrees of celsius'
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['temperature']
-            return self.get_simplesentence(answer,'temperature is ')  
-        else:
             answer=data[timeperiod]['data'][offset]['temperature']
             return self.get_simplesentence(answer,'temperature will be ')  
        
@@ -139,20 +168,27 @@ class Weather:
             return self.get_simplesentence(answer,'intensity of the precipations will be ')
 
     def get_humidity(self,data,offset,timeperiod='currently'):
+        units = 'percent'
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data'][offset]['humidity']
-            return self.get_simplesentence(answer,'humidity is ')
+            answer=data[timeperiod]['data'][offset]['humidity']*100
+            return self.get_simplesentence(answer,'humidity is ',units)
         else:
             answer=data[timeperiod]['data'][offset]['humidity']
-            return self.get_simplesentence(answer,'humidity will be ')
+            return self.get_simplesentence(answer,'humidity will be ',units)
 
     def get_windspeed(self,data,offset,timeperiod='currently'):
+        units = 'meters per second'
+        side = ''
         if(timeperiod=='currently'):
             answer=data[timeperiod]['windSpeed']
-            return self.get_simplesentence(answer,'speed of wind is ')
+            if(answer>0):
+                side = self.degreesToWorldSide(data[timeperiod]['windBearing'])
+            return self.get_simplesentence(answer,'There is ' + side + ' wind of speed ', units)
         else:
             answer=data[timeperiod]['data'][offset]['windSpeed']
-            return self.get_simplesentence(answer,'speed of wind will be ')
+            if(answer>0):
+                side = self.degreesToWorldSide(data[timeperiod]['data'][0]['windBearing'])
+            return self.get_simplesentence(answer,'There will be ' + side + ' wind of speed ', units)
 
     def get_moonphase(self,data,offset,timeperiod='daily'):
         phase=data['daily']['data'][offset]['moonPhase']
@@ -177,36 +213,74 @@ class Weather:
         return self.get_simplesentence(answer,'moon phase is ')
 
     def get_temperatureMin(self,data,offset,timeperiod='daily'):
+        units = 'degrees of celsius'
         answer = data[timeperiod]['data'][offset]['temperatureMin']
-        return self.get_simplesentence(answer,'minimum temperature will be ')
+        return self.get_simplesentence(answer,'minimum temperature will be ',units)
 
     def get_temperatureMax(self,data,offset,timeperiod='daily'):
         answer=data[timeperiod]['data'][offset]['temperatureMax']
-        return self.get_simplesentence(answer,'maximum temperature will be ')
+        return self.get_simplesentence(answer,'maximum temperature will be ',units)
 
     def get_visibility(self, data,offset,timeperiod='currently'):
+        units= 'kilometers'
         if(timeperiod=='currently'):
             answer=data[timeperiod]['visibility']
-            return self.get_simplesentence(answer,'visibility is ')
+            return self.get_simplesentence(answer,'visibility is ', units)
         else:
             answer=data[timeperiod]['data'][offset]['visibility']
-            return self.get_simplesentence(answer,'visibility will be ')
+            return self.get_simplesentence(answer,'visibility will be ', units)
 
     def get_pressure(self, data,offset,timeperiod='currently'):
+        units = 'hectopascals'
         if(timeperiod=='currently'):
             answer=data[timeperiod]['pressure']
-            return self.get_simplesentence(answer,'pressure is ')
+            return self.get_simplesentence(answer,'pressure is ',units)
         else:
             answer=data[timeperiod]['data'][offset]['pressure']
-            return self.get_simplesentence(answer,'pressure will be ')
+            return self.get_simplesentence(answer,'pressure will be ',units)
 
     def get_snow(self, data,offset,timeperiod='currently'):
+        units = 'centimeters per hour'
         if(timeperiod=='currently'):
-            if('precipType' in data[timeperiod]['data'][offset]):
-                answer=data[timeperiod]['data'][offset]['precipType']
-                return self.get_typeofprecipsentence(answer,'')
+            if('precipType' in data[timeperiod]):
+                if('snow' in data[timeperiod]['precipType']):
+                    precipType='snow'
+                elif('sleet' in data[timeperiod]['precipType']):
+                    precipType='sleet'
+                    units = 'milimeters per hour'
+                else:
+                    return 'Currently, there are no precipitations.'
+                
+                intensity = data[timeperiod]['precipIntensity']
+                quantum = self.precipQuantity(self,intensity)
+                if(quantum == 'no precipitation'):
+                    return 'Currently, there are no precipitations.'
+                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units + '.'
             else:
-                return 'Currently, there are no precipitations at the location.'
+                return 'Currently, there are no precipitations.'
+        else:
+            return 'I dont know'
+
+    def get_rain(self, data,offset,timeperiod='currently'):
+        units = 'milimeters per hour'
+        if(timeperiod=='currently'):
+            if('precipType' in data[timeperiod]):
+                if('rain' in data[timeperiod]['precipType']):
+                    precipType='rain'
+                elif('sleet' in data[timeperiod]['precipType']):
+                    precipType='sleet'
+                elif('hail' in data[timeperiod]['precipType']):
+                    precipType='hail'
+                else:
+                    return 'Currently, there are no precipitations.'
+                
+                intensity = data[timeperiod]['precipIntensity']
+                quantum = self.precipQuantity(self,intensity)
+                if(quantum == 'no precipitation'):
+                    return 'Currently, there are no precipitations.'
+                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units + '.'
+            else:
+                return 'Currently, there are no precipitations.'
         else:
             return 'I dont know'
     
@@ -270,7 +344,6 @@ class Weather:
               'temperature': get_temperature,
               'sunrise': get_sunrise,
               'sunset': get_sunset,
-              'precip':get_precip_intensity,
               'humidity':get_humidity,
               'windspeed':get_windspeed,
               'pressure':get_pressure,
@@ -279,6 +352,7 @@ class Weather:
               'temperaturemax':get_temperatureMax,
               'visibility':get_visibility,
               'snow':get_snow,
+              'rain':get_rain,
               }
 
     #Called from the query logic
@@ -310,7 +384,7 @@ class Weather:
 
                 #If location is present in the query, take it into account
                 if 'location' in query['entities']:    
-                    location=query['entities']['location'][0]['value']
+                   location=query['entities']['location'][0]['value']
                     coordinates=getLocation(location)
                     longitude=coordinates.longitude
                     latitude=coordinates.latitude
