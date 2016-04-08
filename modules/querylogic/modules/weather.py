@@ -2,19 +2,14 @@
 Date created: 12.3.2016
 Author: Jiri Burant, Jakub Drapela
 
-First demo of the possible weather module package.
+First demo of the weather module package.
 """
-
-#      Be able to get the weather from past
-
 
 from urllib.request import Request, urlopen, URLError
 from geopy.geocoders import Nominatim
 import json
 import datetime
 import time as tm
-    
-
 
 def getLocation(place):
     geolocator = Nominatim()
@@ -67,11 +62,9 @@ class Weather:
         return {'days': daysOffset, 'hours': hoursOffset}
 
     def get_timeperiod_offset(timeIn,grain):
-        #timeConv=Weather.convertUTCtoUNIXtime(timeIn)
         t= timeIn[:-6] #Ignore timezone
         utc = datetime.datetime.strptime(t, '%Y-%m-%dT%H:%M:%S.000')
         timeOffset=Weather.calculate_time_offset(utc)
-        print(timeOffset)
 
         if ((grain == 'day') | (int(timeOffset['hours'])>48)) and int(timeOffset['days'])<7 :
             offset=timeOffset['days']
@@ -106,8 +99,8 @@ class Weather:
 
     #append the info about the location to the answer.
     def answersentence_add_location(self,answersentence,location):
-        if location != '':
-            return answersentence+' in ' + location
+        if not(location is None) and location != '' and not(answersentence is None):
+            return answersentence[:-1] + ' in ' + location + '.'
         else:
             return answersentence
   
@@ -158,8 +151,12 @@ class Weather:
         units = 'degrees of celsius'
         if(timeperiod=='currently'):
             answer=data[timeperiod]['data'][offset]['temperature']
-            return self.get_simplesentence(answer,'temperature will be ')  
-       
+            return self.get_simplesentence(answer,'The temperature is ')  
+        else:
+            answer=data[timeperiod]['data'][offset]['temperature']
+            return self.get_simplesentence(answer,'The temperature will be ')  
+               
+
     def get_sunrise(self,data,offset,timeperiod='daily'):
         time=Weather.convert_time(data[timeperiod]['data'][offset]['sunriseTime']) 
         return self.get_simplesentence(time,'time of sunrise is ')  
@@ -194,7 +191,6 @@ class Weather:
                 side = self.degreesToWorldSide(data[timeperiod]['windBearing'])
             return self.get_simplesentence(answer,'There is ' + side + ' wind of speed ', units)
         else:
-            print(offset)
             answer=data[timeperiod]['data'][offset]['windSpeed']
             if(answer>0):
                 side = self.degreesToWorldSide(data[timeperiod]['data'][0]['windBearing'])
@@ -411,9 +407,12 @@ class Weather:
                         answersentence=Weather.call_switcher(self,weather_type,data,timeperiod,int(offset))
                 else:
                     answersentence=Weather.call_switcher(self,intent,data,timeperiod,int(offset))
+
                 
+            if not(answersentence is None):        
                 answersentence = self.answer_polish(answersentence,location)                  
-        
+            else:
+                answersentence = 'I am sorry, I could not retrieve the information'
             return answersentence
 
         else:
