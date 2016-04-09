@@ -143,46 +143,23 @@ class Weather:
         d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
         return int(tm.mktime(d.timetuple()))
 
-    def get_summary(self,data,offset,timeperiod='daily'):
+    def get_summary(self,data,entity,offset,timeperiod='daily'):
         answer=data[timeperiod]['data'][offset]['summary']
         return self.get_simplesentence(answer,'forecast says ')  
 
-    def get_temperature(self,data,offset,timeperiod='currently'):
-        units = 'degrees of celsius'
+    def get_specialforecast(self,data,entity,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
-            answer=data[timeperiod]['data'][offset]['temperature']
-            return self.get_simplesentence(answer,'The temperature is ')  
+            answer=data[timeperiod]['data'][offset][entity['value']]
+            return self.get_simplesentence(answer,'The '+ entity['name'] +' is ', entity['units'])  
         else:
-            answer=data[timeperiod]['data'][offset]['temperature']
-            return self.get_simplesentence(answer,'The temperature will be ')  
-               
+            answer=data[timeperiod]['data'][offset][entity['value']]
+            return self.get_simplesentence(answer,'The '+ entity['name'] +' will be ', entity['units'])  
 
-    def get_sunrise(self,data,offset,timeperiod='daily'):
-        time=Weather.convert_time(data[timeperiod]['data'][offset]['sunriseTime']) 
-        return self.get_simplesentence(time,'time of sunrise is ')  
-
-    def get_sunset(self,data,offset,timeperiod='daily'):
-        time=Weather.convert_time(data[timeperiod]['data'][offset]['sunsetTime'])
-        return self.get_simplesentence(time,'time of sunset is ')
-    
-    def get_precip_intensity(self,data,offset,timeperiod='currently'):
-        if(timeperiod=='currently'):
-            answer=data[timeperiod]['data'][offset]['precipIntensity']
-            return self.get_simplesentence(answer,'intensity of the precipations is ')
-        else:
-            answer=data[timeperiod]['data'][offset]['precipIntensity']
-            return self.get_simplesentence(answer,'intensity of the precipations will be ')
-
-    def get_humidity(self,data,offset,timeperiod='currently'):
-        units = 'percent'
-        if(timeperiod=='currently'):
-            answer=data[timeperiod]['data'][offset]['humidity']*100
-            return self.get_simplesentence(answer,'humidity is ',units)
-        else:
-            answer=data[timeperiod]['data'][offset]['humidity']
-            return self.get_simplesentence(answer,'humidity will be ',units)
-
-    def get_windspeed(self,data,offset,timeperiod='currently'):
+    def get_sunTime(self,data,entity,offset,timeperiod='daily'):
+        time=Weather.convert_time(data[timeperiod]['data'][offset][entity['value']]) 
+        return self.get_simplesentence(time,'The '+ entity['name'] +' is ')  
+                   
+    def get_windspeed(self,data,entity,offset,timeperiod='currently'):
         units = 'meters per second'
         side = ''
         if(timeperiod=='currently'):
@@ -196,7 +173,7 @@ class Weather:
                 side = self.degreesToWorldSide(data[timeperiod]['data'][0]['windBearing'])
             return self.get_simplesentence(answer,'There will be ' + side + ' wind of speed ', units)
 
-    def get_moonphase(self,data,offset,timeperiod='daily'):
+    def get_moonphase(self,data,entity,offset,timeperiod='daily'):
         phase=data['daily']['data'][offset]['moonPhase']
 
         if(phase==0):
@@ -218,58 +195,9 @@ class Weather:
 
         return self.get_simplesentence(answer,'moon phase is ')
 
-    def get_temperatureMin(self,data,offset,timeperiod='daily'):
-        units = 'degrees of celsius'
-        answer = data[timeperiod]['data'][offset]['temperatureMin']
-        return self.get_simplesentence(answer,'minimum temperature will be ',units)
-
-    def get_temperatureMax(self,data,offset,timeperiod='daily'):
-        units = 'degrees of celsius'
-        answer=data[timeperiod]['data'][offset]['temperatureMax']
-        return self.get_simplesentence(answer,'maximum temperature will be ',units)
-
-    def get_visibility(self, data,offset,timeperiod='currently'):
-        units= 'kilometers'
-        if(timeperiod=='currently'):
-            answer=data[timeperiod]['visibility']
-            return self.get_simplesentence(answer,'visibility is ', units)
-        else:
-            answer=data[timeperiod]['data'][offset]['visibility']
-            return self.get_simplesentence(answer,'visibility will be ', units)
-
-    def get_pressure(self, data,offset,timeperiod='currently'):
-        units = 'hectopascals'
-        if(timeperiod=='currently'):
-            answer=data[timeperiod]['pressure']
-            return self.get_simplesentence(answer,'pressure is ',units)
-        else:
-            answer=data[timeperiod]['data'][offset]['pressure']
-            return self.get_simplesentence(answer,'pressure will be ',units)
-
-    def get_snow(self, data,offset,timeperiod='currently'):
-        units = 'centimeters per hour'
-        if(timeperiod=='currently'):
-            if('precipType' in data[timeperiod]):
-                if('snow' in data[timeperiod]['precipType']):
-                    precipType='snow'
-                elif('sleet' in data[timeperiod]['precipType']):
-                    precipType='sleet'
-                    units = 'milimeters per hour'
-                else:
-                    return 'Currently, there are no precipitations.'
-                
-                intensity = data[timeperiod]['precipIntensity']
-                quantum = self.precipQuantity(self,intensity)
-                if(quantum == 'no precipitation'):
-                    return 'Currently, there are no precipitations.'
-                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units + '.'
-            else:
-                return 'Currently, there are no precipitations.'
-        else:
-            return 'I dont know'
-
-    def get_rain(self, data,offset,timeperiod='currently'):
-        units = 'milimeters per hour'
+    def get_percipitation(self, data,entity,offset,timeperiod='currently'):
+        units=['milimeters per second', 'centimeters per second']
+        unit_index = 0
         if(timeperiod=='currently'):
             if('precipType' in data[timeperiod]):
                 if('rain' in data[timeperiod]['precipType']):
@@ -278,6 +206,9 @@ class Weather:
                     precipType='sleet'
                 elif('hail' in data[timeperiod]['precipType']):
                     precipType='hail'
+                elif('snow' in data[timeperiod]['precipType']):
+                    precipType='snow'
+                    unit_index = 1
                 else:
                     return 'Currently, there are no precipitations.'
                 
@@ -285,7 +216,7 @@ class Weather:
                 quantum = self.precipQuantity(self,intensity)
                 if(quantum == 'no precipitation'):
                     return 'Currently, there are no precipitations.'
-                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units + '.'
+                return 'There is ' + quatum + ' ' + precipType + ' of intensity ' + str(intensity) + ' ' + units[unit_index] + '.'
             else:
                 return 'Currently, there are no precipitations.'
         else:
@@ -330,36 +261,37 @@ class Weather:
     #call_switcher indexes to the dictionary with key, calling the appropriate function. Firstly, it tries the call with the default timeperiod,
     #if this fails it tries it with other timeperiods.
     def call_switcher(self, key, data, timeperiod, offset):
+        entity = Weather.switcher[key]
         if timeperiod=='':
             try:
-                answer=Weather.switcher[key](self,data,offset)
+                answer=entity['function'](self,data,entity,offset)
             except:
                 try:
-                    answer=Weather.switcher[key](self,data,offset,'hourly')
+                    answer=entity['function'](self,data,entity,offset,'hourly')
                 except:
                     try:
-                        answer=Weather.switcher[key](self,data,offset,'daily')
+                        answer=entity['function'](self,data,entity,offset,'daily')
                     except:
                         answer='I could not receive the information'            
         else:
-            answer=Weather.switcher[key](self,data,offset,timeperiod)
+            answer=entity['function'](self,data,entity,offset,timeperiod)
 
         return answer
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
-    switcher={'weather' : get_summary,
-              'temperature': get_temperature,
-              'sunrise': get_sunrise,
-              'sunset': get_sunset,
-              'humidity':get_humidity,
-              'windspeed':get_windspeed,
-              'pressure':get_pressure,
-              'moonphase':get_moonphase,
-              'temperaturemin':get_temperatureMin,
-              'temperaturemax':get_temperatureMax,
-              'visibility':get_visibility,
-              'snow':get_snow,
-              'rain':get_rain,
+    switcher={'weather' : {'function': get_summary},
+              'temperature': {'function': get_specialforecast, 'value' : 'temperature', 'name': 'temperature', 'units': 'degrees celsius'},
+              'sunrise':     {'function': get_sunTime, 'value' : 'sunriseTime',     'name': 'sunrise time'},
+              'sunset':      {'function': get_sunTime, 'value' : 'sunsetTime',      'name': 'sunset time'},
+              'humidity':    {'function': get_specialforecast, 'value' : 'humidity',    'name': 'humidity',    'units': 'percent'},
+              'windspeed':   {'function': get_windspeed, 'value' : 'windspeed',    'name': 'wind speed',    'units': 'percent', 'side' : 'true'},
+              'pressure':    {'function': get_specialforecast, 'value' : 'pressure',    'name': 'pressure',    'units': 'hectopascals'}, 
+              'moonphase':   {'function': get_moonphase, 'value' : 'humidity',    'name': 'humidity',    'units': 'percent'},
+              'temperaturemin':{'function': get_specialforecast, 'value' : 'temperatureMin', 'name': 'minimum temperature',    'units': 'degrees celsius'},
+              'temperaturemax':{'function': get_specialforecast, 'value' : 'temperatureMax', 'name': 'maximum temperature',    'units': 'degrees celsius'},
+              'visibility':    {'function': get_specialforecast, 'value' : 'visibility',     'name': 'visibility',             'units': 'kilometers'}, 
+              'snow':{'function': get_percipitation}, 
+              'rain':{'function': get_percipitation}, 
               }
 
     #Called from the query logic
