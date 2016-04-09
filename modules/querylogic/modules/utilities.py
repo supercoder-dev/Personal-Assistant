@@ -2,7 +2,6 @@ import json
 import datetime
 import os
 
-
 def init_hook():
         weather=Weather()
         location='Prague'
@@ -16,6 +15,6 @@ class Utilities:
     #          }
 #def call_switcher(self, key, data, timeperiod, offset):
 
-def query_resolution(self, intent, query, params):
-    if intent == 'timer':
-        modules.timer.run(6)
+    def query_resolution(self, intent, query, params):
+        if intent == 'timer':
+            modules.timer.run(6)
