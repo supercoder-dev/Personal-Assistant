@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 import json
 import datetime
 import time as tm
+import math
 
 def getLocation(place):
     geolocator = Nominatim()
@@ -192,11 +193,25 @@ class Weather:
             answer='wanning gibbous'
         elif(phase>0.75 and phase<1):
             answer='wanning crescent'
+    
+    # write for full moon position but can work also for new noon etc.
+    def get_moonposition(self,data,entity,offset,timeperiod='daily'):
+        moonphasePerDay = 1/29.5306
+        fullmoon = 0.5
+        phase=data['daily']['data'][offset]['moonPhase'] - fullmoon + entity['moon']
+        if(phase>fullmoon-moonphasePerDay and phase<=fullmoon):
+            return 'It\'s a '+ entity['name'] +' day'
 
-        return self.get_simplesentence(answer,'moon phase is ')
+        if(phase<fullmoon):
+            lastfull = int(round((phase + fullmoon)/moonphasePerDay))
+            nextfull = int(round((-phase+ fullmoon)/moonphasePerDay))
+        else:
+            lastfull = int(round((phase + fullmoon-1)/moonphasePerDay))
+            nextfull = int(round((-phase+ fullmoon+1)/moonphasePerDay))
+        return 'The last ' + entity['name'] +' was ' + str(abs(lastfull)) + ' days ago and the next '+ entity['name'] +' will be for ' + str(abs(nextfull)) + ' days.'
 
     def get_percipitation(self, data,entity,offset,timeperiod='currently'):
-        units=['milimeters per second', 'centimeters per second']
+        units=['milimeters per hour', 'centimeters per hour']
         unit_index = 0
         if(timeperiod=='currently'):
             if('precipType' in data[timeperiod]):
@@ -220,7 +235,7 @@ class Weather:
             else:
                 return 'Currently, there are no precipitations.'
         else:
-            return 'I dont know'
+            return 'I dont know.'
     
     #check if the datetime is specified and take it into account
     def check_query_datetime(self,entities):
@@ -286,7 +301,9 @@ class Weather:
               'humidity':    {'function': get_specialforecast, 'value' : 'humidity',    'name': 'humidity',    'units': 'percent'},
               'windspeed':   {'function': get_windspeed, 'value' : 'windspeed',    'name': 'wind speed',    'units': 'percent', 'side' : 'true'},
               'pressure':    {'function': get_specialforecast, 'value' : 'pressure',    'name': 'pressure',    'units': 'hectopascals'}, 
-              'moonphase':   {'function': get_moonphase, 'value' : 'humidity',    'name': 'humidity',    'units': 'percent'},
+              'moonphase':   {'function': get_moonphase},
+              'fullmoon':    {'function': get_moonposition,  'name': 'full moon', 'moon' : 0.5},
+              'newmoon':     {'function': get_moonposition,  'name': 'new moon' , 'moon' : 0},
               'temperaturemin':{'function': get_specialforecast, 'value' : 'temperatureMin', 'name': 'minimum temperature',    'units': 'degrees celsius'},
               'temperaturemax':{'function': get_specialforecast, 'value' : 'temperatureMax', 'name': 'maximum temperature',    'units': 'degrees celsius'},
               'visibility':    {'function': get_specialforecast, 'value' : 'visibility',     'name': 'visibility',             'units': 'kilometers'}, 
