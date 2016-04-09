@@ -136,6 +136,17 @@ class Weather:
             return 'moderate'
         return 'heavy'
 
+    def cloudintensity(self,cloudCover):
+        if(cloudCover<0.1):
+            return 'clear'
+        if(cloudCover<0.25):
+            return 'mostly clear'
+        if(cloudCover<0.75):
+            return 'partly cloudy'
+        if(cloudCover<0.9):
+            return 'mostly cloudy'
+        return 'cloud'
+
     def convert_time(posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -151,10 +162,22 @@ class Weather:
     def get_specialforecast(self,data,entity,offset,timeperiod='currently'):
         if(timeperiod=='currently'):
             answer=data[timeperiod]['data'][offset][entity['value']]
+            if(entity['units'] == 'percent'):
+                answer = answer*100
             return self.get_simplesentence(answer,'The '+ entity['name'] +' is ', entity['units'])  
         else:
             answer=data[timeperiod]['data'][offset][entity['value']]
-            return self.get_simplesentence(answer,'The '+ entity['name'] +' will be ', entity['units'])  
+            if(entity['units'] == 'percent'):
+                answer = answer*100
+            return self.get_simplesentence(answer,'The '+ entity['name'] +' will be ', entity['units']) 
+    
+    def get_cloud(self,data,entity,offset,timeperiod='currently'):
+        cloudCover=data[timeperiod]['data'][offset]['cloudCover']
+        answer=self.cloudintensity(cloudCover)
+        if(timeperiod=='currently'):            
+            return self.get_simplesentence(answer,'forecast says is ')   
+        else:
+            return self.get_simplesentence(answer,'forecast says will be ') 
 
     def get_sunTime(self,data,entity,offset,timeperiod='daily'):
         time=Weather.convert_time(data[timeperiod]['data'][offset][entity['value']]) 
@@ -173,6 +196,18 @@ class Weather:
             if(answer>0):
                 side = self.degreesToWorldSide(data[timeperiod]['data'][0]['windBearing'])
             return self.get_simplesentence(answer,'There will be ' + side + ' wind of speed ', units)
+
+    def get_neareststorm(self,data,entity,offset,timeperiod='currently'):
+        units = 'kilomerets'
+        if('nearestStormDistance' in data['currently']):
+            answer=data['currently']['nearestStormDistance']
+            if(answer>0):
+                side = self.degreesToWorldSide(data['currently']['nearestStormBearing'])
+                return self.get_simplesentence(answer,'The nearest thunderstorm is ', units + ' '+side)
+            else:
+                return 'It\'s a thunderstorm place.'
+        else:
+            return 'There aren\'t any thunderstorms data for this time.'
 
     def get_moonphase(self,data,entity,offset,timeperiod='daily'):
         phase=data['daily']['data'][offset]['moonPhase']
@@ -193,6 +228,8 @@ class Weather:
             answer='wanning gibbous'
         elif(phase>0.75 and phase<1):
             answer='wanning crescent'
+
+        return self.get_simplesentence(answer,'moon phase is ')
     
     # write for full moon position but can work also for new noon etc.
     def get_moonposition(self,data,entity,offset,timeperiod='daily'):
@@ -307,8 +344,10 @@ class Weather:
               'temperaturemin':{'function': get_specialforecast, 'value' : 'temperatureMin', 'name': 'minimum temperature',    'units': 'degrees celsius'},
               'temperaturemax':{'function': get_specialforecast, 'value' : 'temperatureMax', 'name': 'maximum temperature',    'units': 'degrees celsius'},
               'visibility':    {'function': get_specialforecast, 'value' : 'visibility',     'name': 'visibility',             'units': 'kilometers'}, 
-              'snow':{'function': get_percipitation}, 
-              'rain':{'function': get_percipitation}, 
+              'snow': {'function': get_percipitation}, 
+              'rain': {'function': get_percipitation}, 
+              'storm':{'function': get_neareststorm}, 
+              'cloudy':{'function': get_cloud}
               }
 
     #Called from the query logic
