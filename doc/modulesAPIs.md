@@ -30,7 +30,7 @@ Field `state` is `accepted` when configuration of the module went well or `faile
   * **Request**
     * `config`:
       * `attentionWord`: string, phrase that wake up the system
-      * `threshold`:
+      * `threshold`: keyword threshold
       * `modelPath`: path to the PocketSphinx model
       * `dictionaryPath`: path to the PocketSphinx dictonary
     * `data`:
@@ -66,6 +66,7 @@ Field `state` is `accepted` when configuration of the module went well or `faile
     * `config`:
     * `data`:
       * `answer`: formulated answer to tell to the user
+      * `voice`: type of the voice to use
   * **Reply**
     * `data`:
       * `timeOfAnswer`: timestamp, when the answer was told to the user (eg. string `2016-01-01 21:21:21`)
