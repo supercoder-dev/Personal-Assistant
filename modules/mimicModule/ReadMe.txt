@@ -1,5 +1,8 @@
 install:
 	1. git clone https://github.com/MycroftAI/mimic.git
+	2. cd mimic
+	3. ./configure
+	4. make
 
 
 Requirements
