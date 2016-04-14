@@ -18,4 +18,4 @@ class textToSpeech(moduleWrapper.moduleWrapper):
       None
     """
 
-    self.configToSend = {}
+    self.configToSend = {'voice': config['voice']}

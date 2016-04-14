@@ -89,7 +89,7 @@ class TextToSpeachModule:
 
 
     msg = message['answer']
-    subprocess.call(" $HOME/mimic/bin/mimic -t '"+msg+"' -voice "+self.selectedVoice,Shell=True)
+    subprocess.call(" $HOME/mimic/bin/mimic -t '"+msg+"' -voice "+self.selectedVoice, shell=True)
 
     timestamp = datetime.datetime.now().isoformat(' ')
     result = {'timeOfAnswer': timestamp}
