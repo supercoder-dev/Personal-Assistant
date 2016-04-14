@@ -1,0 +1,4 @@
+# text-to-speech module config
+textToSpeech:
+  path: ./Personal-Assistant/modules/pyttsxModule/TextToSpeachModule.py
+  voice: 

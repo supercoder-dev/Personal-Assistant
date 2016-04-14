@@ -1,0 +1,7 @@
+- name: install (via apt) required packages for text-to-speech module
+  apt: name={{item}} state=present
+  with_items:
+  - espeak
+
+- name: install (via pip) required python libraries for text-to-speech module
+  pip: requirements=/root/Personal-Assistant/modules/pyttsxModule/requirements.txt executable=pip

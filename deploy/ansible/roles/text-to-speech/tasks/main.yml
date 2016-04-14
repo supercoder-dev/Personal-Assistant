@@ -1,0 +1,21 @@
+- name: install pyttsx
+  include: pyttsx.yml
+  when: text_to_speech == 'pyttsx'
+  tags:
+  - text_to_speech
+  - pyttsx
+
+- name: install mimic
+  include: mimic.yml
+  when: text_to_speech == 'mimic'
+  tags:
+  - text_to_speech
+  - mimic
+
+- name: copy config
+  copy:
+    src: "{{ text_to_speech }}.yml"
+    dest: /root/config/text_to_speech.yml
+    force: yes
+  tags:
+  - text_to_speech

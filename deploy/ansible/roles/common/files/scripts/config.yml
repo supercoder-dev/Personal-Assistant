@@ -27,6 +27,3 @@ queryProcessor:
   country: Czech Republic
   city: Prague
 
-# text-to-speech module config
-textToSpeech:
-  path: ./Personal-Assistant/modules/pyttsxModule/TextToSpeachModule.py

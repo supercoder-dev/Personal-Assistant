@@ -1,0 +1,13 @@
+- name: install (via apt) required libraries for mimic
+  apt: name={{item}} state=present
+  with_items:
+  - libasound2-dev
+
+- name: clone mimic repo
+  git: repo=https://github.com/MycroftAI/mimic.git dest=/root/mimic version=master force=yes depth=5
+
+- name: configure mimic
+  command: ./configure chdir=/root/mimic/
+
+- name: make mimic
+  command: make chdir=/root/mimic/

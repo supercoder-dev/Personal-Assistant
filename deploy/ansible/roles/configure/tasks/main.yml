@@ -1,0 +1,4 @@
+- name: assemble config file
+  assemble:
+    dest: /root/config.yml
+    src: /root/config/

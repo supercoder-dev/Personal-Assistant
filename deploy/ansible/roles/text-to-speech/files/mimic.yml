@@ -1,0 +1,4 @@
+# text-to-speech module config
+textToSpeech:
+  path: ./Personal-Assistant/modules/mimicModule/TextToSpeachModule.py
+  voice: rms
