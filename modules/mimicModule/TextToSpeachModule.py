@@ -20,7 +20,7 @@ class TextToSpeachModule:
     """
 
     self.port = port
-    self.selectedVoice = "slt"
+    self.selectedVoice = "rms"
     self.zmqctx = zmq.Context()
     self.runServer()
 
@@ -89,7 +89,7 @@ class TextToSpeachModule:
 
 
     msg = message['answer']
-    subprocess.call('$HOME/mimic/bin/mimic -t '+msg+' -voice '+self.selectedVoice,Shell=True)
+    subprocess.call(" $HOME/mimic/bin/mimic -t '"+msg+"' -voice "+self.selectedVoice,Shell=True)
 
     timestamp = datetime.datetime.now().isoformat(' ')
     result = {'timeOfAnswer': timestamp}
