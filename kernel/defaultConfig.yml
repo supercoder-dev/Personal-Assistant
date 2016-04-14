@@ -29,5 +29,5 @@ queryProcessor:
 
 # text-to-speech module config
 textToSpeech:
-  path: ../modules/mimicModule/TextToSpeachModule.py
+  path: ../modules/textToSpeech/mimicModule/TextToSpeachModule.py
   voice: rms
