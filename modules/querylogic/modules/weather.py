@@ -142,7 +142,7 @@ class Weather:
             return 'very light'
         if(0.1*k>precipIntensity):
             return 'ligth'
-        if(0.4*k>recipIntensity):
+        if(0.4*k>precipIntensity):
             return 'moderate'
         return 'heavy'
 
