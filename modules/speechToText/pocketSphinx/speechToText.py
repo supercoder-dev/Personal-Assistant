@@ -102,7 +102,7 @@ class speechToText:
              decoder.process_raw(buf, False, False)
              try:
                  if  decoder.hyp().hypstr != '':
-                     print 'Partial decoding result:', decoder.hyp().hypstr
+                     print('Partial decoding result:' + decoder.hyp().hypstr)
              except AttributeError:
                  pass
              if decoder.get_in_speech():
@@ -114,7 +114,7 @@ class speechToText:
                      decoder.end_utt()
                      try:
                          if  decoder.hyp().hypstr != '':
-                             print 'Stream decoding result:', decoder.hyp().hypstr
+                             print('Stream decoding result:' + decoder.hyp().hypstr)
                              message = {'request': decoder.hyp().hypstr}
                              break
                      except AttributeError:
@@ -139,7 +139,7 @@ class speechToText:
     dictionaryPath = config['dictionaryPath']
     grammarPath = config['grammarPath']
 
-    if bool(attentionWord) and bool(threshold) and bool(modelPath) and bool(dictionaryPath):
+    if bool(modelPath) and bool(dictionaryPath) and bool(grammarPath):
         # Create a decoder with certain model
         self.config = Decoder.default_config()
         self.config.set_string('-hmm', modelPath)
