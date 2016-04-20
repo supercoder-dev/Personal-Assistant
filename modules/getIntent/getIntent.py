@@ -94,20 +94,16 @@ class GetIntentModule:
     Returns:
       dict: data to send back as dictionary
     """
-    action = message['action']
-    if action == 'listen':
 
-        response = wit.message(self.access_token, message['query'])
-        json_response = json.dumps(response)
-        r = json.loads(json_response)
-        print(r["_text"])
-        print(r["outcomes"])
-        data = {'response': message['query'], 'JSON': json_response}
+    response = wit.message(self.access_token, message['request'])
+    json_response = json.dumps(response)
+    r = json.loads(json_response)
+    print(r["_text"])
+    print(r["outcomes"])
+    data = {'JSON': json_response}
 
-        # return result
-        return data
-    else:
-        return False
+    # return result
+    return data
 
 
   def saveConfig(self, config):

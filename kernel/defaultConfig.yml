@@ -21,6 +21,11 @@ speechToText:
   path: ../modules/speechToText/speechToText.py
   dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
 
+# get intent module config
+getIntent:
+  path: ../modules/getIntent/getIntent.py
+  dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
+
 # query module config
 queryProcessor:
   path: ../modules/querylogic/query_control.py
