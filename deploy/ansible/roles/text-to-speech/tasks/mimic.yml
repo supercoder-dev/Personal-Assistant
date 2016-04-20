@@ -5,9 +5,12 @@
 
 - name: clone mimic repo
   git: repo=https://github.com/MycroftAI/mimic.git dest=/root/mimic version=master force=yes depth=5
+  register: mimic_clone
 
 - name: configure mimic
   command: ./configure chdir=/root/mimic/
+  when: mimic_clone.changed
 
 - name: make mimic
   command: make chdir=/root/mimic/
+  when: mimic_clone.changed
