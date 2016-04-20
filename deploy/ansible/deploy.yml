@@ -2,6 +2,7 @@
   become: yes
   roles:
    - common
+   - speech-to-text
    - get-intent
    - text-to-speech
    - configure

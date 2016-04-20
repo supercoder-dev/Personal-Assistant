@@ -16,11 +16,6 @@ attword:
   modelPath: /root/PocketSphinx/en-us/
   dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
 
-# speech-to-text module config
-speechToText:
-  path: ./Personal-Assistant/modules/speechToText/speechToText.py
-  dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
-
 # query module config
 queryProcessor:
   path: ./Personal-Assistant/modules/querylogic/query_control.py

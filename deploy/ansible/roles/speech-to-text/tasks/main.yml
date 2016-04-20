@@ -1,0 +1,14 @@
+- name: install pocketSphinx
+  include: pocketSphinx.yml
+  when: speech_to_text == 'pocketSphinx'
+  tags:
+  - speech_to_text
+  - pocketSphinx
+
+- name: copy config
+  copy:
+    src: "{{ speech_to_text }}.yml"
+    dest: /root/config/speech_to_text.yml
+    force: yes
+  tags:
+  - speech_to_text

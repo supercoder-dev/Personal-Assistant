@@ -68,19 +68,10 @@
   file: dest=/root/PocketSphinx state=directory
 
 - name: copy en-us language model for PocketSphinx
-  unarchive: src=PocketSphinx/en-us.zip dest=/root/PocketSphinx/ creates=/root/PocketSphinx/en-us/mdef
+  unarchive: src=files/PocketSphinx/en-us.zip dest=/root/PocketSphinx/ creates=/root/PocketSphinx/en-us/mdef
 
 - name: copy en-us dictionary for PocketSphinx
-  copy: src=PocketSphinx/cmudict-en-us.dict dest=/root/PocketSphinx/en-us/
-
-- name: install (via apt) required python libraries for speech-to-text module (Wit.ai)
-  apt: name={{item}} state=present
-  with_items:
-  - sox
-  - libsox-dev
-  - curl
-  - libcurl4-openssl-dev
-  - libssl-dev
+  copy: src=files/PocketSphinx/cmudict-en-us.dict dest=/root/PocketSphinx/en-us/
 
 - name: install (via pip3) required python libraries for query logic module
   pip: requirements=/root/Personal-Assistant/modules/querylogic/requirements.txt executable=pip3

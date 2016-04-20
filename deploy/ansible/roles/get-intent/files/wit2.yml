@@ -1,5 +1,5 @@
 # get intent module config
 getIntent:
-  path: ../modules/getIntent/getIntent.py
+  path: ./Personal-Assistant/modules/getIntent/getIntent.py
   dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
 
