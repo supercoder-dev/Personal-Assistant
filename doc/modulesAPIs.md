@@ -42,6 +42,9 @@ Field `state` is `accepted` when configuration of the module went well or `faile
 ## Speech-to-text module ##
   * **Request**
     * `config`:
+      * `modelPath`: path to the PocketSphinx model
+      * `dictionaryPath`: path to the PocketSphinx dictonary
+      * `grammarPath`: path to the PocketSphinx grammar
     * `data`:
       * `action`: string `listen` to start listening to the user
   * **Reply**
