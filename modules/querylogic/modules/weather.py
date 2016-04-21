@@ -190,27 +190,26 @@ class Weather:
         return d + datetime.timedelta(hours=-int(timeZone) + 0.01)
 
     def get_summary(self,data,entity,offset,timeWord,timeperiod='daily'):
-        dictAnsSum = self.get_summaryData(data,entity,offset,timeperiod)
-        entity1 = Weather.switcher[entity['subFunctions'][0]]
-        dictforec1 = entity1['subfunction'](self,data,entity1,offset,timeperiod)
-        entity2 = Weather.switcher[entity['subFunctions'][1]]
-        dictforec2 = entity2['subfunction'](self,data,entity2,offset,timeperiod) 
-        entity3 = Weather.switcher[entity['subFunctions'][2]]
-        dictforec3 = entity3['subfunction'](self,data,entity3,offset,timeperiod) 
-        answer = '';    
-        for i in range(len(dictAnsSum['answer'])):
-            answer = answer + dictAnsSum['answer'][i]+', ' +entity1['name']+' ' +dictforec1['answer'][i] +' ' +entity1['units']+', '+ entity2['name']+' ' + dictforec2['answer'][i] +' ' +entity2['units']+', '+entity3['name']+' ' + dictforec3['answer'][i] +' ' +entity3['units']+' '+ dictAnsSum['timespec'][i]+'. '
+        dictAnsSum = self.get_forecastData(data,entity,offset,timeperiod)
+        answer = ''; 
+        if (timeperiod=='currently'):
+            entity1 = Weather.switcher[entity['currFunctions'][0]]
+            dictforec1 = entity1['subfunction'](self,data,entity1,offset,timeperiod)
+            entity2 = Weather.switcher[entity['currFunctions'][1]]
+            dictforec2 = entity2['subfunction'](self,data,entity2,offset,timeperiod)
+            for i in range(len(dictAnsSum['answer'])):
+                answer = answer + dictAnsSum['answer'][i]+', ' +entity1['name']+' ' +dictforec1['answer'][i] +' ' +entity1['units']+', '+ entity2['name']+' ' + dictforec2['answer'][i] +' ' +entity2['units']+' now. '
+        else:
+            entity1 = Weather.switcher[entity['subFunctions'][0]]
+            dictforec1 = entity1['subfunction'](self,data,entity1,offset,timeperiod)
+            entity2 = Weather.switcher[entity['subFunctions'][1]]
+            dictforec2 = entity2['subfunction'](self,data,entity2,offset,timeperiod) 
+            entity3 = Weather.switcher[entity['subFunctions'][2]]
+            dictforec3 = entity3['subfunction'](self,data,entity3,offset,timeperiod) 
+            for i in range(len(dictAnsSum['answer'])):
+                answer = answer + dictAnsSum['answer'][i]+', ' +entity1['name']+' ' +dictforec1['answer'][i] +' ' +entity1['units']+', '+ entity2['name']+' ' + dictforec2['answer'][i] +' ' +entity2['units']+', '+entity3['name']+' ' + dictforec3['answer'][i] +' ' +entity3['units']+' '+ dictAnsSum['timespec'][i]+'. '
+        
         return self.get_simplesentence(answer[:-2],' forecast says ' +timeWord+ ' ')
-
-    def get_summaryData(self,data,entity,offset,timeperiod):
-        answer = []
-        timespec = []
-        for i in offset:
-            answerNew = data[timeperiod]['data'][i]['summary']
-            posixtime = ' on '+ Weather.time_to_day(data[timeperiod]['data'][i]['time'])
-            answer.append(answerNew[:-1])
-            timespec.append(posixtime)
-        return {'answer':answer, 'timespec':timespec }
 
     def get_specialforecast(self,data,entity,offset,timeWord,timeperiod='currently'):
         dictAnswer = self.get_forecastData(data,entity,offset,timeperiod)  
@@ -481,7 +480,7 @@ class Weather:
         return answer
     
     #switcher serves as an intent switch, based on the intent, the appropriate actions are taken. The intents might change in the future
-    switcher={'weather' : {'function': get_summary, 'value': 'summary', 'subFunctions':['temperaturemax', 'temperaturemin', 'windspeed']},
+    switcher={'weather' : {'function': get_summary, 'value': 'summary', 'units' : '', 'subFunctions':['temperaturemax', 'temperaturemin', 'windspeed'],'currFunctions':['temperature', 'windspeed'],'subfunction': get_forecastData},
               'temperature': {'function': get_specialforecast,'subfunction': get_forecastData, 'value' : 'temperature', 'name': 'temperature', 'units': 'degrees celsius'},
               'sunrise':     {'function': get_astronomy, 'subfunction': get_astronomyData, 'value' : 'sunriseTime',     'name': 'sunrise time', 'units': ''},
               'sunset':      {'function': get_astronomy, 'subfunction': get_astronomyData, 'value' : 'sunsetTime',      'name': 'sunset time', 'units': ''},
