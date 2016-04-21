@@ -7,6 +7,7 @@ global:
   minPort: 5000
   maxPort: 5999
   maxRetries: 99
+  logPath: ../logs/
 
 # attention word module config
 attword:
