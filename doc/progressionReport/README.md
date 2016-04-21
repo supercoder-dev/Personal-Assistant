@@ -1,6 +1,6 @@
-# Business plan #
+# Progression report #
 
-This paper describes business plan of the project. It contains project description, it's motivation and brief state-of-the-art preview. Then follows detailed description of the project with proposed solution. At the end there is a plan of the project with Gantt diagram included.
+This paper describes progression report of the project. It contains project state at the time of the report, detailed description of the solution and future plan.
 
 The document is available in czech language only.
 
