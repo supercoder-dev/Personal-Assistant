@@ -131,6 +131,11 @@ class Kernel:
     self.queryProcessor.stop()
     self.textToSpeech.stop()
 
+    del self.attwordListener
+    del self.speechToText
+    del self.getIntent
+    del self.queryProcessor
+    del self.textToSpeech
 
 
 # DEMO

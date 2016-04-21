@@ -33,6 +33,18 @@ class moduleWrapper:
     self.socket = self.zmqctx.socket(zmq.REQ)
 
 
+  def __del__(self):
+    """
+    Destructor of the object.
+
+    Returns:
+      None
+    """
+
+    self.socket.close()
+    self.zmqctx.term()
+
+
   def loadConfig(self, config):
     """
     Loads config into the module.
@@ -81,7 +93,7 @@ class moduleWrapper:
 
     # disconnect from previus socket
     if self.port != None:
-      self.socket.disconnect('ipc://127.0.0.1:{}'.format(port))
+      self.socket.disconnect('ipc://127.0.0.1:{}'.format(self.port))
 
     # select free port
     tmpSocket = self.zmqctx.socket(zmq.REP)
@@ -96,6 +108,7 @@ class moduleWrapper:
 
     # send config to the process
     self.sendReply({});
+
 
   def start(self):
     """
@@ -116,6 +129,11 @@ class moduleWrapper:
       None
     """
 
+    # disconnect from the server
+    if self.port != None:
+      self.socket.disconnect('ipc://127.0.0.1:{}'.format(self.port))
+
+    # stop the process
     self.process.terminate()
 
 
