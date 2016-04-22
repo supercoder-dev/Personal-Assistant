@@ -1,4 +1,4 @@
-# Default configuration file
+# Configuration file specific for this virtual machine
 #
 # All paths are absolute or relative to this file
 
@@ -7,6 +7,7 @@ global:
   minPort: 5000
   maxPort: 5999
   maxRetries: 99
+  logPath: logs/
 
 # attention word module config
 attword:
@@ -15,11 +16,6 @@ attword:
   threshold: 1e-45
   modelPath: /root/PocketSphinx/en-us/
   dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
-
-# speech-to-text module config
-speechToText:
-  path: ./Personal-Assistant/modules/speechToText/speechToText.py
-  dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
 
 # query module config
 queryProcessor:

@@ -1,0 +1,3 @@
+- name: install (via pip) required python libraries for get-intent module (Wit.ai)
+  pip: requirements=/root/Personal-Assistant/modules/getIntent/requirements.txt executable=pip
+

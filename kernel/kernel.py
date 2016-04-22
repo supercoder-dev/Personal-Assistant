@@ -2,6 +2,7 @@
 
 import attwordListener
 import speechToText
+import getIntent
 import queryProcessor
 import textToSpeech
 import os
@@ -27,6 +28,7 @@ class Kernel:
     # init wrappers
     self.attwordListener = attwordListener.attwordListener(self.attwordConfig, 'attention word module')
     self.speechToText = speechToText.speechToText(self.speechToTextConfig, 'speech-to-text module')
+    self.getIntent = getIntent.getIntent(self.getIntentConfig, 'get intent module')
     self.queryProcessor = queryProcessor.queryProcessor(self.queryProcessorConfig, 'query processing module')
     self.textToSpeech = textToSpeech.textToSpeech(self.textToSpeechConfig, 'text-to-speech module')
 
@@ -50,6 +52,7 @@ class Kernel:
     self.globalConfig = cfg['global']
     self.attwordConfig = cfg['attword']
     self.speechToTextConfig = cfg['speechToText']
+    self.getIntentConfig = cfg['getIntent']
     self.queryProcessorConfig = cfg['queryProcessor']
     self.textToSpeechConfig = cfg['textToSpeech']
 
@@ -57,6 +60,7 @@ class Kernel:
 
     self.attwordConfig.update(self.globalConfig)
     self.speechToTextConfig.update(self.globalConfig)
+    self.getIntentConfig.update(self.globalConfig)
     self.queryProcessorConfig.update(self.globalConfig)
     self.textToSpeechConfig.update(self.globalConfig)
 
@@ -65,6 +69,8 @@ class Kernel:
       self.attwordListener.loadConfig(self.attwordConfig)
     if hasattr(self, 'speechToText'):
       self.speechToText.loadConfig(self.speechToTextConfig)
+    if hasattr(self, 'getIntent'):
+      self.getIntent.loadConfig(self.getIntentConfig)
     if hasattr(self, 'queryProcessor'):
       self.queryProcessor.loadConfig(self.queryProcessorConfig)
     if hasattr(self, 'textToSpeech'):
@@ -83,6 +89,7 @@ class Kernel:
       # run all processes
       self.attwordListener.start()
       self.speechToText.start()
+      self.getIntent.start()
       self.queryProcessor.start()
       self.textToSpeech.start()
 
@@ -96,6 +103,7 @@ class Kernel:
         intent = sttResult['JSON']
         query = sttResult['request']
         print('Transcribed query: {}'.format(query))
+        intent = self.getIntent.sendReply({'request': query})['JSON']
         answer = self.queryProcessor.sendReply({'JSON': intent})['answer']
         print('The answer is: {}'.format(answer))
         answerTimestamp = self.textToSpeech.sendReply({'answer': answer})['timeOfAnswer']
@@ -119,9 +127,15 @@ class Kernel:
 
     self.attwordListener.stop()
     self.speechToText.stop()
+    self.getIntent.stop()
     self.queryProcessor.stop()
     self.textToSpeech.stop()
 
+    del self.attwordListener
+    del self.speechToText
+    del self.getIntent
+    del self.queryProcessor
+    del self.textToSpeech
 
 
 # DEMO

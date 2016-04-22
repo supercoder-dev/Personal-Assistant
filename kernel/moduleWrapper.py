@@ -24,6 +24,8 @@ class moduleWrapper:
       None
     """
 
+    self.startUpTime = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+
     self.loadConfig(config)
     self.port = None
     self.name = name
@@ -31,6 +33,18 @@ class moduleWrapper:
     # ZMQ
     self.zmqctx = zmq.Context()
     self.socket = self.zmqctx.socket(zmq.REQ)
+
+
+  def __del__(self):
+    """
+    Destructor of the object.
+
+    Returns:
+      None
+    """
+
+    self.socket.close()
+    self.zmqctx.term()
 
 
   def loadConfig(self, config):
@@ -48,6 +62,7 @@ class moduleWrapper:
     self.minPort = config['minPort']
     self.maxPort = config['maxPort']
     self.maxRetries = config['maxRetries']
+    self.logPath = config['logPath']
     self.path = os.path.normpath(os.path.join(os.path.dirname(config['configFileName']), config['path']))
     self.prepareConfigToSend(config)
 
@@ -81,21 +96,27 @@ class moduleWrapper:
 
     # disconnect from previus socket
     if self.port != None:
-      self.socket.disconnect('ipc://127.0.0.1:{}'.format(port))
+      self.socket.disconnect('ipc://127.0.0.1:{}'.format(self.port))
 
     # select free port
     tmpSocket = self.zmqctx.socket(zmq.REP)
     self.port = tmpSocket.bind_to_random_port('ipc://127.0.0.1', self.minPort, self.maxPort, self.maxRetries)
     tmpSocket.unbind('ipc://127.0.0.1:{}'.format(self.port))
 
+    # open files to log
+    os.makedirs(self.logPath, exist_ok = True)
+    self.logStdout = open(os.path.join(self.logPath, self.startUpTime + '-' + self.name + '.out'), 'w')
+    self.logStderr = open(os.path.join(self.logPath, self.startUpTime + '-' + self.name + '.err'), 'w')
+
     # run the process
-    self.process = subprocess.Popen([self.path, str(self.port)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    self.process = subprocess.Popen([self.path, str(self.port)], stdout=self.logStdout, stderr=self.logStderr)
 
     # create client
     self.socket.connect('ipc://127.0.0.1:{}'.format(self.port))
 
     # send config to the process
     self.sendReply({});
+
 
   def start(self):
     """
@@ -116,6 +137,17 @@ class moduleWrapper:
       None
     """
 
+    # close files to log
+    if hasattr(self, 'logStdout') and not self.logStdout.closed:
+      self.logStdout.close()
+    if hasattr(self, 'logStderr') and not self.logStderr.closed:
+      self.logStderr.close()
+
+    # disconnect from the server
+    if self.port != None:
+      self.socket.disconnect('ipc://127.0.0.1:{}'.format(self.port))
+
+    # stop the process
     self.process.terminate()
 
 

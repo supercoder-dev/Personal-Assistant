@@ -1,0 +1,14 @@
+- name: install wit2
+  include: wit2.yml
+  when: get_intent == 'wit2'
+  tags:
+  - get_intent
+  - wit2
+
+- name: copy config
+  copy:
+    src: "{{ get_intent }}.yml"
+    dest: /root/config/get_intent.yml
+    force: yes
+  tags:
+  - get_intent
