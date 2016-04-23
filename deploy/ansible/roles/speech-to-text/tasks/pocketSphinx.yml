@@ -17,4 +17,4 @@
   copy: src=files/PocketSphinx/cmudict-en-us.dict dest=/root/PocketSphinx/en-us/
 
 - name: copy en-us grammar for PocketSphinx
-  copy: src=files/PocketSphinx/cmusphinx-5.0-en-us.lm.dmp dest=/root/PocketSphinx/en-us/
+  copy: src=files/PocketSphinx/en-us.lm dest=/root/PocketSphinx/en-us/

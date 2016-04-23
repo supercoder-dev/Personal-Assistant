@@ -145,7 +145,6 @@ class speechToText:
         self.config.set_string('-hmm', modelPath)
         self.config.set_string('-dict', dictionaryPath)
         self.config.set_string('-lm', grammarPath)
-        self.config.set_string('-logfn', '/dev/null')
 
         # prepare microphone using PyAudio
         self.p = pyaudio.PyAudio()

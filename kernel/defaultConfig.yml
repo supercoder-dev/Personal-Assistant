@@ -22,7 +22,7 @@ speechToText:
   path: ../modules/speechToText/pocketSphinx/speechToText.py
   modelPath: /usr/local/share/pocketsphinx/model/en-us/en-us
   dictionaryPath: /usr/local/share/pocketsphinx/model/en-us/en-us/dictionary.dict
-  grammarPath: /usr/local/share/pocketsphinx/model/en-us/en-us/grammar.dmp
+  grammarPath: /usr/local/share/pocketsphinx/model/en-us/en-us/grammar.lm
 
 # get intent module config
 getIntent:

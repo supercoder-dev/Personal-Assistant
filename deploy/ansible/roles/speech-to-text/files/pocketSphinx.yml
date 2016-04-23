@@ -3,5 +3,5 @@ speechToText:
   path: ./Personal-Assistant/modules/speechToText/pocketSphinx/speechToText.py
   modelPath: /root/PocketSphinx/en-us/
   dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
-  grammarPath: /root/PocketSphinx/en-us/cmusphinx-5.0-en-us.lm.dmp
+  grammarPath: /root/PocketSphinx/en-us/en-us.lm
 
