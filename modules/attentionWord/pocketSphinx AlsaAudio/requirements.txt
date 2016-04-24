@@ -1,0 +1,3 @@
+pyzmq>=15.2.0
+alsaaudion
+pocketsphinx>=0.0.9
