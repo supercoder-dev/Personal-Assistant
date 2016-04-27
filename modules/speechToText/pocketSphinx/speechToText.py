@@ -96,6 +96,8 @@ class speechToText:
     # start input stream
     stream = self.p.open(format=pyaudio.paInt16, channels=2, rate=44100, input=True, frames_per_buffer=1024)
 
+    in_speech_bf = True
+
     while True:
         buf = stream.read(1024)
         if buf:
