@@ -142,7 +142,7 @@ class Weather:
             return 'very light'
         if(0.1*k>precipIntensity):
             return 'ligth'
-        if(0.4*k>precipIntensity):
+        if(0.4*k>recipIntensity):
             return 'moderate'
         return 'heavy'
 
@@ -207,7 +207,7 @@ class Weather:
             entity3 = Weather.switcher[entity['subFunctions'][2]]
             dictforec3 = entity3['subfunction'](self,data,entity3,offset,timeperiod) 
             for i in range(len(dictAnsSum['answer'])):
-                answer = answer + dictAnsSum['answer'][i]+', ' +entity1['name']+' ' +dictforec1['answer'][i] +' ' +entity1['units']+', '+ entity2['name']+' ' + dictforec2['answer'][i] +' ' +entity2['units']+', '+entity3['name']+' ' + dictforec3['answer'][i] +' ' +entity3['units']+' '+ dictAnsSum['timespec'][i]+'. '
+                answer = answer + (dictAnsSum['answer'][i])[:-1]+', ' +(entity1['value'])[:-3]+' from ' +dictforec2['answer'][i] +' to '+ dictforec1['answer'][i] +' ' +entity2['units']+' '+ dictAnsSum['timespec'][i]+'. '
         
         return self.get_simplesentence(answer[:-2],' forecast says ' +timeWord+ ' ')
 
@@ -299,6 +299,8 @@ class Weather:
                  answerNew = answerNew*100
              elif(entity['value'] == 'cloudCover'):
                  answerNew = self.cloudintensity(answerNew)
+             elif(entity['units'] == 'degrees celsius' or entity['value'] == 'windSpeed' ):
+                 answerNew = round(answerNew)
              answer.append(str(answerNew))
              timespec.append(posixday)
         return {'answer':answer, 'timespec':timespec }   
