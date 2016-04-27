@@ -57,19 +57,13 @@ witTest=[{"_text":"What is the weather today","msg_id":"20853b05-3c62-4766-8404-
 '''
 witTest=[
          {"outcomes": [{"_text": "Tell me a joke about Chuck Norris", "confidence": 0.735, "entities": {'agenda_entry': 'joke'}, "intent": "agenda"}]},
-    {"outcomes": [
-        {"_text": "Tell me the news about travel", "confidence": 0.735, "entities": {"content_type": "travel"},
-         "intent": "news"}]},
-    {"outcomes": [
-        {"_text": "Tell me the news for business", "confidence": 0.735, "entities": {"content_type": "business"},
-         "intent": "news"}]},
-
-    {"outcomes": [{"_text": "Tell me the news about uk", "confidence": 0.735, "entities": {"content_type": "business"},
-                   "intent": "news"}]},
+    {"outcomes": [        {"_text": "Tell me the news about travel", "confidence": 0.735, "entities": {"content_type": "travel"},"intent": "news"}]},
+    {"outcomes": [        {"_text": "Tell me the news for business", "confidence": 0.735, "entities": {"content_type": "business"},         "intent": "news"}]},
+    {"outcomes": [{"_text": "Tell me the news about uk", "confidence": 0.735, "entities": {"content_type": "business"},                   "intent": "news"}]},
     {"outcomes": [{"_text": "Tell me the news", "confidence": 0.735, "entities": {}, "intent": "news"}]},
-    {"outcomes": [
-        {"_text": "Tell me the news about sdanasd", "confidence": 0.735, "entities": {"content_type": "sdanasd"},
-         "intent": "news"}]},
+    {"outcomes": [        {"_text": "Tell me the news about sdanasd", "confidence": 0.735, "entities": {"content_type": "sdanasd"},         "intent": "news"}]},
+    {"outcomes": [      {"_text": "Tell me a good joke", "confidence": 0.735, "entities": {"agenda_entry": "joke"},         "intent": 'agenda'}]},
+         
          ]
 
 #{"_text":"What is the air pressure today","msg_id":"0d58b3e9-924f-40e7-b721-da9289a1db50","outcomes":[{"_text":"What is the air pressure today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000+01:00","values":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000+01:00"}]}],"weather_type":[{"type":"value","value":"pressure"}]},"intent":"weather"}]}
