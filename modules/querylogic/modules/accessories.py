@@ -5,6 +5,7 @@ import os
 from urllib.request import Request, urlopen, URLError
 import json
 import html
+import random
 
 #import modules.access_util.timer as timer
 
@@ -30,11 +31,19 @@ class Accessories:
         return 'The date is: ' + dt.strftime('%d of %m %Y') + '.'
 
     def tell_joke(self,query):
-        request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
-        response = urlopen(request)
-        data = json.loads(response.readall().decode('utf-8'))
-        joke = data['value']['joke']
-        html.unescape(joke)
+        if round(random.random()):
+            with open('jokes.json') as data_file:    
+                data = json.load(data_file)
+        
+            choise = round(len(data)*random.random()); 
+            joke = data[choise]['joke']
+        else:
+            request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
+            response = urlopen(request)
+            data = json.loads(response.readall().decode('utf-8'))
+            joke = data['value']['joke']
+            html.unescape(joke)
+
         return joke
 
     switcher = {'timeNow' : get_timeNow,
