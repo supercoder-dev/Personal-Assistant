@@ -23,4 +23,8 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "ansible/deploy.yml"
   end
 
+  # create named machine
+  config.vm.define "vagrant", primary:true do |vg|
+  end
+
 end
