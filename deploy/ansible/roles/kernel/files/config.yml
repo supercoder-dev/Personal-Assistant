@@ -9,14 +9,6 @@ global:
   maxRetries: 99
   logPath: logs/
 
-# attention word module config
-attword:
-  path: ./Personal-Assistant/modules/attentionWord/pocketSphinx/attentionWord.py
-  attentionWord: phoenix
-  threshold: 1e-45
-  modelPath: /root/PocketSphinx/en-us/
-  dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
-
 # query module config
 queryProcessor:
   path: ./Personal-Assistant/modules/querylogic/query_control.py

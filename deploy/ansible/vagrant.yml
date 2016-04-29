@@ -4,6 +4,7 @@
    - common
    - audio
    - kernel
+   - attention-word
    - speech-to-text
    - get-intent
    - text-to-speech
