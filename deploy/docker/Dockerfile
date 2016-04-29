@@ -6,14 +6,12 @@ RUN apt-get update && \
     apt-get install -y apt-utils \
                        debconf-utils
 # Git
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git \
-                                                      curl && \
-    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y git-lfs && \
-    git lfs install
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git
 
 # Ansible
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ansible
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ansible
 
 WORKDIR /root
 
