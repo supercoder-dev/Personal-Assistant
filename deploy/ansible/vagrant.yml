@@ -3,6 +3,7 @@
   roles:
    - common
    - audio
+   - kernel
    - speech-to-text
    - get-intent
    - text-to-speech

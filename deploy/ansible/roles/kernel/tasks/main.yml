@@ -1,0 +1,15 @@
+- name: install (via pip3) required python libraries for kernel
+  pip: requirements=/root/Personal-Assistant/kernel/requirements.txt executable=pip3
+
+- name: copy config
+  copy:
+    src: config.yml
+    dest: /root/config/global.yml
+    force: yes
+
+- name: copy run script
+  copy:
+    dest: /root/run.py
+    src: run.py
+    mode: 755
+    force: yes
