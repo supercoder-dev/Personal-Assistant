@@ -1,0 +1,4 @@
+- name: install (via pip3) required python libraries for query logic module
+  pip:
+    requirements: /root/Personal-Assistant/modules/querylogic/requirements.txt
+    executable: pip3

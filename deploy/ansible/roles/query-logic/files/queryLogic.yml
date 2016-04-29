@@ -1,0 +1,6 @@
+# query module config
+queryProcessor:
+  path: ./Personal-Assistant/modules/querylogic/query_control.py
+  country: Czech Republic
+  city: Prague
+

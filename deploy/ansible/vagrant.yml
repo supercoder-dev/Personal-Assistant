@@ -7,5 +7,6 @@
    - attention-word
    - speech-to-text
    - get-intent
+   - query-logic
    - text-to-speech
    - configure

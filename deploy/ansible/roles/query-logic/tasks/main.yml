@@ -1,0 +1,14 @@
+- name: install query logic module
+  include: queryLogic.yml
+  when: query_logic == 'queryLogic'
+  tags:
+  - query_logic
+  - queryLogic
+
+- name: copy config
+  copy:
+    src: "{{ query_logic }}.yml"
+    dest: /root/config/query_logic.yml
+    force: yes
+  tags:
+  - query_logic
