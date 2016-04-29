@@ -1,0 +1,15 @@
+<!doctype html>
+<title>Phoenix</title>
+<h1>Phoenix</h1>
+
+<form action="/" method="post">
+  <input type="text" name="query" size="30" value="Here type you question."></input><br>
+  <input type="submit" value="Ask" name="submit">
+</form>
+
+{% if answer %}
+  <p><b>Question:</b> {{ query }}</p>
+  <p><b>Answer:</b> {{ answer }}</p>
+{% else %}
+
+{% endif %}
