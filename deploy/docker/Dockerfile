@@ -20,3 +20,9 @@ RUN git clone --depth 5 https://github.com/brmson/Personal-Assistant.git
 
 # provision with ansible
 RUN ansible-playbook -c local -i Personal-Assistant/deploy/ansible/docker_hosts Personal-Assistant/deploy/ansible/docker.yml
+
+# expose HTTP
+EXPOSE 80
+
+# set entrypoint
+CMD ["python3", "/root/web.py"]

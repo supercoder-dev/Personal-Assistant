@@ -7,9 +7,12 @@
     dest: /root/config/global.yml
     force: yes
 
-- name: copy run script
+- name: copy run scripts
   copy:
-    dest: /root/run.py
-    src: run.py
+    dest: /root/{{ item }}
+    src: "{{ item }}"
     mode: 755
     force: yes
+  with_items:
+    - run.py
+    - web.py
