@@ -98,8 +98,6 @@ class kernel:
 
 
 app = flask.Flask('Phoenix')
-kernel = kernel()
-kernel.run()
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
@@ -114,4 +112,6 @@ def index():
 
 # DEMO
 if __name__ == '__main__':
-  app.run(host = '0.0.0.0', port = 80)
+  kernel = kernel()
+  kernel.run()
+  app.run(port = 5000)
