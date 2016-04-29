@@ -17,66 +17,10 @@
 - name: change root password
   user: name=root password=$6$n8I8WiGqmbCU$ElHrLqhi9SWLLBT27UWsP0xwXQ0cz.QRsk9vq.uC0y7zPXpiCzHtfcVEPlFhOFGh5wKRGhiygwyTk5qbf4YI21
 
-- name: install alsa audio drivers
-  apt: name={{item}} state=present
-  with_items:
-  - alsa-base
-  - alsa-utils
-  - alsa-oss
-  #- alsamixergui
-  #- alsaplayer-gtk
-  - alsaplayer-common
-  - alsaplayer-oss
-  #- snd-gtk-jack 
-
-- name: init alsa audio
-  command: alsactl init
-  failed_when: False
-  changed_when: False
-
-- name: set output volume
-  command: amixer set Master 100%
-  changed_when: False
-
 - name: clone repo
   git: repo=https://github.com/brmson/Personal-Assistant.git dest=/root/Personal-Assistant version=master force=yes depth=5
-
-- name: install (via pip3) required python libraries for kernel
-  pip: requirements=/root/Personal-Assistant/kernel/requirements.txt executable=pip3
 
 - name: create config folder
   file:
     path: /root/config/
     state: directory
-
-- name: copy config
-  copy:
-    src: scripts/config.yml
-    dest: /root/config/global.yml
-    force: yes
-
-- name: install (via apt) required python libraries for attention word module (PocketSphinx)
-  apt: name={{item}} state=present
-  with_items:
-  - python3-pyaudio
-  - swig
-  
-- name: install (via pip3) required python libraries for attention word module (PocketSphinx)
-  pip: requirements=/root/Personal-Assistant/modules/attentionWord/pocketSphinx/requirements.txt executable=pip3
-
-- name: make PocketSphinx dir
-  file: dest=/root/PocketSphinx state=directory
-
-- name: copy en-us language model for PocketSphinx
-  unarchive: src=files/PocketSphinx/en-us.zip dest=/root/PocketSphinx/ creates=/root/PocketSphinx/en-us/mdef
-
-- name: copy en-us dictionary for PocketSphinx
-  copy: src=files/PocketSphinx/cmudict-en-us.dict dest=/root/PocketSphinx/en-us/
-
-- name: install (via pip3) required python libraries for query logic module
-  pip: requirements=/root/Personal-Assistant/modules/querylogic/requirements.txt executable=pip3
-
-- name: copy script files
-  copy: dest=/root/{{ item.name }} src=scripts/{{ item.name }} mode={{ item.mode }} force=yes
-  with_items:
-  - {name: run.py, mode: 755}

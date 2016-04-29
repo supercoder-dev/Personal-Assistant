@@ -1,0 +1,28 @@
+- name: install (via apt) required python libraries for attention word module (PocketSphinx)
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - python3-pyaudio
+  - swig
+  
+- name: install (via pip3) required python libraries for attention word module (PocketSphinx)
+  pip:
+    requirements: /root/Personal-Assistant/modules/attentionWord/pocketSphinx/requirements.txt
+    executable: pip3
+
+- name: make PocketSphinx dir
+  file:
+    dest: /root/PocketSphinx
+    state: directory
+
+- name: copy en-us language model for PocketSphinx
+  unarchive:
+    src: files/PocketSphinx/en-us.zip
+    dest: /root/PocketSphinx/
+    creates: /root/PocketSphinx/en-us/mdef
+
+- name: copy en-us dictionary for PocketSphinx
+  copy:
+    src: files/PocketSphinx/cmudict-en-us.dict
+    dest: /root/PocketSphinx/en-us/

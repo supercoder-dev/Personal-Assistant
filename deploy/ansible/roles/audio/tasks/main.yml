@@ -1,0 +1,19 @@
+- name: install alsa audio drivers
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - alsa-base
+  - alsa-utils
+  - alsa-oss
+  - alsaplayer-common
+  - alsaplayer-oss
+
+- name: init alsa audio
+  command: alsactl init
+  failed_when: False
+  changed_when: False
+
+- name: set output volume
+  command: amixer set Master 100%
+  changed_when: False

@@ -1,0 +1,14 @@
+- name: install pocketSphinx
+  include: pocketSphinx.yml
+  when: attention_word == 'pocketSphinx'
+  tags:
+  - attention_word
+  - pocketSphinx
+
+- name: copy config
+  copy:
+    src: "{{ attention_word }}.yml"
+    dest: /root/config/attention_word.yml
+    force: yes
+  tags:
+  - attention_word

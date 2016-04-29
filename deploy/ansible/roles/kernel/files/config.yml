@@ -1,0 +1,11 @@
+# Configuration file specific for this virtual machine
+#
+# All paths are absolute or relative to this file
+
+# global config
+global:
+  minPort: 5000
+  maxPort: 5999
+  maxRetries: 99
+  logPath: logs/
+
