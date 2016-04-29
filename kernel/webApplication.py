@@ -7,7 +7,7 @@ import yaml
 import flask
 
 
-class kernel:
+class Kernel:
   """
   Class maintaining run of the whole web application.
   """
@@ -97,7 +97,7 @@ class kernel:
     del self.queryProcessor
 
 
-app = flask.Flask('Phoenix')
+app = flask.Flask('Phoenix', template_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates'))
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
@@ -112,6 +112,6 @@ def index():
 
 # DEMO
 if __name__ == '__main__':
-  kernel = kernel()
+  kernel = Kernel()
   kernel.run()
   app.run(port = 5000)
