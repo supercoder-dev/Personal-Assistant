@@ -17,27 +17,6 @@
 - name: change root password
   user: name=root password=$6$n8I8WiGqmbCU$ElHrLqhi9SWLLBT27UWsP0xwXQ0cz.QRsk9vq.uC0y7zPXpiCzHtfcVEPlFhOFGh5wKRGhiygwyTk5qbf4YI21
 
-- name: install alsa audio drivers
-  apt: name={{item}} state=present
-  with_items:
-  - alsa-base
-  - alsa-utils
-  - alsa-oss
-  #- alsamixergui
-  #- alsaplayer-gtk
-  - alsaplayer-common
-  - alsaplayer-oss
-  #- snd-gtk-jack 
-
-- name: init alsa audio
-  command: alsactl init
-  failed_when: False
-  changed_when: False
-
-- name: set output volume
-  command: amixer set Master 100%
-  changed_when: False
-
 - name: clone repo
   git: repo=https://github.com/brmson/Personal-Assistant.git dest=/root/Personal-Assistant version=master force=yes depth=5
 
