@@ -1,0 +1,107 @@
+import wit
+import os
+
+#import wit2 as wit
+from wit import Wit
+
+import json
+access_token = 'NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR'
+#wit.init()
+#response = wit.voice_query_auto(access_token)
+
+def say(session_id, context, msg):
+    print(msg)
+
+def merge(session_id, context, entities, msg):
+    return context
+
+def error(session_id, context, e):
+    print(str(e))
+
+actions = {
+    'say': say,
+    'merge': merge,
+    'error': error,
+}
+client = Wit(access_token, actions)
+responses=[]
+
+sentences={
+    'What is the weather in London?' : {'intent': 'weather','entities':{'location':'London'}},
+    'What is the temperature outside?' : {'intent': 'weather','entities':{'location':'outside','weather_type':'temperature'}},
+    'What moon phase will be on Wednesday?':{'intent': 'weather','entities':{'weather_type':'moonphase','datetime':None}},
+    'What will be the weather during the weekend?':{'intent': 'weather','entities':{'datetime':None}},
+    'How is the wind outside?':{'intent': 'weather','entities':{'location':'outside','weather_type':'windspeed'}},
+    'Is it raining outside?':{'intent': 'weather','entities':{'location':'outside','weather_type':'rain'}},
+    'Is it snowing in Brno?':{'intent': 'weather','entities':{'location':'Brno', 'weather_type':'snow'}},
+    'Is it cloudy in Liberec?':{'intent': 'weather','entities':{'location':'Liberec','weather_type':'cloudy'}},
+    'What is the weather forecast for the next week?':{'intent': 'weather','entities':{'datetime':None}},
+    'Will the sun shine on Thursday?':{'intent': 'weather','entities':{'datetime':None}},
+    'When will the sun rise on Monday?':{'intent': 'weather','entities':{'datetime':None,'weather_type':'sunrise'}},
+    'Is there a storm coming?':{'intent': 'weather','entities':{'weather_type':'storm'}},
+}
+
+def testSentence(message,expOutcome):
+    res={'intent':None,'entities':None,'confidence':None}
+    resp = client.message(message)
+    responses.append(resp)
+    #print(str(resp['outcomes'][0]['intent']))
+    print(str(resp['_text']))
+    print(str(resp['outcomes'][0]['entities'].keys()))
+    #print(str(resp['outcomes'][0]['confidence']))
+
+    res['confidence'] = resp['outcomes'][0]['confidence']
+    if expOutcome['intent'] == resp['outcomes'][0]['intent']:
+        res['intent'] = 'Ok'
+    else:
+        res['intent'] = 'Bad'
+
+    if expOutcome['entities'].keys() == resp['outcomes'][0]['entities'].keys():
+        res['entities']='Ok'
+        for key, value in expOutcome['entities'].items():
+
+            if not(key=='datetime') and (not value == resp['outcomes'][0]['entities'][key][0]['value']):
+                res['entities']='Bad'
+    else:
+        res['entities'] = 'Bad'
+
+    return res
+
+for key, value in sentences.items():
+    result=testSentence(key,value)
+
+    if (result['intent'] == 'Ok') and (result['entities'] == 'Ok'):
+        print('Ok')
+    else:
+        print('Mistake')
+
+currentDir=os.path.dirname(os.path.abspath(__file__))
+desiredDir=os.path.join(currentDir,os.pardir,'modules','querylogic','modules')
+moduleNames=os.listdir(desiredDir)
+moduleNames=['modules.querylogic.modules.' + s for s in moduleNames]
+print(currentDir)
+print(desiredDir)
+
+moduleNames = [ name for name in moduleNames if not name.startswith('modules.querylogic.modules.__') ]
+modules=[]
+
+for i in range(0,len(moduleNames)):
+    moduleNames[i]=moduleNames[i][:-3]
+    print(moduleNames[i])
+    modules.append(__import__(moduleNames[i], fromlist=['']))
+
+moduleInst=[]
+
+for module in modules:
+    initModule=module.init_hook()
+    moduleInst.append(initModule)
+
+params={'city':'Prague'}
+
+
+for wit in responses:
+    for module in moduleInst:
+        answer=module.query_resolution(wit['outcomes'][0]['intent'], wit['outcomes'][0], params)
+
+        if(answer!='query not recognised'):
+            print(answer)
