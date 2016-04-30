@@ -1,13 +1,12 @@
 import wit
 import os
-
-#import wit2 as wit
+import json
 from wit import Wit
 
-import json
+'''
+Initializate wit
+'''
 access_token = 'NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR'
-#wit.init()
-#response = wit.voice_query_auto(access_token)
 
 def say(session_id, context, msg):
     print(msg)
@@ -26,6 +25,9 @@ actions = {
 client = Wit(access_token, actions)
 responses=[]
 
+'''
+Prepare testing sentences with expected responses
+'''
 sentences={
     'What is the weather in London?' : {'intent': 'weather','entities':{'location':'London'}},
     'What is the temperature outside?' : {'intent': 'weather','entities':{'location':'outside','weather_type':'temperature'}},
@@ -67,6 +69,7 @@ def testSentence(message,expOutcome):
 
     return res
 
+#Go through the test sentences and try them
 for key, value in sentences.items():
     result=testSentence(key,value)
 
@@ -75,12 +78,15 @@ for key, value in sentences.items():
     else:
         print('Mistake')
 
+'''
+Try the responses from wit in queryModule
+'''
+
+#Initializate the queryModules
 currentDir=os.path.dirname(os.path.abspath(__file__))
 desiredDir=os.path.join(currentDir,os.pardir,'modules','querylogic','modules')
 moduleNames=os.listdir(desiredDir)
 moduleNames=['modules.querylogic.modules.' + s for s in moduleNames]
-print(currentDir)
-print(desiredDir)
 
 moduleNames = [ name for name in moduleNames if not name.startswith('modules.querylogic.modules.__') ]
 modules=[]
@@ -98,6 +104,7 @@ for module in modules:
 
 params={'city':'Prague'}
 
+#Feed the wit.ai responses into querymodule and print the answer
 
 for wit in responses:
     for module in moduleInst:
