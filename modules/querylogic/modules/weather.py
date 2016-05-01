@@ -76,7 +76,7 @@ class Weather:
         timeOffset=Weather.calculate_time_offset(utcEnd,utcStart)	
         
         if ((timeDelta['days'] >= -366) and (timeDelta['days'] <= 5)):
-            if ((grain == 'day') or (int(timeOffset['hours'])>48)):
+            if ((grain != 'hour') or (int(timeOffset['hours'])>48)):
                 offset=timeOffset['days']
                 timeperiod='daily'
             else:
@@ -453,10 +453,11 @@ class Weather:
                 # detlaTime because of time spesification
                 deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom),datetime.datetime.utcnow()) 
                 grain = entities['datetime'][0]['grain']
-                if ('day' in grain):
-                    grain = 'daily'
-                elif ('hour' in grain):
+'
+                if ('hour' in grain):
                     grain = 'hourly'
+                else:
+                    grain = 'daily
                 return {'timeperiod':grain, 'offset':0, 'deltaTime' : deltaTime, 'startTime' : Weather.convertUTCtoUNIXtime(timeFrom)}
         else:
             return {'timeperiod':'currently', 'offset': 0}
