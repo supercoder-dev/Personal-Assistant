@@ -133,7 +133,7 @@ class AttentionWord:
     modelPath = config['modelPath']
     dictionaryPath = config['dictionaryPath']
 
-    if bool(attentionWord) and bool(threshold) and bool(modePath) and bool(dictionaryPath):
+    if bool(attentionWord) and bool(threshold) and bool(modelPath) and bool(dictionaryPath):
         # Create a decoder with certain model
         self.config = Decoder.default_config()
         self.config.set_string('-hmm', modelPath)
