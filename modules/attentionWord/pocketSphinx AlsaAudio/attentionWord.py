@@ -4,20 +4,20 @@ import zmq
 import sys
 import datetime
 import os
-import alsaaudio
+import alsaaduio
 import wave
 import numpy
 from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 
-class DummyModule:
+class AttentionWord:
   """
-  Dummy module class, which just sends back what it receives.
+  AttentionWord class, which listens for selected keyword.
   """
 
   def __init__(self, port):
     """
-    Constructor of the dummy class.
+    Constructor of the AttentionWord class.
     Args:
       port (int): port of the server
     Returns:
@@ -94,21 +94,16 @@ class DummyModule:
     # start Decoder
     decoder = Decoder(self.config)
     decoder.start_utt()
-
-    # start input stream
-    inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE)
+    
+    # configure input strem
+    inp = alsaaduio.PCM(alsaaduio.PCM_CAPTURE)
     inp.setchannels(1)
-    inp.setrate(12000)
+    inp.setrate(16000)
     inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    inp.setperiodsize(1024)
-
-    w = wave.open('test.wav','w')
-    w.setnchannels(1)
-    w.setsampwidth(2)
-    w.setframerate(12000)
+    inp.setperiodsize(32)
 
     while True:
-        l,buf =inp.read()
+        l,buf = inp.read()
         if buf:
              decoder.process_raw(buf, False, False)
         else:
@@ -138,14 +133,16 @@ class DummyModule:
     modelPath = config['modelPath']
     dictionaryPath = config['dictionaryPath']
 
-    if bool(attentionWord) and bool(threshold) and bool(modelPath) and bool(dictionaryPath):
+    if bool(attentionWord) and bool(threshold) and bool(modePath) and bool(dictionaryPath):
         # Create a decoder with certain model
         self.config = Decoder.default_config()
         self.config.set_string('-hmm', modelPath)
         self.config.set_string('-dict', dictionaryPath)
         self.config.set_string('-keyphrase', attentionWord)
         self.config.set_float('-kws_threshold', threshold)
-
+        self.config.set_int('-nfft', 512)
+        self.config.set_float('-samprate', 16000)
+        
         return True
     else: 
         return False
@@ -154,5 +151,5 @@ class DummyModule:
 if __name__ == '__main__':
   port = sys.argv[1]
   port = int(port)
-  dm = DummyModule(port)
+  dm = AttentionWord(port)
   dm.listen()
