@@ -4,7 +4,7 @@ import zmq
 import sys
 import datetime
 import os
-import alsaaduio
+import alsaaudio
 import wave
 import numpy
 from pocketsphinx.pocketsphinx import *
