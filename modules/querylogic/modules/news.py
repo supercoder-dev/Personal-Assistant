@@ -32,7 +32,7 @@ class Accessories:
         resp={}
         for i in range (0,rangeMax):
             resp[i]=data['response']['editorsPicks'][i]['webTitle']
-            print(i)
+            #print(i)
 
         resp['stat']=stat
         return resp

@@ -190,6 +190,7 @@ class Weather:
         return d + datetime.timedelta(hours=-int(timeZone) + 0.01)
 
     def get_summary(self,data,entity,offset,timeWord,timeperiod='daily'):
+        print(offset)
         dictAnsSum = self.get_forecastData(data,entity,offset,timeperiod)
         answer = ''; 
         if (timeperiod=='currently'):
@@ -453,12 +454,22 @@ class Weather:
                 # detlaTime because of time spesification
                 deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom),datetime.datetime.utcnow()) 
                 grain = entities['datetime'][0]['grain']
-'
+                offset = 0
+                
                 if ('hour' in grain):
                     grain = 'hourly'
+                elif ('day' in grain):
+                    grain = 'daily'
+                elif ('week' in grain):
+                    grain = 'daily'
+                    offset = 7
+                elif ('month' in grain):
+                    grain = 'daily'
+                    offset = 30
                 else:
-                    grain = 'daily
-                return {'timeperiod':grain, 'offset':0, 'deltaTime' : deltaTime, 'startTime' : Weather.convertUTCtoUNIXtime(timeFrom)}
+                    grain = 'daily'
+                    offset = 30
+                return {'timeperiod':grain, 'offset':offset, 'deltaTime' : deltaTime, 'startTime' : Weather.convertUTCtoUNIXtime(timeFrom)}
         else:
             return {'timeperiod':'currently', 'offset': 0}
 
