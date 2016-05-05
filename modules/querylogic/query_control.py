@@ -14,6 +14,7 @@ import sys
 import datetime
 import os
 import json
+import random
 
 class Query_control:
 
@@ -57,9 +58,21 @@ class Query_control:
             print(parsedQuery['_text'])
             intent=parsedQuery['intent']
         except:
-            return 'malformed json'
+            return {'answer':"Query didn't parsed correctly."}
+            
+        message = ["I'm not able to answer your question",
+                   "I don't know the asnwer.",
+                   "I don't have answer for your query.",
+                   "What about try some other query?",
+                   "Query not recognised."]
 
-        if(testMode==0):
+        if(testMode==0)
+            if ('weather' in intent): # try confidence score
+               if parsedQuery['confidence'] < 0.93: 
+                   return {'answer': random.choise(message)}
+            elif parsedQuery['confidence'] < 0.75:
+               return {'answer': random.choise(message)}
+                
             for module in self.moduleInst:
                 answer=module.query_resolution(intent, parsedQuery, self.config)
                 if(answer!='query not recognised'):
@@ -67,7 +80,7 @@ class Query_control:
         else:
             return {'answer': 'Query test answer string.'}
 
-        return {'answer': 'query not recognised'}
+        return {'answer': random.choise(message)}
 
     def saveConfig(self, config):
         self.config=config
