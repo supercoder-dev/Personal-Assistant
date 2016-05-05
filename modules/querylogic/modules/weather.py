@@ -190,7 +190,7 @@ class Weather:
         return d + datetime.timedelta(hours=-int(timeZone) + 0.01)
 
     def get_summary(self,data,entity,offset,timeWord,timeperiod='daily'):
-        print(offset)
+        #print(offset)
         dictAnsSum = self.get_forecastData(data,entity,offset,timeperiod)
         answer = ''; 
         if (timeperiod=='currently'):
