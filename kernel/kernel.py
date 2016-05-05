@@ -100,7 +100,7 @@ class Kernel:
         print('Attention word spotted at {}'.format(activationWordTimestamp))
         print('Listening for the query...')
         sttResult = self.speechToText.sendReply({'action': 'listen'})
-        intent = sttResult['JSON']
+        #intent = sttResult['JSON']
         query = sttResult['request']
         print('Transcribed query: {}'.format(query))
         intent = self.getIntent.sendReply({'request': query})['JSON']
