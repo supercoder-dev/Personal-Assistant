@@ -41,6 +41,15 @@ sentences={
     'Will the sun shine on Thursday?':{'intent': 'weather','entities':{'datetime':None}},
     'When will the sun rise on Monday?':{'intent': 'weather','entities':{'datetime':None,'weather_type':'sunrise'}},
     'Is there a storm coming?':{'intent': 'weather','entities':{'weather_type':'storm'}},
+    'When does the sun set today?':{'intent': 'weather','entities':{'datetime':None,'weather_type':'sunrise'}},
+    'Will it rain on Monday in New York?':{'intent': 'weather','entities':{'location':'New York','weather_type':'rain','datetime':None}},
+    'What will be the temperature during weekend?' : {'intent': 'weather','entities':{'weather_type':'temperature','datetime':None}},
+    'Will it be sunny on Thursday in Ostrava?' : {'intent': 'weather','entities':{'location':'Ostrava','datetime':None}},
+    'Will there be a new moon on Tuesday?' : {'intent': 'weather','entities':{'weather_type':'newmoon','datetime':None}},
+    'Tell me a joke' : {'intent': 'agenda','entities':{'weather_type':'agenda_entry'}},
+    'How is the weather today?' : {'intent': 'weather','entities':{'datetime':None}},
+    'Should I take an umbrella?' : {'intent': 'weather','entities':{'weather_type':'rain'}},
+    'Is it cold outside?' : {'intent': 'weather','entities':{'location':'outside','weather_type':'temperature'}},
 }
 
 def testSentence(message,expOutcome):
@@ -90,7 +99,7 @@ moduleNames=['modules.querylogic.modules.' + s for s in moduleNames]
 
 moduleNames = [ name for name in moduleNames if not name.startswith('modules.querylogic.modules.__') ]
 modules=[]
-
+print(moduleNames)
 for i in range(0,len(moduleNames)):
     moduleNames[i]=moduleNames[i][:-3]
     print(moduleNames[i])
