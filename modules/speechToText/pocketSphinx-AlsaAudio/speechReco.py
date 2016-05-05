@@ -157,7 +157,7 @@ class SpeechReco:
         self.config.set_int('-nfft', 512)
         self.config.set_float('-samprate', 16000)
         
-        self.decoder = Decoder(config)
+        self.decoder = Decoder(self.config)
         
         self.configured = True
         return True
