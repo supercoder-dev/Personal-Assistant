@@ -95,7 +95,7 @@ class SpeechReco:
     self.decoder.start_utt()
     
     # configure input strem
-    inp = alsaaduio.PCM(alsaaduio.PCM_CAPTURE)
+    inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE)
     inp.setchannels(1)
     inp.setrate(16000)
     inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
