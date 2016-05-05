@@ -11,6 +11,7 @@ import json
 import datetime
 import time as tm
 import math
+import random
 
 #TODO - hourly forecast -> collect data and time(afternoon, morning, night,...)
 #       now changed to daily -> line cca 555
@@ -63,18 +64,20 @@ class Weather:
         
         try:
             hoursOffset = diff.days*24+int(round(diff.seconds/3600))
-            if hoursOffset>daysOffset*24:
-                daysOffset=daysOffset+1
+            #if hoursOffset>daysOffset*24:
+                #daysOffset=daysOffset+1
         except:
             hoursOffset = diff.days*24
 
-        return {'days': daysOffset, 'hours': hoursOffset}
+        return {'days': daysOffset, 'hours': hoursOffset, 'seconds': diff.seconds}
 
     def get_timeperiod_offset(timeStart,timeEnd, timeDelta,grain):  # zacatek intervalu, konec intervalu, casovy posun oproti soucasnu
         utcStart = Weather.convertUTCtoDatetime(timeStart)
         utcEnd = Weather.convertUTCtoDatetime(timeEnd)
         timeOffset=Weather.calculate_time_offset(utcEnd,utcStart)	
-        
+        if timeOffset['hours']>timeOffset['days']*24:
+            timeOffset['days']=timeOffset['days']+1
+
         if ((timeDelta['days'] >= -366) and (timeDelta['days'] <= 5)):
             if ((grain != 'hour') or (int(timeOffset['hours'])>48)):
                 offset=timeOffset['days']
@@ -179,18 +182,26 @@ class Weather:
     def time_to_day(posixtime):
         return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%A')
 
-    def convertUTCtoUNIXtime(utctime):
-        d = Weather.convertUTCtoDatetime(utctime)
+    def convertUTCtoUNIXtime(utctime, ignore = False):
+        d = Weather.convertUTCtoDatetime(utctime,ignore)
         return int(tm.mktime(d.timetuple()))
 
-    def convertUTCtoDatetime(utctime):
+    def convertUTCtoDatetime(utctime,ignore = False):
         timeZone=utctime[-6:-3]
         utctime=utctime[:-6] #ignoring time zone 
         d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
+        if ignore:
+            return d
         return d + datetime.timedelta(hours=-int(timeZone) + 0.01)
 
     def get_summary(self,data,entity,offset,timeWord,timeperiod='daily'):
         #print(offset)
+        if min(offset) == 0 and (len(offset)>3 or len(offset)==8):
+            sum_data = data[timeperiod]['summary']
+            answers = ["The forecast for next 7 days : " + sum_data,
+                       "The forcast says : " + sum_data ]
+            return random.choice(answers)
+        
         dictAnsSum = self.get_forecastData(data,entity,offset,timeperiod)
         answer = ''; 
         if (timeperiod=='currently'):
@@ -409,16 +420,20 @@ class Weather:
     
     #check if the datetime is specified and take it into account
     def check_query_datetime(self,entities):
+        now = datetime.datetime.utcnow()
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
         if 'datetime' in entities:  #If datetime is present in the query, take it into account
             if 'interval' in entities['datetime'][0]['type']:  #In case of interval, take the beginning
                 timeFrom = entities['datetime'][0]['from']['value']
                 grain = entities['datetime'][0]['from']['grain']
                 timeTo = entities['datetime'][0]['to']['value']
-                startTime = Weather.convertUTCtoUNIXtime(timeFrom)
-                deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom),datetime.datetime.utcnow())
+                startTime = Weather.convertUTCtoUNIXtime(timeFrom,True)
+
+                deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom,True),today)
 
                 timeOffset=Weather.get_timeperiod_offset(timeFrom,timeTo, deltaTime, grain)
-
+                #print(timeOffset)
+                #print(deltaTime)
                 if timeOffset != 'Not supp':
                     timeperiod= timeOffset['timeperiod']
                     offset    = timeOffset['offset']
@@ -440,7 +455,7 @@ class Weather:
                         
                         daysOffset = deltaTime['days']+ offset
 
-                        if ( daysOffset < 7) and ( daysOffset >= 0):
+                        if ( daysOffset <= 8) and ( daysOffset >= 0):
                             startTime = 'now'
                         elif ( offset != 0 ):
                             return 'Not supp'
@@ -452,24 +467,27 @@ class Weather:
                 timeFrom = entities['datetime'][0]['value']
                 
                 # detlaTime because of time spesification
-                deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom),datetime.datetime.utcnow()) 
-                grain = entities['datetime'][0]['grain']
+                deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom,True),today) 
+                grain_date = entities['datetime'][0]['grain']
                 offset = 0
-                
-                if ('hour' in grain):
+                startTime = Weather.convertUTCtoUNIXtime(timeFrom,True)
+                #print(deltaTime)
+                #print(Weather.convertUTCtoDatetime(timeFrom,True))
+                #print(datetime.datetime.utcnow())
+                if ('hour' in grain_date):
                     grain = 'hourly'
-                elif ('day' in grain):
+                elif ('day' in grain_date):
                     grain = 'daily'
-                elif ('week' in grain):
-                    grain = 'daily'
-                    offset = 7
-                elif ('month' in grain):
-                    grain = 'daily'
-                    offset = 30
+                elif ('week' in grain_date):
+                    if deltaTime['days'] == 0:
+                        startTime = 'now'
+                        grain = 'daily'
+                        offset = 7
+                    else:
+                        return 'Not supp'
                 else:
-                    grain = 'daily'
-                    offset = 30
-                return {'timeperiod':grain, 'offset':offset, 'deltaTime' : deltaTime, 'startTime' : Weather.convertUTCtoUNIXtime(timeFrom)}
+                    return 'Not supp'
+                return {'timeperiod':grain, 'offset':offset, 'deltaTime' : deltaTime, 'startTime' : startTime}
         else:
             return {'timeperiod':'currently', 'offset': 0}
 
@@ -540,7 +558,7 @@ class Weather:
                     except:
                         timeperiod=''
                         offset=0
-                    if ('deltaTime' in  timeperiodOffset):
+                    if ('deltaTime' in  timeperiodOffset): # matching time word
                         if timeperiodOffset['deltaTime']['days']<0:
                             timeWord = 'was'
                             timeperiod = 'daily'
@@ -550,6 +568,7 @@ class Weather:
                             timeWord = 'will be'
 
                     if ('startTime' in  timeperiodOffset):
+                        #print(timeperiodOffset['startTime'])
                         if (type(timeperiodOffset['startTime']) is str):
                             if ( 'hourly' in timeperiod ):
                                 offset = range(timeperiodOffset['deltaTime']['hours'], timeperiodOffset['deltaTime']['hours']+offset)
@@ -557,9 +576,15 @@ class Weather:
                                 offset = range(timeperiodOffset['deltaTime']['days'] , timeperiodOffset['deltaTime']['days'] +offset)
                         else:
                             time = timeperiodOffset['startTime']
+                            #print('startTime isnt string')
                             offset = range(offset+1)
-                else:
-                    return 'I would like to know.'
+                else:# add other answers
+                    messages = ['I would like to know this forecast.',
+                                "I don't tell you the forecast for this time specification.",
+                                "I don't have data for this forecast.",
+                                'I was unable to get the forecast information.']
+
+                    return random.choice(messages)
                 
                 if (timeperiod == 'currently'):
                     offset = range(0,1)
