@@ -15,7 +15,7 @@ def init_hook():
 
 class Accessories:
 
-    def get_timeNow(self):
+    def get_timeNow(self,query):
         dt=datetime.datetime.utcnow();
         return 'It is ' + dt.strftime('%I:%M %p') + '.'
 

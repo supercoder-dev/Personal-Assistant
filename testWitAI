@@ -93,13 +93,15 @@ Try the responses from wit in queryModule
 
 #Initializate the queryModules
 currentDir=os.path.dirname(os.path.abspath(__file__))
-desiredDir=os.path.join(currentDir,os.pardir,'modules','querylogic','modules')
+desiredDir=os.path.join(currentDir,'modules','querylogic','modules')
 moduleNames=os.listdir(desiredDir)
 moduleNames=['modules.querylogic.modules.' + s for s in moduleNames]
 
 moduleNames = [ name for name in moduleNames if not name.startswith('modules.querylogic.modules.__') ]
 modules=[]
 print(moduleNames)
+print(desiredDir)
+
 for i in range(0,len(moduleNames)):
     moduleNames[i]=moduleNames[i][:-3]
     print(moduleNames[i])

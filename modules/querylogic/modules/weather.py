@@ -471,9 +471,6 @@ class Weather:
                 grain_date = entities['datetime'][0]['grain']
                 offset = 0
                 startTime = Weather.convertUTCtoUNIXtime(timeFrom,True)
-                #print(deltaTime)
-                #print(Weather.convertUTCtoDatetime(timeFrom,True))
-                #print(datetime.datetime.utcnow())
                 if ('hour' in grain_date):
                     grain = 'hourly'
                 elif ('day' in grain_date):
@@ -579,8 +576,7 @@ class Weather:
                             #print('startTime isnt string')
                             offset = range(offset+1)
                 else:# add other answers
-                    messages = ['I would like to know this forecast.',
-                                "I don't tell you the forecast for this time specification.",
+                    messages = ["I can't tell you the forecast for this time specification.",
                                 "I don't have data for this forecast.",
                                 'I was unable to get the forecast information.']
 
