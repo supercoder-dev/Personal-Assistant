@@ -4,7 +4,7 @@ import zmq
 import sys
 import datetime
 import os
-import alsaaduio
+import alsaaudio
 import wave
 import numpy
 from pocketsphinx.pocketsphinx import *
@@ -153,7 +153,6 @@ class SpeechReco:
         self.config.set_string('-hmm', modelPath)
         self.config.set_string('-lm', grammarPath)
         self.config.set_string('-dict', dictionaryPath)
-        self.config.set_string('-keyphrase', attentionWord)
         self.config.set_float('-vad_threshold', 2.5)
         self.config.set_int('-nfft', 512)
         self.config.set_float('-samprate', 16000)
