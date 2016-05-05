@@ -66,7 +66,7 @@ class Query_control:
                    "What about try some other query?",
                    "Query not recognised."]
 
-        if(testMode==0)
+        if(testMode==0):
             if ('weather' in intent): # try confidence score
                if parsedQuery['confidence'] < 0.93: 
                    return {'answer': random.choise(message)}
