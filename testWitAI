@@ -27,30 +27,41 @@ responses=[]
 
 '''
 Prepare testing sentences with expected responses
+
 '''
-sentences={
-    'What is the weather in London?' : {'intent': 'weather','entities':{'location':'London'}},
-    'What is the temperature outside?' : {'intent': 'weather','entities':{'location':'outside','weather_type':'temperature'}},
-    'What moon phase will be on Wednesday?':{'intent': 'weather','entities':{'weather_type':'moonphase','datetime':None}},
-    'What will be the weather during the weekend?':{'intent': 'weather','entities':{'datetime':None}},
-    'How is the wind outside?':{'intent': 'weather','entities':{'location':'outside','weather_type':'windspeed'}},
-    'Is it raining outside?':{'intent': 'weather','entities':{'location':'outside','weather_type':'rain'}},
-    'Is it snowing in Brno?':{'intent': 'weather','entities':{'location':'Brno', 'weather_type':'snow'}},
-    'Is it cloudy in Liberec?':{'intent': 'weather','entities':{'location':'Liberec','weather_type':'cloudy'}},
-    'What is the weather forecast for the next week?':{'intent': 'weather','entities':{'datetime':None}},
-    'Will the sun shine on Thursday?':{'intent': 'weather','entities':{'datetime':None}},
-    'When will the sun rise on Monday?':{'intent': 'weather','entities':{'datetime':None,'weather_type':'sunrise'}},
-    'Is there a storm coming?':{'intent': 'weather','entities':{'weather_type':'storm'}},
-    'When does the sun set today?':{'intent': 'weather','entities':{'datetime':None,'weather_type':'sunrise'}},
-    'Will it rain on Monday in New York?':{'intent': 'weather','entities':{'location':'New York','weather_type':'rain','datetime':None}},
-    'What will be the temperature during weekend?' : {'intent': 'weather','entities':{'weather_type':'temperature','datetime':None}},
-    'Will it be sunny on Thursday in Ostrava?' : {'intent': 'weather','entities':{'location':'Ostrava','datetime':None}},
-    'Will there be a new moon on Tuesday?' : {'intent': 'weather','entities':{'weather_type':'newmoon','datetime':None}},
-    'Tell me a joke' : {'intent': 'agenda','entities':{'weather_type':'agenda_entry'}},
-    'How is the weather today?' : {'intent': 'weather','entities':{'datetime':None}},
-    'Should I take an umbrella?' : {'intent': 'weather','entities':{'weather_type':'rain'}},
-    'Is it cold outside?' : {'intent': 'weather','entities':{'location':'outside','weather_type':'temperature'}},
+sentences = {
+    'Is there a storm coming?': {'intent': 'weather', 'entities': {'weather_type': 'storm'}},
+    'When does the sun set today?': {'intent': 'weather', 'entities': {'datetime': None, 'weather_type': 'sunset'}},
+    'Will it rain on Monday in New York?': {'intent': 'weather',
+                                            'entities': {'location': 'New York', 'weather_type': 'rain',
+                                                         'datetime': None}},
+    'What will be the temperature during weekend?': {'intent': 'weather',
+                                                     'entities': {'weather_type': 'temperature', 'datetime': None}},
+    'Will it be sunny on Thursday in Ostrava?': {'intent': 'weather',
+                                                 'entities': {'location': 'Ostrava', 'datetime': None}},
+    'Will there be a new moon on Tuesday?': {'intent': 'weather',
+                                             'entities': {'weather_type': 'newmoon', 'datetime': None}},
+    'Tell me a joke': {'intent': 'agenda', 'entities': {'agenda_entry': 'joke'}},
+    'How is the weather today?': {'intent': 'weather', 'entities': {'datetime': None}},
+    'Should I take an umbrella?': {'intent': 'weather', 'entities': {'weather_type': 'rain'}},
+    'Is it cold outside?': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'temperature'}},
+    'How is the wind outside?': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'windspeed'}},
+    'Is it raining outside?': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'rain'}},
+    'Is it snowing in Brno?': {'intent': 'weather', 'entities': {'location': 'Brno', 'weather_type': 'snow'}},
+    'Is it cloudy in Liberec?': {'intent': 'weather', 'entities': {'location': 'Liberec', 'weather_type': 'cloudy'}},
+    'What is the weather forecast for the next week?': {'intent': 'weather', 'entities': {'datetime': None}},
+    'Will the sun shine on Thursday?': {'intent': 'weather', 'entities': {'datetime': None}},
+    'When will the sun rise on Monday?': {'intent': 'weather',
+                                          'entities': {'datetime': None, 'weather_type': 'sunrise'}},
+    'What is the weather in London?': {'intent': 'weather', 'entities': {'location': 'London'}},
+    'What is the temperature outside?': {'intent': 'weather',
+                                         'entities': {'location': 'outside', 'weather_type': 'temperature'}},
+    'What moon phase will be on Wednesday?': {'intent': 'weather',
+                                              'entities': {'weather_type': 'moonphase', 'datetime': None}},
+    'What will be the weather during the weekend?': {'intent': 'weather', 'entities': {'datetime': None}},
 }
+
+
 
 def testSentence(message,expOutcome):
     res={'intent':None,'entities':None,'confidence':None}
@@ -58,7 +69,6 @@ def testSentence(message,expOutcome):
     responses.append(resp)
     #print(str(resp['outcomes'][0]['intent']))
     print(str(resp['_text']))
-    print(str(resp['outcomes'][0]['entities'].keys()))
     #print(str(resp['outcomes'][0]['confidence']))
 
     res['confidence'] = resp['outcomes'][0]['confidence']
@@ -66,6 +76,7 @@ def testSentence(message,expOutcome):
         res['intent'] = 'Ok'
     else:
         res['intent'] = 'Bad'
+        print('Bad intent')
 
     if expOutcome['entities'].keys() == resp['outcomes'][0]['entities'].keys():
         res['entities']='Ok'
@@ -73,9 +84,14 @@ def testSentence(message,expOutcome):
 
             if not(key=='datetime') and (not value == resp['outcomes'][0]['entities'][key][0]['value']):
                 res['entities']='Bad'
+                print('Bad value')
+                print(resp['outcomes'][0]['entities'][key][0]['value'])
+                print(value)
+
     else:
         res['entities'] = 'Bad'
-
+        print(resp['outcomes'][0]['entities'].keys())
+        print(expOutcome['entities'].keys())
     return res
 
 #Go through the test sentences and try them
@@ -86,6 +102,7 @@ for key, value in sentences.items():
         print('Ok')
     else:
         print('Mistake')
+        print(result)
 
 '''
 Try the responses from wit in queryModule

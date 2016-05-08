@@ -15,7 +15,7 @@ def findResponse(query):
 	ACCES_TOKEN = '7BBOPUV5O46MVZC3IUCYMRXOYYTDZJRH' #acces to wit.ai/konrajak/Household database  
 	return wit.text_query(query, ACCES_TOKEN)
 
-print 'Test script for query control'
+print ('Test script for query control')
 wit.init()
 
 #queries from text file
