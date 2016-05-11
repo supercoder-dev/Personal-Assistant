@@ -33,44 +33,23 @@ for module in modules:
 
 params={'city':'Prague'}
 
+now = datetime.datetime.now()
+now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
-now=convertToString(datetime.datetime.now())
-timeTo=convertToString(datetime.datetime.now()+datetime.timedelta(days=8))
-timeFut=convertToString(datetime.datetime.now()+datetime.timedelta(days=0))
+timeTo=convertToString(now+datetime.timedelta(days=6))
+timeFut=convertToString(now+datetime.timedelta(days=2))
 
-'''
-witTest=[{"_text":"What is the weather today","msg_id":"20853b05-3c62-4766-8404-601b6d5eb6fa","outcomes":[{"_text":"What is the weather today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":timeFut,"values":[{"grain":"day","type":"value","value":timeFut}]}]},"intent":"weather"}]},
-
-{"_text":"Will be weather nice this weekend in Liberec","msg_id":"e4ff481d-0421-4b80-9b03-b0eab2bb7638","outcomes":[{"_text":"Will be weather nice this weekend in Liberec","confidence":0.735,"entities":{"datetime":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval","values":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval"}]}],"location":[{"suggested":'true',"type":"value","value":"Liberec"}]},"intent":"weather"}]},
-
-{"_text":"wind in Brno tonight","msg_id":"067b058c-61cd-4ae2-bfba-7f70edb6ba77","outcomes":[{"_text":"wind in Brno tonight","confidence":0.735,"entities":{"datetime":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval","values":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval"}]}],"location":[{"suggested":'true',"type":"value","value":"Brno"}],"weather_type":[{"metadata":"","type":"value","value":"windspeed"}]},"intent":"weather"}]},
-
-{"_text":"What is the temperature maximum record for today","msg_id":"a4b5557b-1160-4118-b792-47aac33c2340","outcomes":[{"_text":"What is the temperature maximum record for today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":timeFut,"values":[{"grain":"day","type":"value","value":timeFut}]}],"value_size":[{"type":"value","value":"max"}],"weather_type":[{"type":"value","value":"temperature"}]},"intent":"weather"}]},
-
-{"_text":"when is the sunset in London","msg_id":"7317188a-af4a-4a93-8635-24e91f4ac839","outcomes":[{"_text":"when is the sunset in London","confidence":0.735,"entities":{"location":[{"suggested":'true',"type":"value","value":"London"}],"weather_type":[{"type":"value","value":"sunset"}]},"intent":"weather"}]},
-
-{"_text":"Tell me the outside temperature in Paris","msg_id":"6dadd35b-3595-4322-9ad8-6bf2f25aa084","outcomes":[{"_text":"Tell me the outside temperature in Paris","confidence":0.735,"entities":{"location":[{"suggested":'true',"type":"value","value":"Paris"}],"weather_type":[{"type":"value","value":"temperature"}]},"intent":"weather"}]},
-
-{"_text":"Sunrise tomorrow in Prague","msg_id":"8228e694-7f9d-4ec5-9b46-f0b2b81aa05e","outcomes":[{"_text":"Sunrise tomorrow in Prague","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":timeFut,"values":[{"grain":"day","type":"value","value":timeFut}]}],"location":[{"suggested":'true',"type":"value","value":"Prague"}],"weather_type":[{"type":"value","value":"sunrise"}]},"intent":"weather"}]},
-
-{'outcomes': [{'entities': {'datetime': [{'values': [{'grain': 'week', 'type': 'value', 'value': 'timeFut'}], 'grain': 'week', 'type': 'value', 'value': timeFut}],"location":[{"suggested":'true',"type":"value","value":"Vancover"}]}, 'confidence': 1.0, 'intent': 'weather', '_text': 'What is the weather forecast for the next week?'}], 'msg_id': 'f70e1ea9-3650-44ab-b6e9-d89e256d14e4', '_text': 'What is the weather forecast for the next week?'},
-
-#{'outcomes': [{'entities': {'datetime': [{'values': [{'from': {'grain': 'week', 'value': '2016-05-09T00:00:00.000+02:00'}, 'type': 'interval', 'to': {'grain': 'week', 'value': '2016-05-23T00:00:00.000+02:00'}}], 'from': {'grain': 'week', 'value': '2016-05-09T00:00:00.000+02:00'}, 'type': 'interval', 'to': {'grain': 'week', 'value': '2016-05-23T00:00:00.000+02:00'}}]}, 'confidence': 1.0, 'intent': 'weather', '_text': 'What is the weather forecast for the next two weeks?'}], 'msg_id': '1efbe57c-4f67-4c34-be22-76d4b7d51346', '_text': 'What is the weather forecast for the next two weeks?'},
+test_features = []
+test_features = [ 'temperaturemin', 'temperaturemax', 'temperature', 'cloudy', 'windspeed', 'humidity', 'pressure', 'sunset', 'sunrise', 'moonphase', 'newmoon', 'fullmoon', 'rain', 'snow', 'storm', 'weather']
+witTest= []
+for weather_type in test_features:
+    witTest.append({"_text":"What is the weather ","outcomes":[{"entities":{"location":[{"suggested":'true',"type":"value","value":"Prague"}],"weather_type":[{"type":"value","value":weather_type}]},"intent":"weather"}]})
+    witTest.append(
+{"_text":"What is the weather today","outcomes":[{"_text":"What is the weather today","entities":{"datetime":[{"grain":"day","type":"value","value":timeFut,"values":[{"grain":"day","type":"value","value":timeFut}]}],"weather_type":[{"type":"value","value":weather_type}]},"intent":"weather"}]})
+    witTest.append(
+{"_text":"Will be weather nice this weekend in Tokyo","outcomes":[{"entities":{"datetime":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval","values":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval"}]}],"location":[{"suggested":'true',"type":"value","value":"Prague"}],"weather_type":[{"type":"value","value":weather_type}]},"intent":"weather"}]})
 
 
-{"_text":"What lunar phase is it","msg_id":"e64a37a3-9613-4beb-9b8f-115f99136fca","outcomes":[{"_text":"What lunar phase is it","confidence":0.735,"entities":{"weather_type":[{"type":"value","value":"moonphase"}]},"intent":"weather"}]},
-
-{"_text":"Will be the stars visible tonight","msg_id":"d2c5be02-82c5-4a71-a2be-462013e8502a","outcomes":[{"_text":"Will be the stars visible tonight","confidence":0.735,"entities":{"datetime":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval","values":[{"from":{"grain":"hour","value":timeFut},"to":{"grain":"hour","value":timeTo},"type":"interval"}]}],"weather_type":[{"type":"value","value":"cloudy"}]},"intent":"weather"}]},
-
-{'outcomes': [{'entities': {'weather_type': [{'type': 'value', 'value': 'newmoon'}]}, 'confidence': 0.96, 'intent': 'weather', '_text': 'When was last new moon'}], 'msg_id': '8acca167-b64a-4015-96d2-6231478c861c', '_text': 'When was last new moon'},
-
-{'outcomes': [{'entities': {'weather_type': [{'type': 'value', 'value': 'fullmoon', 'metadata': ''}]}, 'confidence': 0.96, 'intent': 'weather', '_text': 'Tell me the nearest full moon '}], 'msg_id': '3fe2cd82-06b8-4009-b9ec-4d535c0137a0', '_text': 'Tell me the nearest full moon '},
-
-{'outcomes': [{'entities': {'weather_type': [{'value': 'snow'}]}, 'confidence': 0.96, 'intent': 'weather', '_text': 'Is it snowing'}], 'msg_id': '84c52417-03b5-42da-b065-cf692657cb46', '_text': 'Is it snowing'},
-
-{'outcomes': [{'entities': {'location': [{'suggested': True, 'type': 'value', 'value': 'Dallas'}], 'weather_type': [{'type': 'value', 'value': 'storm'}]}, 'confidence': 0.96, 'intent': 'weather', '_text': 'The nearest thunderstorm form Dallas'}], 'msg_id': '22382576-3908-4413-ab61-a47a745467cf', '_text': 'The nearest thunderstorm form Dallas'}
-
-]
 '''
 witTest=[
          {"outcomes": [{"_text": "Tell me a joke about Chuck Norris", "confidence": 0.735, "entities": {'agenda_entry': 'joke'}, "intent": "agenda"}]},
@@ -82,7 +61,7 @@ witTest=[
     {"outcomes": [      {"_text": "Tell me a good joke", "confidence": 0.735, "entities": {"agenda_entry": "joke"},         "intent": 'agenda'}]},
          
          ]
-
+'''
 
 #{"_text":"What is the air pressure today","msg_id":"0d58b3e9-924f-40e7-b721-da9289a1db50","outcomes":[{"_text":"What is the air pressure today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000+01:00","values":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000+01:00"}]}],"weather_type":[{"type":"value","value":"pressure"}]},"intent":"weather"}]}
 #{"_text":"What is the temperature minmium record for today","msg_id":"4709662a-7bf2-4707-90c2-ebac1bfa8871","outcomes":[{"_text":"What is the temperature minmium record for today","confidence":0.735,"entities":{"datetime":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000+01:00","values":[{"grain":"day","type":"value","value":"2016-03-27T00:00:00.000+01:00"}]}],"weather_type":[{"type":"value","value":"temperature"}]},"intent":"weather"}]}
