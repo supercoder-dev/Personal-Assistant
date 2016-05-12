@@ -2,7 +2,6 @@
   apt: name={{item}} state=present
   with_items:
   - portaudio19-dev
-  - python-all-dev
   - python3-all-dev
   
 - name: install (via pip3) required python libraries for speech-to-text module (SpeachReco)

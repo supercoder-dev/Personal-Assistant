@@ -1,7 +1,8 @@
 - name: install (via apt) required python libraries for attention word module (PocketSphinx)
   apt: name={{item}} state=present
   with_items:
-  - python3-pyaudio
+  - portaudio19-dev
+  - python3-all-dev
   - swig
   
 - name: install (via pip3) required python libraries for speech-to-text module (PocketSphinx)
