@@ -27,7 +27,10 @@ speechToText:
 # get intent module config
 getIntent:
   path: ../modules/getIntent/getIntent.py
-  dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
+# dbToken: NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR
+# Jakub Konrad Database
+  dbToken: 3LH5Q3E3KEIYYVINQKBLOL2QGAIQ2IRG
+# Jakub Drapela Database
 
 # query module config
 queryProcessor:
