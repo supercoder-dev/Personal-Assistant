@@ -5,6 +5,13 @@
   - speech_to_text
   - pocketSphinx
 
+- name: install SpeachReco
+  include: SpeachReco.yml
+  when: speech_to_text == 'SpeachReco'
+  tags:
+  - speech_to_text
+  - SpeachReco
+
 - name: copy config
   copy:
     src: "{{ speech_to_text }}.yml"

@@ -1,0 +1,7 @@
+# speech-to-text module config
+speechToText:
+  path: ./Personal-Assistant/modules/speechToText/SpeachReco/speechToText.py
+  modelPath: ''
+  dictionaryPath: ''
+  grammarPath: ''
+

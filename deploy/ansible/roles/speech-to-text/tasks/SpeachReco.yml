@@ -1,0 +1,10 @@
+- name: install (via apt) required python libraries for attention word module (SpeachReco)
+  apt: name={{item}} state=present
+  with_items:
+  - portaudio19-dev
+  - python-all-dev
+  - python3-all-dev
+  
+- name: install (via pip3) required python libraries for speech-to-text module (SpeachReco)
+  pip: requirements=/root/Personal-Assistant/modules/speechToText/SpeachReco/requirements.txt executable=pip3
+
