@@ -111,7 +111,7 @@ class speechToText:
         message="Uh oh! Couldn't request results from Google Speech Recognition service; {0}".format(e)
 
     # return result
-    return message
+    return {'request': message}
 
 
   def saveConfig(self, config):
