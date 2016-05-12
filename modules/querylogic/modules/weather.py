@@ -771,9 +771,6 @@ class Weather:
         timeperiod=''
         offset=''
         timeWord = 'is'
-
-        if query['confidence']<0.95:
-            return 'I am not sure what you meant by that.'
       
         if 'city' in params:
             location=params['city']

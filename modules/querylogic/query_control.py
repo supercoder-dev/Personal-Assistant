@@ -58,17 +58,18 @@ class Query_control:
             print(parsedQuery['_text'])
             intent=parsedQuery['intent']
         except:
-            return {'answer':"Query didn't parsed correctly."}
+            return {'answer':"Query didnt parsed correctly."}
             
-        message = ["I'm not able to answer your question",
-                   "I don't know the asnwer.",
-                   "I don't have answer for your query.",
+        message = ["I am not able to answer your question",
+                   "I dont know the asnwer.",
+                   "I dont have answer for your query.",
                    "What about try some other query?",
-                   "Query not recognised."]
+                   "Query not recognised.",
+                   'I am not sure what you meant by that.']
 
         if(testMode==0):
             if ('weather' in intent): # try confidence score
-               if parsedQuery['confidence'] < 0.93: 
+               if parsedQuery['confidence'] < 0.8: 
                    return {'answer': random.choice(message)}
             elif parsedQuery['confidence'] < 0.75:
                return {'answer': random.choice(message)}
