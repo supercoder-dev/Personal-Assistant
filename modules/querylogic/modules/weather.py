@@ -647,7 +647,7 @@ class Weather:
             pType.append(precipType)
             units.append(unit)
             if(subdata['icon'] == precipType):
-                if subdata['summary'][-1] == '.'
+                if subdata['summary'][-1] == '.':
                     answer.append(str(subdata['summary'])[:-1])
                 else:
                     answer.append(str(subdata['summary']))
