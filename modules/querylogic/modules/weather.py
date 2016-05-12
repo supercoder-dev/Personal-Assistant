@@ -772,9 +772,9 @@ class Weather:
         offset=''
         timeWord = 'is'
 
-        if query['confidence']<0.93:
+        if query['confidence']<0.95:
             return 'I am not sure what you meant by that.'
-
+      
         if 'city' in params:
             location=params['city']
             homelocation=getLocation(location)
@@ -859,4 +859,5 @@ class Weather:
         else:
             answersentence='query not recognised'
             return answersentence
+
 
