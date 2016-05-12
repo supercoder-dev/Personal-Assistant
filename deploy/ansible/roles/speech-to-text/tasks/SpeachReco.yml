@@ -3,6 +3,7 @@
   with_items:
   - portaudio19-dev
   - python3-all-dev
+  - flac
   
 - name: install (via pip3) required python libraries for speech-to-text module (SpeachReco)
   pip: requirements=/root/Personal-Assistant/modules/speechToText/SpeachReco/requirements.txt executable=pip3
