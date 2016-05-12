@@ -53,8 +53,8 @@ class Accessories:
     }
 
     def call_switcher(self,query):
-        if 'entities' in query and 'agenda_entry' in query['entities']:
-            key=query['entities']['agenda_entry']
+        if 'entities' in query and 'agenda_en' in query['entities']:
+            key=query['entities']['agenda_en']
             return Accessories.switcher[key](self,query)
 
     def query_resolution(self, intent, query, params):
