@@ -60,7 +60,7 @@ class Query_control:
         except:
             return {'answer':"Query didnt parsed correctly."}
             
-        message = ["I am not able to answer your question",
+        message = ["I am not able to answer your question.",
                    "I dont know the asnwer.",
                    "I dont have answer for your query.",
                    "What about try some other query?",
