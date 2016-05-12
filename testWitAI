@@ -6,7 +6,9 @@ from wit import Wit
 '''
 Initializate wit
 '''
-access_token = 'NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR'
+#access_token = 'NUFTF6VJH6EC3BN5S2EK2STCPYGKPPNR'
+access_token = '3LH5Q3E3KEIYYVINQKBLOL2QGAIQ2IRG'
+
 
 def say(session_id, context, msg):
     print(msg)
@@ -30,37 +32,69 @@ Prepare testing sentences with expected responses
 
 '''
 sentences = {
-    'Is there a storm coming?': {'intent': 'weather', 'entities': {'weather_type': 'storm'}},
-    'When does the sun set today?': {'intent': 'weather', 'entities': {'datetime': None, 'weather_type': 'sunset'}},
-    'Will it rain on Monday in New York?': {'intent': 'weather',
+    'Is there a storm coming': {'intent': 'weather', 'entities': {'weather_type': 'storm'}},
+    'When does the sun set today': {'intent': 'weather', 'entities': {'datetime': None, 'weather_type': 'sunset'}},
+    'Will it rain on Monday in New York': {'intent': 'weather',
                                             'entities': {'location': 'New York', 'weather_type': 'rain',
                                                          'datetime': None}},
-    'What will be the temperature during weekend?': {'intent': 'weather',
+    'What will be the temperature during weekend': {'intent': 'weather',
                                                      'entities': {'weather_type': 'temperature', 'datetime': None}},
-    'Will it be sunny on Thursday in Ostrava?': {'intent': 'weather',
-                                                 'entities': {'location': 'Ostrava', 'datetime': None}},
-    'Will there be a new moon on Tuesday?': {'intent': 'weather',
-                                             'entities': {'weather_type': 'newmoon', 'datetime': None}},
-    'Tell me a joke': {'intent': 'agenda', 'entities': {'agenda_entry': 'joke'}},
-    'How is the weather today?': {'intent': 'weather', 'entities': {'datetime': None}},
-    'Should I take an umbrella?': {'intent': 'weather', 'entities': {'weather_type': 'rain'}},
-    'Is it cold outside?': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'temperature'}},
-    'How is the wind outside?': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'windspeed'}},
-    'Is it raining outside?': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'rain'}},
-    'Is it snowing in Brno?': {'intent': 'weather', 'entities': {'location': 'Brno', 'weather_type': 'snow'}},
-    'Is it cloudy in Liberec?': {'intent': 'weather', 'entities': {'location': 'Liberec', 'weather_type': 'cloudy'}},
-    'What is the weather forecast for the next week?': {'intent': 'weather', 'entities': {'datetime': None}},
-    'Will the sun shine on Thursday?': {'intent': 'weather', 'entities': {'datetime': None}},
-    'When will the sun rise on Monday?': {'intent': 'weather',
+    'Will it be sunny on Thursday in Ostrava': {'intent': 'weather',
+                                                 'entities': {'location': 'Ostrava', 'datetime': None, 'weather_type': 'cloudy'}},
+    'Will there be a new moon on Tuesday': {'intent': 'weather',
+                                             'entities': {'weather_type': 'moonphase', 'datetime': None}},
+    'Tell me a joke': {'intent': 'agenda', 'entities': {'agenda_en': 'joke'}},
+    'How is the weather today': {'intent': 'weather', 'entities': {'datetime': None}},
+    'Should I take an umbrella': {'intent': 'weather', 'entities': {'weather_type': 'rain'}},
+    'Is it cold outside': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'temperature'}},
+    'How is the wind outside': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'windspeed'}},
+    'Is it raining outside': {'intent': 'weather', 'entities': {'location': 'outside', 'weather_type': 'rain'}},
+    'Is it snowing in Brno': {'intent': 'weather', 'entities': {'location': 'Brno', 'weather_type': 'snow'}},
+    'Is it cloudy in Liberec': {'intent': 'weather', 'entities': {'location': 'Liberec', 'weather_type': 'cloudy'}},
+    'What is the weather forecast for the next week': {'intent': 'weather', 'entities': {'datetime': None}},
+    'Will the sun shine on Thursday': {'intent': 'weather', 'entities': {'datetime': None, 'weather_type': 'cloudy'}},
+    'When will the sun rise on Monday': {'intent': 'weather',
                                           'entities': {'datetime': None, 'weather_type': 'sunrise'}},
-    'What is the weather in London?': {'intent': 'weather', 'entities': {'location': 'London'}},
-    'What is the temperature outside?': {'intent': 'weather',
+    'What is the weather in London': {'intent': 'weather', 'entities': {'location': 'London'}},
+    'What is the temperature outside': {'intent': 'weather',
                                          'entities': {'location': 'outside', 'weather_type': 'temperature'}},
-    'What moon phase will be on Wednesday?': {'intent': 'weather',
+    'What moon phase will be on Wednesday': {'intent': 'weather',
                                               'entities': {'weather_type': 'moonphase', 'datetime': None}},
-    'What will be the weather during the weekend?': {'intent': 'weather', 'entities': {'datetime': None}},
+    'What will be the weather during the weekend': {'intent': 'weather', 'entities': {'datetime': None}},
+
 }
 
+wrongSentences = [
+    'Where is my car',
+    'What is the time',
+    'When is the dinner'
+    'Where is London',
+    'What homeworks do I have',
+    'What are the latest news',
+    'What will happen on Thursday',
+    'What color is my house',
+    'Where is she from',
+    'Who are you',
+    'Is the meal ready',
+    'Turn on the heat',
+    'You have been terminated',
+    'Tell me something',
+    'Is there any food left',
+    'Do my homework for me',
+    'Who is the queen of Ireland',
+    'How big is the sun',
+    'How far is the Moon',
+    'What is the rain',
+    'How cold is snow',
+    'Talk to me',
+    'Where is Paris',
+    'What is the capital of Russia',
+    'Destroy all humans on wednesday',
+    'Raise the temperature in house in the morning',
+    'What is you opinion on current economical crisis',
+    'Do you think I look good in the new dress I bought',
+    'I would like to build a swing outside, in the garden',
+ ]
 
 
 def testSentence(message,expOutcome):
@@ -77,6 +111,7 @@ def testSentence(message,expOutcome):
     else:
         res['intent'] = 'Bad'
         print('Bad intent')
+        print(resp['outcomes'][0]['intent'])
 
     if expOutcome['entities'].keys() == resp['outcomes'][0]['entities'].keys():
         res['entities']='Ok'
@@ -103,6 +138,15 @@ for key, value in sentences.items():
     else:
         print('Mistake')
         print(result)
+    print(result['confidence'])
+
+for sentence in wrongSentences:
+    resp = client.message(sentence)
+    responses.append(resp)
+    print(str(resp['_text']))    
+    print(str(resp['outcomes'][0]['intent']))    
+    print(str(resp['outcomes'][0]['confidence']))
+    print(str(resp['outcomes'][0]['entities'].keys()))
 
 '''
 Try the responses from wit in queryModule
@@ -132,7 +176,7 @@ for module in modules:
 
 params={'city':'Prague'}
 
-#Feed the wit.ai responses into querymodule and print the answer
+#Feed the wit.ai responses icnto querymodule and print the answer
 
 for wit in responses:
     for module in moduleInst:

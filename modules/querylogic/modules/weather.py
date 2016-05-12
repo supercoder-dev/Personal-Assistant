@@ -414,6 +414,9 @@ class Weather:
         timeperiod=''
         offset=0
 
+        if query['confidence']<0.93:
+            return 'I am not sure what you meant by that.'
+
         if 'city' in params:
             location=params['city']
             homelocation=getLocation(location)
