@@ -31,18 +31,18 @@ class Accessories:
         return 'The date is: ' + dt.strftime('%d of %m %Y') + '.'
 
     def tell_joke(self,query):
-       # if round(random.random()):
-        #    with open('jokes.json') as data_file:
-       #         data = json.load(data_file)
-        #
-       #     choise = round(len(data)*random.random());
-        #    joke = data[choise]['joke']
-        #else:
-        request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
-        response = urlopen(request)
-        data = json.loads(response.readall().decode('utf-8'))
-        joke = data['value']['joke']
-        html.unescape(joke)
+        if round(random.random()):
+            with open('jokes.json') as data_file:    
+                data = json.load(data_file)
+        
+            choise = round(len(data)*random.random()); 
+            joke = data[choise]['joke']
+        else:
+            request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
+            response = urlopen(request)
+            data = json.loads(response.readall().decode('utf-8'))
+            joke = data['value']['joke']
+            html.unescape(joke)
 
         return joke
 
@@ -55,7 +55,7 @@ class Accessories:
     def call_switcher(self,query):
         if 'entities' in query and 'agenda_entry' in query['entities']:
             key=query['entities']['agenda_entry']
-            return Accessories.switcher[key[0]['value']](self,query)
+            return Accessories.switcher[key](self,query)
 
     def query_resolution(self, intent, query, params):
         if intent == 'agenda':
