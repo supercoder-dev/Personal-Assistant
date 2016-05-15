@@ -5,6 +5,13 @@
   - attention_word
   - pocketSphinx
 
+- name: install pocketSphinx with Alsa
+  include: pocketSphinxAlsa.yml
+  when: attention_word == 'pocketSphinxAlsa'
+  tags:
+  - attention_word
+  - pocketSphinx_alsa
+
 - name: copy config
   copy:
     src: "{{ attention_word }}.yml"

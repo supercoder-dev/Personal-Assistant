@@ -1,0 +1,11 @@
+- name: install (via apt) required python libraries for attention word module (PocketSphinx with AlsaAudio)
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - swig
+  
+- name: install (via pip3) required python libraries for attention word module (PocketSphinx with AlsaAudio)
+  pip:
+    requirements: "\'/root/Personal-Assistant/modules/attentionWord/pocketSphinx\ AlsaAudio/requirements.txt\'"
+    executable: pip3
