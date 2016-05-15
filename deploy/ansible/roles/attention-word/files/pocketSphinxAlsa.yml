@@ -1,6 +1,6 @@
 # attention word module config
 attword:
-  path: ./Personal-Assistant/modules/attentionWord/pocketSphinx/attentionWord.py
+  path: ./Personal-Assistant/modules/attentionWord/pocketSphinx AlsaAudio/attentionWord.py
   attentionWord: phoenix
   threshold: 1e-45
   modelPath: /root/PocketSphinx/en-us/

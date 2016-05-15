@@ -4,8 +4,25 @@
     state: present
   with_items:
   - swig
+  - libasound2-dev
   
 - name: install (via pip3) required python libraries for attention word module (PocketSphinx with AlsaAudio)
   pip:
     requirements: "\'/root/Personal-Assistant/modules/attentionWord/pocketSphinx\ AlsaAudio/requirements.txt\'"
     executable: pip3
+
+- name: make PocketSphinx dir
+  file:
+    dest: /root/PocketSphinx
+    state: directory
+
+- name: copy en-us language model for PocketSphinx
+  unarchive:
+    src: files/PocketSphinx/en-us.zip
+    dest: /root/PocketSphinx/
+    creates: /root/PocketSphinx/en-us/mdef
+
+- name: copy en-us dictionary for PocketSphinx
+  copy:
+    src: files/PocketSphinx/cmudict-en-us.dict
+    dest: /root/PocketSphinx/en-us/
