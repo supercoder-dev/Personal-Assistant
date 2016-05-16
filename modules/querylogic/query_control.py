@@ -81,6 +81,8 @@ class Query_control:
                 answer=module.query_resolution(intent, parsedQuery, self.config)
                 if(answer!='query not recognised'):
                     return {'answer': answer}
+                else:
+                    return {'answer': random.choice(message)}
         else:
             return {'answer': 'Query test answer string.'}
 

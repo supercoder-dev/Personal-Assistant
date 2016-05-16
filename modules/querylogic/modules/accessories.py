@@ -48,6 +48,8 @@ class Accessories:
         if 'entities' in query and 'agenda_en' in query['entities']:
             key=query['entities']['agenda_en'][0]['value']
             return Accessories.switcher[key](self,query)
+        else:
+            return 'query not recognised'
 
     def query_resolution(self, intent, query, params):
         if intent == 'agenda':
