@@ -32,18 +32,17 @@ class Accessories:
 
     def tell_joke(self,query):
           if round(random.random()):
-            with open('jokes.json') as data_file:    
+            with open('jokes.json') as data_file:
                 data = json.load(data_file)
-        
-            choise = round(len(data)*random.random()); 
+
+            choise = round(len(data)*random.random());
             joke = data[choise]['joke']
         else:
-        
-        request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
-        response = urlopen(request)
-        data = json.loads(response.readall().decode('utf-8'))
-        joke = data['value']['joke']
-        html.unescape(joke)
+            request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
+            response = urlopen(request)
+            data = json.loads(response.readall().decode('utf-8'))
+            joke = data['value']['joke']
+            html.unescape(joke)
 
         return joke
 
@@ -63,7 +62,3 @@ class Accessories:
             return self.call_switcher(query)
         else:
             return 'query not recognised'
-
-
-
-
