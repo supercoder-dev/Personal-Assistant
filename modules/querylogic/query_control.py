@@ -69,10 +69,13 @@ class Query_control:
 
         if(testMode==0):
             if ('weather' in intent): # try confidence score
-               if parsedQuery['confidence'] < 0.8: 
+               if parsedQuery['confidence'] < 0.88: 
                    return {'answer': random.choice(message)}
+            elif ('unknown' in intent): # try confidence score
+                return {'answer': random.choice(message)}
             elif parsedQuery['confidence'] < 0.75:
                return {'answer': random.choice(message)}
+
                 
             for module in self.moduleInst:
                 answer=module.query_resolution(intent, parsedQuery, self.config)

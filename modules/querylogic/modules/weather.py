@@ -20,7 +20,7 @@ import numpy as np
 
 def getLocation(place):
     geolocator = Nominatim()
-    location = geolocator.geocode(place,timeout=10)
+    location = geolocator.geocode(place,timeout = 10)
     return location
 
 #init_hook initializes the class Weather
@@ -313,6 +313,8 @@ class Weather:
                 return 'today'
             elif deltaTime['days'] == 1:
                 return 'tomorrow'
+            elif deltaTime['days'] == -1:
+                return 'yesterday'
             return time.strftime('%A')  
         else:
             deltaTime = Weather.calculate_time_offset(datetime.datetime.fromtimestamp(int(posixtime)),today)
