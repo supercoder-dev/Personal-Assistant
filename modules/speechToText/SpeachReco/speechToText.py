@@ -25,7 +25,7 @@ class speechToText:
     self.runServer()
     self.r = sr.Recognizer()
     self.m = sr.Microphone()
-
+    self.threshold=110
 
   def runServer(self):
     """
@@ -89,8 +89,7 @@ class speechToText:
       dict: data to send back as dictionary
     """
 
-    print("A moment of silence, please...")
-    with self.m as source: self.r.adjust_for_ambient_noise(source)
+    self.r.energy_threshold=self.threshold
     print("Set minimum energy threshold to {}".format(self.r.energy_threshold))
 
     print("Say!")
@@ -122,6 +121,8 @@ class speechToText:
     Returns:
       bool: True if config successuflly saved, False is not
     """
+    thresh = config['threshold']
+    self.threshold=thresh
     return True
 
 

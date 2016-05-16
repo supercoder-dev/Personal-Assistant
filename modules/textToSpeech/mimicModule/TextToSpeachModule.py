@@ -88,7 +88,8 @@ class TextToSpeachModule:
     """
 
 
-    msg = message['answer']
+    msgFull = message['answer']
+    msg = msgFull.replace("'","")
     subprocess.call(" $HOME/mimic/bin/mimic -t '"+msg+"' -voice "+self.selectedVoice, shell=True)
 
     timestamp = datetime.datetime.now().isoformat(' ')
