@@ -31,8 +31,8 @@ class Accessories:
         return 'The date is: ' + dt.strftime('%d of %m %Y') + '.'
 
     def tell_joke(self,query):
-        return('No jokes now!!!')
-        with open('jokes.json') as data_file:
+        #return('No jokes now!!!')
+        with open('./Personal-Assistant/modules/querylogic/jokes.json') as data_file:
             data = json.load(data_file)
         choise = round(len(data)*random.random());
         joke = data[choise]['joke']
