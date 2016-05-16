@@ -20,7 +20,7 @@ import numpy as np
 
 def getLocation(place):
     geolocator = Nominatim()
-    location = geolocator.geocode(place)
+    location = geolocator.geocode(place,timeout=10)
     return location
 
 #init_hook initializes the class Weather

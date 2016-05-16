@@ -38,11 +38,12 @@ class Accessories:
             choise = round(len(data)*random.random()); 
             joke = data[choise]['joke']
         else:
-            request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
-            response = urlopen(request)
-            data = json.loads(response.readall().decode('utf-8'))
-            joke = data['value']['joke']
-            html.unescape(joke)
+        
+        request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
+        response = urlopen(request)
+        data = json.loads(response.readall().decode('utf-8'))
+        joke = data['value']['joke']
+        html.unescape(joke)
 
         return joke
 
@@ -54,7 +55,10 @@ class Accessories:
 
     def call_switcher(self,query):
         if 'entities' in query and 'agenda_en' in query['entities']:
-            key=query['entities']['agenda_en']
+            key=query['entities']['agenda_en'][0]['value']
+            print('-----')
+            print(key)
+            print(query)
             return Accessories.switcher[key](self,query)
 
     def query_resolution(self, intent, query, params):
