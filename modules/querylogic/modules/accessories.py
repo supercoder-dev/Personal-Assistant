@@ -31,22 +31,11 @@ class Accessories:
         return 'The date is: ' + dt.strftime('%d of %m %Y') + '.'
 
     def tell_joke(self,query):
+        return('No jokes now!!!')
         with open('jokes.json') as data_file:
             data = json.load(data_file)
-
         choise = round(len(data)*random.random());
         joke = data[choise]['joke']
-        
-        '''
-        else:
-            print('DEBUG ELSE')
-            request = 'http://api.icndb.com/jokes/random?limitTo=[nerdy]'
-            response = urlopen(request)
-            data = json.loads(response.readall().decode('utf-8'))
-            joke = data['value']['joke']
-            html.unescape(joke)
-        '''
-
         return joke
 
     switcher = {'timeNow' : get_timeNow,
