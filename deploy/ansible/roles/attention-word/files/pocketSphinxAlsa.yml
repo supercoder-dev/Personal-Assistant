@@ -2,7 +2,6 @@
 attword:
   path: ./Personal-Assistant/modules/attentionWord/pocketSphinx AlsaAudio/attentionWord.py
   attentionWord: phoenix
-  threshold: 1e-45
+  threshold: 1e-10
   modelPath: /root/PocketSphinx/en-us/
   dictionaryPath: /root/PocketSphinx/en-us/cmudict-en-us.dict
-
