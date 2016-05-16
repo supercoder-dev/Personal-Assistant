@@ -31,16 +31,8 @@ class Accessories:
         return 'The date is: ' + dt.strftime('%d of %m %Y') + '.'
 
     def tell_joke(self,query):
-<<<<<<< HEAD
         with open('jokes.json') as data_file:
             data = json.load(data_file)
-=======
-        print(query)
-        if round(random.random()):
-            print('DEBUG IF')
-            with open('jokes.json') as data_file:
-                data = json.load(data_file)
->>>>>>> c279b19dbc3732edbc2c0e5d973e48d7a45ec026
 
         choise = round(len(data)*random.random());
         joke = data[choise]['joke']
