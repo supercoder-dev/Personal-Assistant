@@ -16,7 +16,7 @@ def init_hook():
 class Accessories:
 
     def get_timeNow(self,query):
-        dt=datetime.datetime.utcnow();
+        dt=datetime.datetime.now();
         return 'It is ' + dt.strftime('%I:%M %p') + '.'
 
     def get_dayInWeek(self,query):
