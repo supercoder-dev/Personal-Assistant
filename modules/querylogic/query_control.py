@@ -60,11 +60,10 @@ class Query_control:
         except:
             return {'answer':"Query didnt parsed correctly."}
             
-        message = ["I am not able to answer your question.",
-                   "I dont know the asnwer.",
-                   "I dont have answer for your query.",
-                   "What about try some other query?",
-                   "Query not recognised.",
+        message = ["I am sorry, I am not able to answer your question.",
+                   "I am sorry, I dont know the answer.",
+                   "I dont have answer for your query, sorry.",
+                   "Query not recognised, please try again.",
                    'I am not sure what you meant by that.']
 
         if(testMode==0):
@@ -81,8 +80,8 @@ class Query_control:
                 answer=module.query_resolution(intent, parsedQuery, self.config)
                 if(answer!='query not recognised'):
                     return {'answer': answer}
-                else:
-                    return {'answer': random.choice(message)}
+
+            return {'answer': random.choice(message)}
         else:
             return {'answer': 'Query test answer string.'}
 
