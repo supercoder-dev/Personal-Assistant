@@ -313,6 +313,8 @@ class Weather:
                 return 'today'
             elif deltaTime['days'] == 1:
                 return 'tomorrow'
+            elif deltaTime['days'] == -1:
+                return 'yesterday'
             return time.strftime('%A')  
         else:
             deltaTime = Weather.calculate_time_offset(datetime.datetime.fromtimestamp(int(posixtime)),today)
