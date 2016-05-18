@@ -97,6 +97,7 @@ class Kernel:
       while True:
         print('Listening for the attention word...')
         activationWordTimestamp = self.attwordListener.sendReply({'action': 'listen'})['timeOfActivation']
+        answerTimestamp = self.textToSpeech.sendReply({'answer': 'Listening honey'})['timeOfAnswer']
         print('Attention word spotted at {}'.format(activationWordTimestamp))
         print('Listening for the query...')
         sttResult = self.speechToText.sendReply({'action': 'listen'})
