@@ -157,7 +157,7 @@ V blízkosti mikrofonu jsme se bavili 15 minut v anglickém jazyce a 15 minut v 
 
  Testování se účastnili vždy 3 muži ve věku 20-25 let a proběhlo 125 dotazů na klíčové slovo pro klidnou místnost a 60 dotazů pro hlučnou místnost.
  
-Při testech rozpoznání klíčového slova v klidné místnosti jsme měli celkovou úspěšnost 86 \%. K falošně pozitivní detekci došlo pouze jednou.  Výsledek testu je znázorněn na grafu \ref*{fig:AttentionWord}.
+Při testech rozpoznání klíčového slova v klidné místnosti jsme měli celkovou úspěšnost 86 \%. K falošně pozitivní detekci došlo pouze jednou.  Výsledek testu je znázorněn na grafu \ref{fig:AttentionWord}.
 
 	\begin{figure}[ht]
 		
@@ -167,7 +167,7 @@ Při testech rozpoznání klíčového slova v klidné místnosti jsme měli cel
 		\label{fig:AttentionWord}
 	\end{figure}
 	
-V hlučné místnosti s ozvěnou jsme byli schopni naším systémem detekovat 80 \% dotazů s klíčovým slovem. Objevili se také falešné detekce, ke kterým došlo celkem 4-krát během celého testování Výsledek testu je znázorněn na grafu \ref*{fig:AttentionWord2}. 
+V hlučné místnosti s ozvěnou jsme byli schopni naším systémem detekovat 80 \% dotazů s klíčovým slovem. Objevili se také falešné detekce, ke kterým došlo celkem 4-krát během celého testování Výsledek testu je znázorněn na grafu \ref{fig:AttentionWord2}. 
 
 	\begin{figure}[ht]
 		
@@ -180,7 +180,7 @@ V hlučné místnosti s ozvěnou jsme byli schopni naším systémem detekovat 8
 \subsection{Speech-to-text - testování}
 Modulu bylo v obou verzích testu prředloženo 60 dotazů a ze získaných odpovědí byla vyhodnocená jeho přesnost. Výsledky byly rozděleny do tří kategorií - správně vyhodnocené dotazy, dotazy s drobnými odchylkami (zorpoznáno "is" místo "was", špatně rozpoznaný místní název jako Liberec nebo Krkonoše), které leze pro naše účely s ohledem na možnosti systému stále považovat za správně vyhodnocené a dozaty vyhodnocené nesprávně.
 Výsledny testů je možno vidět v grafu na obrázku.
- \ref*{fig:speech}.
+ \ref{fig:speech}.
 \begin{figure}[ht]
 	\begin{center}
 		\includegraphics[width = 1\textwidth ]{stt.eps}
@@ -197,7 +197,7 @@ Při testování jsme navíc zjistili, pravděpodobnost rozpoznání dotazu zvy�
 
 \subsection{Sentence processing - testování}
 Modul \textit{Sentence processing} byl otestován pomocí vytvořené sady testovacích dotazů. Výsledky modulu byly porovnány se zamýšlenými výsledky sady a následně vyhodnoceny.
-Testovací sada se obsahovala 70 dotazů a obsahovala jak dotazy na které má systém umět odpovědět, tak dotazy které jsou mimo scope systému. Pokud systém odpověděl dle očekávání, byl dotaz vyhodnocen jako správně zodpovězený. Pokud se systém odlišil, odpověď byla vyhodnocena jako špatná. Výsledky systému lze vidět na níže uvedeném grafu (obrázek \ref*{fig:sentence_processing}).
+Testovací sada se obsahovala 70 dotazů a obsahovala jak dotazy na které má systém umět odpovědět, tak dotazy které jsou mimo scope systému. Pokud systém odpověděl dle očekávání, byl dotaz vyhodnocen jako správně zodpovězený. Pokud se systém odlišil, odpověď byla vyhodnocena jako špatná. Výsledky systému lze vidět na níže uvedeném grafu (obrázek \ref{fig:sentence_processing}).
 
 \begin{figure}[ht]
 	\begin{center}
@@ -220,7 +220,7 @@ Následující test byl proveden v běžném prostření akustickým pozadím. S
 	\end{center}
 \end{figure}
 
-V grafu \ref*{fig:full} vidíme, že systému se podařilo odpovědět na položený dotaz v 62 procentech případů. Tato úspěšnost je poměrně nízká, je však potřeba vzít v úvahu, že z 17 neúspěšných testů jich 8 selhalo na oslovení systému, v tomto přípahě uživatel systém pouze osloví znovu a po úspěšné registraci klíčového slova může pokračovat. Pokud bychom vypostili testy, kde bylo první oslovení systému neúspěšné, dostali bychom se s úspěšností na 75 procent, což už se jeví jako přijatelnější výsledek.
+V grafu \ref{fig:full} vidíme, že systému se podařilo odpovědět na položený dotaz v 62 procentech případů. Tato úspěšnost je poměrně nízká, je však potřeba vzít v úvahu, že z 17 neúspěšných testů jich 8 selhalo na oslovení systému, v tomto přípahě uživatel systém pouze osloví znovu a po úspěšné registraci klíčového slova může pokračovat. Pokud bychom vypostili testy, kde bylo první oslovení systému neúspěšné, dostali bychom se s úspěšností na 75 procent, což už se jeví jako přijatelnější výsledek.
 
 \subsection{Shrnutí výsledků testů}
 Souhrnně lze říci, že výsledky testů systému byly pozitivní. Jednotlivé moduly si vedly velmi dobře. Systém jako celek má výsledky horší, ale stále přijatelné.
