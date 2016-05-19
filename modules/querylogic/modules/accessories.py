@@ -3,20 +3,42 @@ import datetime
 import os
 #import modules.access_util.joke as joke
 from urllib.request import Request, urlopen, URLError
+from geopy.geocoders import Nominatim
 import json
 import html
 import random
+from tzwhere import tzwhere
+from pytz import timezone, utc
 
-#import modules.access_util.timer as timer
+#import modules.access_util.timer as timer 
+def getLocation(place):
+    geolocator = Nominatim()
+    location = geolocator.geocode(place,timeout = 10)
+    return location
 
 def init_hook():
-    access=Accessories()
-    return access
+        access=Accessories()
+        tz = tzwhere.tzwhere()
+        location='Prague'
+        homeloc=getLocation(location)
+        tz = tzwhere.tzwhere()
+        tz_name =tz.tzNameAt(homeloc.latitude,homeloc.longitude)
+        timez = timezone(tz_name) 
+        d = datetime.datetime.utcnow()
+        d = timez.localize(d)
+        access.set_init_parameters(homeloc.latitude,homeloc.longitude,d.utcoffset().seconds/3600)
+        return access
 
 class Accessories:
 
+    def set_init_parameters(self,latitude, longitude,utcoffset = 0):
+        self.latitude=latitude
+        self.longitude=longitude
+        self.utcoffset=round(utcoffset)
+
     def get_timeNow(self,query):
-        dt=datetime.datetime.now();
+        dt=datetime.datetime.utcnow();
+        dt=dt + datetime.timedelta(hours=self.utcoffset)
         return 'It is ' + dt.strftime('%I:%M %p') + '.'
 
     def get_dayInWeek(self,query):

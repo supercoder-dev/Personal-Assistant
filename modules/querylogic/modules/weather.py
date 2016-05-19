@@ -13,6 +13,8 @@ import time as tm
 import math
 import random
 import numpy as np
+from tzwhere import tzwhere
+from pytz import timezone, utc
 
 #TODO - hourly forecast -> collect data and time(afternoon, morning, night,...)
 #       now changed to daily -> line cca 833
@@ -26,17 +28,26 @@ def getLocation(place):
 #init_hook initializes the class Weather
 def init_hook():
         weather=Weather()
+        tz = tzwhere.tzwhere()
         location='Prague'
-        homelocation=getLocation(location)
-        weather.set_init_parameters(homelocation.latitude,homelocation.longitude)
+        homeloc=getLocation(location)
+        tz = tzwhere.tzwhere()
+        tz_name =tz.tzNameAt(homeloc.latitude,homeloc.longitude)
+        timez = timezone(tz_name) 
+        d = datetime.datetime.utcnow()
+        d = timez.localize(d)
+        weather.set_init_parameters(homeloc.latitude,homeloc.longitude,d.utcoffset().seconds/3600)
         return weather
 
 class Weather:
 
-    def set_init_parameters(self,latitude, longitude):
+    def set_init_parameters(self,latitude, longitude,utcoffset = 0):
         self.apikey='2fe3789874bc830a8cf2b1d98c4d7dbb' #Free apikey for up to 1000 queries per day, registered to the author
         self.latitude=latitude
         self.longitude=longitude
+        if utcoffset != 0:
+            self.utcoffset=round(utcoffset)
+        
 
     def call_weather_api(self, latitude, longitude, time='now'):
         if time == 'now':
@@ -66,9 +77,9 @@ class Weather:
 
         return {'days': daysOffset, 'hours': hoursOffset, 'seconds': diff.seconds}
 
-    def get_timeperiod_offset(timeStart,timeEnd, timeDelta,grain):  # zacatek intervalu, konec intervalu, casovy posun oproti soucasnu
-        utcStart = Weather.convertUTCtoDatetime(timeStart)
-        utcEnd = Weather.convertUTCtoDatetime(timeEnd)
+    def get_timeperiod_offset(self,timeStart,timeEnd, timeDelta,grain):  # zacatek intervalu, konec intervalu, casovy posun oproti soucasnu
+        utcStart = self.convertUTCtoDatetime(timeStart)
+        utcEnd = self.convertUTCtoDatetime(timeEnd)
         timeOffset=Weather.calculate_time_offset(utcEnd,utcStart)	
         if timeOffset['hours']>timeOffset['days']*24:
             timeOffset['days']=timeOffset['days']+1
@@ -301,9 +312,12 @@ class Weather:
             return 'mostly cloudy'
         return 'cloudy'
 
-    def convert_time(posixtime):
-        return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%H:%M:%S')
-    def time_to_day(posixtime, offset, isInterval = False):
+    def convert_time(self,posixtime):
+        time = datetime.datetime.fromtimestamp(int(posixtime))
+        time = time + datetime.timedelta(hours=self.utcoffset)
+        return time.strftime('%H:%M:%S')
+
+    def time_to_day(self,posixtime, offset, isInterval = False):
         now = datetime.datetime.utcnow()
         today = now.replace(hour=0, minute=0, second=0, microsecond=0)
         if isInterval:            
@@ -317,7 +331,9 @@ class Weather:
                 return 'yesterday'
             return time.strftime('%A')  
         else:
-            deltaTime = Weather.calculate_time_offset(datetime.datetime.fromtimestamp(int(posixtime)),today)
+            time = datetime.datetime.fromtimestamp(int(posixtime))
+            time = time + datetime.timedelta(hours=self.utcoffset)
+            deltaTime = Weather.calculate_time_offset(time,today)
             if deltaTime['days'] == 0:
                 return 'today'
             elif deltaTime['days'] == 1:
@@ -326,17 +342,17 @@ class Weather:
                 return 'yesterday'
             return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%A')
 
-    def convertUTCtoUNIXtime(utctime, ignore = False):
-        d = Weather.convertUTCtoDatetime(utctime,ignore)
+    def convertUTCtoUNIXtime(self,utctime, ignore = False):
+        d = self.convertUTCtoDatetime(utctime,ignore)
         return int(tm.mktime(d.timetuple()))
 
-    def convertUTCtoDatetime(utctime,ignore = False):
-        timeZone=utctime[-6:-3]
+    def convertUTCtoDatetime(self,utctime,ignore = False):
+        #timeZone=utctime[-6:-3]
         utctime=utctime[:-6] #ignoring time zone 
         d = datetime.datetime.strptime( utctime, "%Y-%m-%dT%H:%M:%S.%f" )
         if ignore:
             return d
-        return d + datetime.timedelta(hours=-int(timeZone) + 0.01)
+        return d + datetime.timedelta(hours=-int(self.utcoffset) + 0.01)
 
     def get_summary(self,data,entity,offset,timeWord,timeperiod='daily'):
         #print(offset)
@@ -447,18 +463,18 @@ class Weather:
         dictAnswer = self.get_astronomyData(data,entity,offset,timeperiod)  
         answer = '';    
         if timeWord == 'is':
-            answer =  'The ' + entity['name'] +' '+timeWord+' '+ Weather.convert_time(dictAnswer['answer'][0]) + ' today.'
+            answer =  'The ' + entity['name'] +' '+timeWord+' '+ self.convert_time(dictAnswer['answer'][0]) + ' today.'
             answers = [ answer. capitalize(),
                        "The forecast says: " + answer.capitalize(),]
             return random.choice(answers)
         elif len(offset) ==1:
-            answer =  'The ' + entity['name'] +' '+timeWord+' '+Weather.convert_time(dictAnswer['answer'][0])
+            answer =  'The ' + entity['name'] +' '+timeWord+' '+ self.convert_time(dictAnswer['answer'][0])
             timespecif = self.day_expression(dictAnswer['timespec'][0])
             answers = [ answer. capitalize() + timespecif +'.',
                        "The forecast says: " + answer.capitalize()+ timespecif +'.',]
             return random.choice(answers)
 
-        answer =  'The ' +entity['name'] +' '+timeWord+' changed from '+Weather.convert_time(dictAnswer['answer'][0]) + ' to ' + Weather.convert_time(dictAnswer['answer'][-1])
+        answer =  'The ' +entity['name'] +' '+timeWord+' changed from '+ self.convert_time(dictAnswer['answer'][0]) + ' to ' + self.convert_time(dictAnswer['answer'][-1])
         timespecif = self.day_expression(dictAnswer['timespec'][-1])
         answers = [ answer. capitalize() + timespecif+'.',
                    "The forecast says: " + answer.capitalize()+ timespecif+'.',]
@@ -503,7 +519,7 @@ class Weather:
                 value = self.get_phasespecif(subdata[entity['value']])
             else: 
                 value = subdata[entity['value']]
-            timespec.append(Weather.time_to_day(subdata['time'], i, len(offset)> 1))
+            timespec.append(self.time_to_day(subdata['time'], i, len(offset)> 1))
             answer.append(value)
         return {'answer':answer, 'timespec':timespec }
                    
@@ -571,7 +587,7 @@ class Weather:
                  if entity['value'] == 'temperature': 	# temperature missing in daily forecast
                      value = 'temperatureMax'
                  subdata = data[timeperiod]['data'][i]
-                 posixday = Weather.time_to_day(subdata['time'], i, len(offset)> 1)
+                 posixday = self.time_to_day(subdata['time'], i, len(offset)> 1)
              answerNew=subdata[value]
 
              if(entity['units'] == 'percent'):
@@ -638,7 +654,7 @@ class Weather:
                 posixday = ''
             else:
                 subdata = data[timeperiod]['data'][i]
-                posixday = Weather.time_to_day(subdata['time'], i, len(offset)> 1)
+                posixday = self.time_to_day(subdata['time'], i, len(offset)> 1)
             intens = subdata['precipIntensity']
             
             if('precipType' in subdata):
@@ -669,12 +685,12 @@ class Weather:
                 timeFrom = entities['datetime'][0]['from']['value']
                 grain = entities['datetime'][0]['from']['grain']
                 timeTo = entities['datetime'][0]['to']['value']
-                startTime = Weather.convertUTCtoUNIXtime(timeFrom,True)
+                startTime = self.convertUTCtoUNIXtime(timeFrom,True)
 
-                deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom,True),today)
-
-                timeOffset=Weather.get_timeperiod_offset(timeFrom,timeTo, deltaTime, grain)
-
+                deltaTime = Weather.calculate_time_offset(self.convertUTCtoDatetime(timeFrom,True),today)
+                #print(deltaTime)
+                timeOffset=self.get_timeperiod_offset(timeFrom,timeTo, deltaTime, grain)
+                #print(timeOffset)
                 if timeOffset != 'Not supp':
                     timeperiod= timeOffset['timeperiod']
                     offset    = timeOffset['offset']
@@ -694,7 +710,7 @@ class Weather:
             
                     if ('daily' in timeperiod):
                         
-                        daysOffset = deltaTime['days']+ offset
+                        daysOffset = abs(deltaTime['days'])+ offset
 
                         if ( daysOffset <= 8) and ( daysOffset >= 0):
                             startTime = 'now'
@@ -708,10 +724,10 @@ class Weather:
                 timeFrom = entities['datetime'][0]['value']
                 
                 # detlaTime because of time spesification
-                deltaTime = Weather.calculate_time_offset(Weather.convertUTCtoDatetime(timeFrom,True),today) 
+                deltaTime = Weather.calculate_time_offset(self.convertUTCtoDatetime(timeFrom,True),today) 
                 grain_date = entities['datetime'][0]['grain']
                 offset = 0
-                startTime = Weather.convertUTCtoUNIXtime(timeFrom,True)
+                startTime = self.convertUTCtoUNIXtime(timeFrom,True)
                 if ('hour' in grain_date):
                     grain = 'hourly'
                 elif ('day' in grain_date):
