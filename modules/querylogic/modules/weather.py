@@ -332,7 +332,7 @@ class Weather:
             return time.strftime('%A')  
         else:
             time = datetime.datetime.fromtimestamp(int(posixtime))
-            time = time + datetime.timedelta(hours=self.utcoffset)
+            time = time + datetime.timedelta(hours=self.utcoffset,seconds = 10)
             deltaTime = Weather.calculate_time_offset(time,today)
             if deltaTime['days'] == 0:
                 return 'today'
@@ -340,7 +340,7 @@ class Weather:
                 return 'tomorrow'
             elif deltaTime['days'] == -1:
                 return 'yesterday'
-            return datetime.datetime.fromtimestamp(int(posixtime)).strftime('%A')
+            return time.strftime('%A')
 
     def convertUTCtoUNIXtime(self,utctime, ignore = False):
         d = self.convertUTCtoDatetime(utctime,ignore)
