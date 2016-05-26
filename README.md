@@ -1,5 +1,13 @@
 # Household Intelligent Assistant #
 
+This is a prototype of a speech-controlled personal assistant - easy to deploy
+(on Linux), can talk about the weather, tell you (very dry) jokes, the time and
+The Guardian news summary.  Attention word scanning using PocketSphinx (locally,
+no background streaming to the cloud), speech reco powered by Google, intent
+detection by wit.ai.  Enjoy!
+
+Quick demo: https://www.youtube.com/watch?v=xOZluGa_lwc
+
 ## Installation Instructions ##
 To install the application, please follow these steps:
 ```
@@ -21,20 +29,20 @@ sudo -i
 ```
 The virtual machine has to have access to you microphone and speakers. You can check it in you VirtualBox GUI application.
 
-The web application on the port 80 can be launched by typing following command inside the virtual machine:
+For testing of intent detection and development of new domains, aside of
+the speech interface there is also a web-based text interface available.
+The web application on port 80 can be launched by typing following
+command inside the virtual machine:
 ```
 ./webapp.py
 ```
 
-### Tuning Instructions ###
-
-A major tunable of the assistant are thresholds for attention word recognition
-and silence after speech input.  Tune these in /root/config.yml (inside the
-virtual machine) by changing threshold in attword: (larger is less sensitive)
-and speechToText: section (larger is more noise resistant, requires louder
-speech input).
-
 ### Docker container ###
+
+**Deprecated for now.**
+Due to problems with audio transfering into Docker containers, *only
+the web application* is available in Docker containers, no speech reco.
+
 You can build you own Docker image by
 ```
 docker build --tag phoenix Personal-Assistant/deploy/docker/
@@ -45,7 +53,15 @@ docker run -d -p 80:80 --name phoenix phoenix
 ```
 which will run the web application at the port 80.
 
-Due to problems with audio transfering into Docker containers, the web application is available only in Docker containers.
+## Tuning Instructions ##
+
+A major tunable of the assistant are thresholds for attention word recognition
+and silence after speech input.  Tune these in /root/config.yml (inside the
+virtual machine) by changing threshold in attword: (larger is less sensitive)
+and speechToText: section (larger is more noise resistant, requires louder
+speech input).
+
+Errors and other debug information is logged to the /root/logs directory.
 
 ## Intent recognition database ##
 
@@ -62,3 +78,5 @@ https://wit.ai/drapejak/Household2
   - [Pavel Trutman](https://github.com/PavelTrutman)
 
 Special thanks to [Petr Baudiš](https://github.com/pasky) and Jan Šedivý for indroducing us into the problem and for their help.
+
+This is a student project, so discretion re code quality is welcome. ;-)
