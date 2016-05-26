@@ -39,6 +39,12 @@ which will run the web application at the port 80.
 
 Due to problems with audio transfering into Docker containers, the web application is available only in Docker containers.
 
+## Intent recognition database ##
+
+Our system uses wit.ai for parsing questions. It is possible to create a fork of our wit.ai application and extend its scope to your custom intents. You need to sing up with wit.ai and than use the link below.
+
+https://wit.ai/drapejak/Household2
+
 ## Developers ##
   - [Jiří Burant](https://github.com/JBurant)
   - [Jakub Drápela](https://github.com/drapejak)
