@@ -23,6 +23,7 @@ speechToText:
   modelPath: /usr/local/share/pocketsphinx/model/en-us/en-us
   dictionaryPath: /usr/local/share/pocketsphinx/model/en-us/en-us/dictionary.dict
   grammarPath: /usr/local/share/pocketsphinx/model/en-us/en-us/grammar.lm
+  threshold: 110
 
 # get intent module config
 getIntent:
