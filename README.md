@@ -4,7 +4,7 @@ This is a prototype of a speech-controlled personal assistant - easy to deploy
 (on Linux), can talk about the weather, tell you (very dry) jokes, the time and
 The Guardian news summary.  Attention word scanning using PocketSphinx (locally,
 no background streaming to the cloud), speech reco powered by Google, intent
-detection by wit.ai.  Enjoy!
+detection by wit.ai.  It responds to the name **Phoenix** /ˈfiːnɪks/.  Enjoy!
 
 Quick demo: https://www.youtube.com/watch?v=xOZluGa_lwc
 
