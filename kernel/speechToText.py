@@ -18,5 +18,5 @@ class speechToText(moduleWrapper.moduleWrapper):
       None
     """
 
-    self.configToSend = {'modelPath': config['modelPath'], 'dictionaryPath': config['dictionaryPath'], 'grammarPath': config['grammarPath']}
+    self.configToSend = {'modelPath': config['modelPath'], 'dictionaryPath': config['dictionaryPath'], 'grammarPath': config['grammarPath'], 'threshold': config['threshold']}
 
