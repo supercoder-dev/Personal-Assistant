@@ -26,6 +26,14 @@ The web application on the port 80 can be launched by typing following command i
 ./webapp.py
 ```
 
+### Tuning Instructions ###
+
+A major tunable of the assistant are thresholds for attention word recognition
+and silence after speech input.  Tune these in /root/config.yml (inside the
+virtual machine) by changing threshold in attword: (larger is less sensitive)
+and speechToText: section (larger is more noise resistant, requires louder
+speech input).
+
 ### Docker container ###
 You can build you own Docker image by
 ```
