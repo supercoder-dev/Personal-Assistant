@@ -104,9 +104,9 @@ class speechToText:
             message=u"{}".format(value).encode("utf-8")
         else: # this version of Python uses unicode for strings (Python 3+)
             message="{}".format(value)
-    except self.sr.UnknownValueError:
+    except sr.UnknownValueError:
         message="Oops! Didn't catch that"
-    except self.sr.RequestError as e:
+    except sr.RequestError as e:
         message="Uh oh! Couldn't request results from Google Speech Recognition service; {0}".format(e)
 
     # return result
