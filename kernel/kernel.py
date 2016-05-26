@@ -102,7 +102,7 @@ class Kernel:
         print('Listening for the query...')
         sttResult = self.speechToText.sendReply({'action': 'listen'})
         #intent = sttResult['JSON']
-        answerTimestamp = self.textToSpeech.sendReply({'answer':'Beep'})['timer']
+        answerTimestamp = self.textToSpeech.sendReply({'answer':'Beep'})['timerOf Answer']
         query = sttResult['request']
         print('Transcribed query: {}'.format(query))
         intent = self.getIntent.sendReply({'request': query})['JSON']
