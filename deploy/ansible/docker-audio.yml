@@ -1,0 +1,10 @@
+- hosts: localhost
+  roles:
+   - common
+   - kernel
+   - attention-word
+   - speech-to-text
+   - get-intent
+   - query-logic
+   - text-to-speech
+   - configure

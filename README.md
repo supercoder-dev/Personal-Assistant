@@ -37,19 +37,31 @@ command inside the virtual machine:
 ./webapp.py
 ```
 
-### Docker container ###
+### Docker container - audio interface ###
 
-**Deprecated for now.**
-Due to problems with audio transfering into Docker containers, *only
-the web application* is available in Docker containers, no speech reco.
+*work in progress*
 
 You can build you own Docker image by
 ```
-docker build --tag phoenix Personal-Assistant/deploy/docker/
+sudo docker build --tag phoenix Personal-Assistant/deploy/docker-audio/
 ```
 and then run the container
 ```
-docker run -d -p 80:80 --volume=/run/user/$UID/pulse:/run/pulse:ro --name phoenix phoenix
+sudo docker run -d --volume=/run/user/$UID/pulse:/run/pulse:ro --volume=$HOME/.config/pulse/cookie:/run/pulse/cookie:ro --name phoenix phoenix
+```
+which will run the audio interface
+(if you don't do this via sudo but as root, you'll need to modify $UID to your
+desktop user $UID to properly forward pulseaudio).
+
+### Docker container - web interface ###
+
+You can build you own Docker image by
+```
+sudo docker build --tag phoenix Personal-Assistant/deploy/docker-web/
+```
+and then run the container
+```
+sudo docker run -d -p 80:80 --name phoenix phoenix
 ```
 which will run the web application at the port 80.
 
