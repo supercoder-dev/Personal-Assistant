@@ -8,7 +8,7 @@
   
 - name: install (via pip3) required python libraries for attention word module (PocketSphinx with AlsaAudio)
   pip:
-    requirements: "\'/root/Personal-Assistant/modules/attentionWord/pocketSphinx\ AlsaAudio/requirements.txt\'"
+    requirements: "/root/Personal-Assistant/modules/attentionWord/pocketSphinx\\ AlsaAudio/requirements.txt"
     executable: pip3
 
 - name: make PocketSphinx dir
