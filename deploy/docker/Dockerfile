@@ -5,6 +5,12 @@ MAINTAINER Pavel Trutman <pavel.trutman@fel.cvut.cz>
 RUN apt-get update && \
     apt-get install -y apt-utils \
                        debconf-utils
+
+# Pulseaudio
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y pulseaudio &&
+    echo enable-shm=no >> /etc/pulse/client.conf
+ENV PULSE_SERVER /run/pulse/native
+
 # Git
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y git

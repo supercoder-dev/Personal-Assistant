@@ -49,7 +49,7 @@ docker build --tag phoenix Personal-Assistant/deploy/docker/
 ```
 and then run the container
 ```
-docker run -d -p 80:80 --name phoenix phoenix
+docker run -d -p 80:80 --volume=/run/user/$UID/pulse:/run/pulse:ro --name phoenix phoenix
 ```
 which will run the web application at the port 80.
 
