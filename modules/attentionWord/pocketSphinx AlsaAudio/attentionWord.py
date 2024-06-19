@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import time
 import zmq
 import sys
 import datetime
@@ -102,18 +102,24 @@ class AttentionWord:
     inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
     inp.setperiodsize(32)
 
-    while True:
-        l,buf = inp.read()
-        if buf:
+    start_time = time.time()
+     while True:
+         l, buf = inp.read()
+         if buf:
              decoder.process_raw(buf, False, False)
-        else:
+         else:
              break
-        if decoder.hyp() != None:
-            timeOfActivation = datetime.datetime.now().isoformat(' ')
-            print ("Detected keyword, restarting search")
-            decoder.end_utt()
-            message = {'timeOfActivation': timeOfActivation}
-            break
+         if decoder.hyp() is not None:
+             timeOfActivation = datetime.datetime.now().isoformat(' ')
+             print("Detected keyword, restarting search")
+             decoder.end_utt()
+             message = {'timeOfActivation': timeOfActivation}
+             break
+         if time.time() - start_time > 15:
+             print("Timeout reached, stopping listening")
+             decoder.end_utt()
+             message = {'timeOfActivation': None}
+             break
 
     # return result
     return message
